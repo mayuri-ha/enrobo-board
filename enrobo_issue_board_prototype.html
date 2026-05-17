@@ -1,0 +1,336 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.app{display:flex;flex-direction:column;min-height:600px;background:var(--color-background-tertiary)}
+.topbar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px}
+.logo{font-size:16px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:8px}
+.logo-badge{background:#1D9E75;color:#fff;font-size:11px;font-weight:500;padding:2px 8px;border-radius:var(--border-radius-md)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.auth-placeholder{font-size:12px;color:var(--color-text-tertiary);background:var(--color-background-secondary);border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:4px 10px}
+.role-toggle{display:flex;gap:4px}
+.role-btn{font-size:12px;padding:4px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer}
+.role-btn.active{background:#E1F5EE;color:#0F6E56;border-color:#5DCAA5}
+.layout{display:flex;flex:1}
+.sidebar{width:200px;background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);padding:16px 12px;flex-shrink:0}
+.sidebar-section{margin-bottom:20px}
+.sidebar-label{font-size:11px;color:var(--color-text-tertiary);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--border-radius-md);font-size:13px;color:var(--color-text-secondary);cursor:pointer;margin-bottom:2px}
+.nav-item:hover{background:var(--color-background-secondary)}
+.nav-item.active{background:#E1F5EE;color:#0F6E56}
+.nav-item i{font-size:16px}
+.badge-count{margin-left:auto;font-size:11px;background:var(--color-background-secondary);color:var(--color-text-secondary);border-radius:10px;padding:1px 6px}
+.nav-item.active .badge-count{background:#9FE1CB;color:#085041}
+.main{flex:1;padding:20px;overflow:auto}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.page-title{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.page-actions{display:flex;gap:8px;align-items:center}
+.filter-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.filter-chip{font-size:12px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer}
+.filter-chip.active{background:#E1F5EE;color:#0F6E56;border-color:#5DCAA5}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px}
+.stat-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.stat-val{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.stat-sub{font-size:11px;color:var(--color-text-tertiary);margin-top:2px}
+.issue-list{display:flex;flex-direction:column;gap:8px}
+.issue-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;cursor:pointer;transition:border-color .15s}
+.issue-card:hover{border-color:var(--color-border-secondary)}
+.issue-card.selected{border-color:#5DCAA5;border-width:1px}
+.issue-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.priority-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.p-high{background:#E24B4A}
+.p-mid{background:#EF9F27}
+.p-low{background:#639922}
+.issue-id{font-size:11px;color:var(--color-text-tertiary);font-weight:500}
+.issue-title{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.status-badge{font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--border-radius-md);flex-shrink:0}
+.s-new{background:#E6F1FB;color:#185FA5}
+.s-open{background:#FAEEDA;color:#854F0B}
+.s-inprogress{background:#E1F5EE;color:#0F6E56}
+.s-done{background:#EAF3DE;color:#3B6D11}
+.issue-meta{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--color-text-tertiary)}
+.meta-item{display:flex;align-items:center;gap:4px}
+.meta-item i{font-size:14px}
+.assignee-chip{display:flex;align-items:center;gap:4px;background:var(--color-background-secondary);border-radius:20px;padding:2px 8px}
+.avatar{width:18px;height:18px;border-radius:50%;background:#9FE1CB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#085041;flex-shrink:0}
+.new-btn{display:flex;align-items:center;gap:6px;font-size:13px;padding:7px 14px;border-radius:var(--border-radius-md);background:#1D9E75;color:#fff;border:none;cursor:pointer}
+.detail-panel{width:320px;background:var(--color-background-primary);border-left:0.5px solid var(--color-border-tertiary);padding:20px;flex-shrink:0;display:none}
+.detail-panel.show{display:block}
+.detail-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.detail-id{font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px}
+.detail-title{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.close-btn{background:none;border:none;color:var(--color-text-tertiary);cursor:pointer;font-size:20px;padding:0}
+.detail-section{margin-bottom:16px}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px}
+.dt{color:var(--color-text-secondary)}
+.dd{color:var(--color-text-primary);font-weight:500}
+.detail-divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:16px 0}
+.comment-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.comment{display:flex;gap:8px}
+.comment-body{flex:1}
+.comment-meta{font-size:11px;color:var(--color-text-tertiary);margin-bottom:2px}
+.comment-text{font-size:13px;color:var(--color-text-primary);line-height:1.5}
+.comment-input-row{display:flex;gap:6px}
+.comment-input-row input{flex:1;font-size:13px;padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary)}
+.send-btn{background:#1D9E75;color:#fff;border:none;border-radius:var(--border-radius-md);padding:6px 12px;cursor:pointer;font-size:13px}
+.status-select{font-size:12px;padding:5px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary);width:100%}
+.notify-btn{display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);background:var(--color-background-secondary);cursor:pointer;width:100%;margin-top:8px;justify-content:center}
+</style>
+
+<h2 class="sr-only">ENROBO 課題管理プラットフォーム プロトタイプ</h2>
+
+<div class="app">
+  <div class="topbar">
+    <div class="logo">
+      <i class="ti ti-robot" aria-hidden="true"></i>
+      ENROBO
+      <span class="logo-badge">課題管理</span>
+    </div>
+    <div class="topbar-right">
+      <span class="auth-placeholder"><i class="ti ti-lock" style="font-size:12px;vertical-align:-1px"></i> 認証はここに差し込み予定</span>
+      <div class="role-toggle">
+        <button class="role-btn active" onclick="setRole('staff')">担当者ビュー</button>
+        <button class="role-btn" onclick="setRole('client')">クライアントビュー</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">メニュー</div>
+        <div class="nav-item active">
+          <i class="ti ti-list-check" aria-hidden="true"></i>
+          課題一覧
+          <span class="badge-count">12</span>
+        </div>
+        <div class="nav-item" id="nav-dashboard">
+          <i class="ti ti-chart-bar" aria-hidden="true"></i>
+          ダッシュボード
+        </div>
+        <div class="nav-item client-only" style="display:none">
+          <i class="ti ti-file-plus" aria-hidden="true"></i>
+          課題を起票する
+        </div>
+      </div>
+      <div class="sidebar-section staff-only">
+        <div class="sidebar-label">クライアント</div>
+        <div class="nav-item">
+          <i class="ti ti-building" aria-hidden="true"></i>
+          A社
+          <span class="badge-count">5</span>
+        </div>
+        <div class="nav-item">
+          <i class="ti ti-building" aria-hidden="true"></i>
+          B社
+          <span class="badge-count">4</span>
+        </div>
+        <div class="nav-item">
+          <i class="ti ti-building" aria-hidden="true"></i>
+          C社
+          <span class="badge-count">3</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="page-header">
+        <div class="page-title">課題一覧</div>
+        <div class="page-actions">
+          <button class="new-btn staff-only" onclick="sendPrompt('新規課題登録フォームの画面も追加してほしい')">
+            <i class="ti ti-plus" aria-hidden="true"></i> 新規登録
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <span class="filter-chip active" onclick="filterStatus('all', this)">すべて</span>
+        <span class="filter-chip" onclick="filterStatus('new', this)">新規</span>
+        <span class="filter-chip" onclick="filterStatus('open', this)">受付済</span>
+        <span class="filter-chip" onclick="filterStatus('inprogress', this)">対応中</span>
+        <span class="filter-chip" onclick="filterStatus('done', this)">完了</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">総課題数</div>
+          <div class="stat-val" id="s-total">12</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">新規・未対応</div>
+          <div class="stat-val" style="color:#185FA5" id="s-new">3</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">対応中</div>
+          <div class="stat-val" style="color:#0F6E56" id="s-prog">5</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">今月完了</div>
+          <div class="stat-val" style="color:#3B6D11" id="s-done">4</div>
+        </div>
+      </div>
+
+      <div class="issue-list" id="issue-list"></div>
+    </div>
+
+    <div class="detail-panel" id="detail-panel">
+      <div class="detail-header">
+        <div>
+          <div class="detail-id" id="d-id"></div>
+          <div class="detail-title" id="d-title"></div>
+        </div>
+        <button class="close-btn" onclick="closeDetail()" aria-label="閉じる"><i class="ti ti-x"></i></button>
+      </div>
+
+      <div class="detail-section">
+        <div class="dl">
+          <span class="dt">ステータス</span>
+          <span class="dd" id="d-status-label"></span>
+          <span class="dt">優先度</span>
+          <span class="dd" id="d-priority"></span>
+          <span class="dt">クライアント</span>
+          <span class="dd" id="d-client"></span>
+          <span class="dt">担当者</span>
+          <span class="dd" id="d-assignee"></span>
+          <span class="dt">起票日</span>
+          <span class="dd" id="d-date"></span>
+        </div>
+      </div>
+
+      <div class="staff-only" id="staff-actions">
+        <select class="status-select" id="status-select" onchange="updateStatus(this.value)">
+          <option value="new">新規</option>
+          <option value="open">受付済</option>
+          <option value="inprogress">対応中</option>
+          <option value="done">完了</option>
+        </select>
+        <button class="notify-btn"><i class="ti ti-bell" aria-hidden="true" style="font-size:14px"></i> クライアントに通知する</button>
+      </div>
+
+      <hr class="detail-divider">
+
+      <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px">コメント</div>
+      <div class="comment-list" id="comment-list"></div>
+      <div class="comment-input-row">
+        <input type="text" id="comment-input" placeholder="コメントを入力..." />
+        <button class="send-btn" onclick="addComment()"><i class="ti ti-send" style="font-size:14px"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const issues = [
+  {id:'ISS-012',title:'給与計算RPAが月末に停止する',status:'new',priority:'high',client:'A社',assignee:'田中',date:'2025-05-17',comments:[{user:'A社 山田',time:'05-17 14:22',text:'毎月末日の23時頃に止まっています。ログを添付します。'}]},
+  {id:'ISS-011',title:'勤怠データの取込でエラーが発生する',status:'inprogress',priority:'high',client:'B社',assignee:'鈴木',date:'2025-05-15',comments:[{user:'鈴木（担当）',time:'05-16 10:00',text:'原因を調査中です。明日中に状況報告します。'}]},
+  {id:'ISS-010',title:'社保手続きの自動送信が失敗する',status:'open',priority:'mid',client:'A社',assignee:'田中',date:'2025-05-14',comments:[]},
+  {id:'ISS-009',title:'ログイン画面でパスワードリセットが動作しない',status:'inprogress',priority:'mid',client:'C社',assignee:'佐藤',date:'2025-05-12',comments:[{user:'佐藤（担当）',time:'05-13 09:00',text:'修正版をテスト環境にデプロイしました。確認をお願いします。'},{user:'C社 木村',time:'05-13 15:30',text:'確認しました。本番反映を依頼します。'}]},
+  {id:'ISS-008',title:'帳票PDFの文字化けを修正してほしい',status:'done',priority:'low',client:'B社',assignee:'鈴木',date:'2025-05-10',comments:[{user:'鈴木（担当）',time:'05-11 11:00',text:'修正完了しました。フォント設定を変更しています。'}]},
+  {id:'ISS-007',title:'RPA実行ログのエクスポート機能追加',status:'inprogress',priority:'mid',client:'C社',assignee:'田中',date:'2025-05-08',comments:[]},
+  {id:'ISS-006',title:'マスタデータ更新後に反映されない',status:'done',priority:'high',client:'A社',assignee:'佐藤',date:'2025-05-05',comments:[{user:'佐藤（担当）',time:'05-06 14:00',text:'キャッシュの問題でした。修正しました。'}]},
+];
+
+let currentFilter='all', currentIssue=null, currentRole='staff';
+
+const statusLabel={new:'新規',open:'受付済',inprogress:'対応中',done:'完了'};
+const priorityLabel={high:'高',mid:'中',low:'低'};
+const statusClass={new:'s-new',open:'s-open',inprogress:'s-inprogress',done:'s-done'};
+const priorityClass={high:'p-high',mid:'p-mid',low:'p-low'};
+
+function setRole(r){
+  currentRole=r;
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.toggle('active',b.textContent.includes(r==='staff'?'担当者':'クライアント')));
+  document.querySelectorAll('.staff-only').forEach(el=>el.style.display=r==='staff'?'':'none');
+  document.querySelectorAll('.client-only').forEach(el=>el.style.display=r==='client'?'':'none');
+  renderList();
+}
+
+function filterStatus(s, el){
+  currentFilter=s;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderList();
+}
+
+function renderList(){
+  const list=document.getElementById('issue-list');
+  const filtered=issues.filter(i=>currentFilter==='all'||i.status===currentFilter);
+  list.innerHTML=filtered.map(i=>`
+    <div class="issue-card${currentIssue&&currentIssue.id===i.id?' selected':''}" onclick="openDetail('${i.id}')">
+      <div class="issue-top">
+        <div class="priority-dot ${priorityClass[i.priority]}"></div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+            <span class="issue-id">${i.id}</span>
+            <span class="status-badge ${statusClass[i.status]}">${statusLabel[i.status]}</span>
+          </div>
+          <div class="issue-title">${i.title}</div>
+        </div>
+      </div>
+      <div class="issue-meta">
+        <span class="meta-item"><i class="ti ti-building"></i>${i.client}</span>
+        <span class="assignee-chip"><div class="avatar">${i.assignee[0]}</div>${i.assignee}</span>
+        <span class="meta-item" style="margin-left:auto"><i class="ti ti-message"></i>${i.comments.length}</span>
+        <span class="meta-item"><i class="ti ti-calendar"></i>${i.date.slice(5)}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openDetail(id){
+  const i=issues.find(x=>x.id===id);
+  currentIssue=i;
+  document.getElementById('d-id').textContent=i.id;
+  document.getElementById('d-title').textContent=i.title;
+  document.getElementById('d-status-label').textContent=statusLabel[i.status];
+  document.getElementById('d-priority').textContent=priorityLabel[i.priority];
+  document.getElementById('d-client').textContent=i.client;
+  document.getElementById('d-assignee').textContent=i.assignee;
+  document.getElementById('d-date').textContent=i.date;
+  document.getElementById('status-select').value=i.status;
+  renderComments(i);
+  document.getElementById('detail-panel').classList.add('show');
+  document.getElementById('staff-actions').style.display=currentRole==='staff'?'block':'none';
+  renderList();
+}
+
+function closeDetail(){
+  currentIssue=null;
+  document.getElementById('detail-panel').classList.remove('show');
+  renderList();
+}
+
+function renderComments(i){
+  const cl=document.getElementById('comment-list');
+  cl.innerHTML=i.comments.map(c=>`
+    <div class="comment">
+      <div class="avatar" style="width:24px;height:24px;font-size:11px;flex-shrink:0">${c.user[0]}</div>
+      <div class="comment-body">
+        <div class="comment-meta">${c.user} · ${c.time}</div>
+        <div class="comment-text">${c.text}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateStatus(val){
+  if(!currentIssue)return;
+  currentIssue.status=val;
+  document.getElementById('d-status-label').textContent=statusLabel[val];
+  renderList();
+}
+
+function addComment(){
+  const inp=document.getElementById('comment-input');
+  if(!inp.value.trim()||!currentIssue)return;
+  const now=new Date();
+  const t=`${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  currentIssue.comments.push({user:currentRole==='staff'?'担当者':'クライアント',time:t,text:inp.value.trim()});
+  inp.value='';
+  renderComments(currentIssue);
+  renderList();
+}
+
+renderList();
+</script>
