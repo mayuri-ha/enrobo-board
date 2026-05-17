@@ -88,7 +88,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .search-box input{border:none;outline:none;background:transparent;flex:1;font-size:13px;font-family:inherit;color:var(--text-primary);min-width:0}
 
 /* ==== Stats Row ==== */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px}
 .stat-card{background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:14px 16px}
 .stat-label{font-size:11px;color:var(--text-secondary);margin-bottom:4px;font-weight:500}
 .stat-val{font-size:24px;font-weight:600;line-height:1.2}
@@ -100,10 +100,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .issue-card:hover{border-color:var(--border-strong);box-shadow:var(--shadow-sm)}
 .issue-card.selected{border-color:var(--brand-mid);box-shadow:0 0 0 2px var(--brand-light)}
 .issue-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
-.priority-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
-.p-high{background:#E24B4A}
-.p-mid{background:#EF9F27}
-.p-low{background:#639922}
+.level-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:var(--radius-sm);flex-shrink:0;margin-top:3px}
+.level-L{background:#E6F1FB;color:#185FA5}
+.level-M{background:#FAEEDA;color:#854F0B}
+.level-H{background:#FCEBEB;color:#A32D2D}
 .issue-id{font-size:11px;color:var(--text-tertiary);font-weight:600;font-family:'SF Mono','Menlo',monospace}
 .issue-title{font-size:14px;font-weight:500;flex:1;line-height:1.4}
 .status-badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:var(--radius-sm);flex-shrink:0}
@@ -112,29 +112,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .s-inprogress{background:#E1F5EE;color:#0F6E56}
 .s-done{background:#EAF3DE;color:#3B6D11}
 .s-onhold{background:#F1EFE8;color:#5F5E5A}
+.s-pending10{background:#FFF3CD;color:#856404}
 .issue-meta{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--text-tertiary);flex-wrap:wrap}
 .meta-item{display:flex;align-items:center;gap:4px}
 .meta-item i{font-size:14px}
 .assignee-chip{display:flex;align-items:center;gap:5px;background:var(--bg-secondary);border-radius:20px;padding:2px 8px 2px 3px}
 .avatar{width:20px;height:20px;border-radius:50%;background:var(--brand-mid);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--brand-dark);flex-shrink:0}
 .avatar-lg{width:32px;height:32px;font-size:13px}
+.tag-chip{font-size:10px;background:var(--bg-secondary);border-radius:var(--radius-sm);padding:2px 6px;color:var(--text-secondary);border:1px solid var(--border-light)}
+.tags-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
 
 /* ==== Detail Modal ==== */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
 .modal-overlay.show{opacity:1;pointer-events:auto}
-.modal{background:var(--bg-primary);border-radius:var(--radius-lg);width:90%;max-width:720px;max-height:90vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);transform:scale(0.95);transition:transform .2s}
+.modal{background:var(--bg-primary);border-radius:var(--radius-lg);width:90%;max-width:800px;max-height:92vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);transform:scale(0.95);transition:transform .2s}
 .modal-overlay.show .modal{transform:scale(1)}
 .modal-header{padding:20px 24px;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .modal-body{padding:20px 24px;overflow-y:auto;flex:1}
 .modal-footer{padding:14px 24px;border-top:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center;gap:12px}
 .detail-id{font-size:11px;color:var(--text-tertiary);font-family:'SF Mono','Menlo',monospace;margin-bottom:6px;font-weight:600}
 .detail-title{font-size:18px;font-weight:600;line-height:1.4}
-.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:20px}
 .detail-field{background:var(--bg-secondary);border-radius:var(--radius-md);padding:10px 12px}
 .detail-field-label{font-size:11px;color:var(--text-secondary);font-weight:500;margin-bottom:4px}
-.detail-field-value{font-size:13px;font-weight:500}
+.detail-field-value{font-size:13px;font-weight:500;word-break:break-all}
 .detail-section-title{font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.03em}
 .detail-desc{background:var(--bg-secondary);border-radius:var(--radius-md);padding:14px;font-size:13px;line-height:1.6;margin-bottom:20px;white-space:pre-wrap}
+.detail-tags-wrap{margin-bottom:20px}
+.detail-tags{display:flex;gap:6px;flex-wrap:wrap}
+.detail-tag{font-size:11px;background:var(--brand-light);color:var(--brand-dark);border-radius:var(--radius-sm);padding:3px 8px}
+
+/* ==== Tabs in modal ==== */
+.modal-tabs{display:flex;gap:0;border-bottom:1px solid var(--border-light);margin-bottom:16px}
+.modal-tab{font-size:13px;font-weight:500;padding:8px 16px;cursor:pointer;color:var(--text-secondary);border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px}
+.modal-tab.active{color:var(--brand-dark);border-bottom-color:var(--brand)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
 
 /* ==== Comments ==== */
 .comment-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
@@ -157,6 +170,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-light)}
 .form-textarea{min-height:100px;resize:vertical;line-height:1.5}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .form-help{font-size:11px;color:var(--text-tertiary);margin-top:4px}
 
 /* ==== Dashboard ==== */
@@ -165,7 +179,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .dash-card-title{font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .dash-card-title i{font-size:16px}
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
-.bar-label{width:80px;color:var(--text-secondary);flex-shrink:0}
+.bar-label{width:90px;color:var(--text-secondary);flex-shrink:0;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar-track{flex:1;height:8px;background:var(--bg-secondary);border-radius:4px;overflow:hidden}
 .bar-fill{height:100%;background:var(--brand);border-radius:4px;transition:width .3s}
 .bar-val{width:30px;text-align:right;font-weight:600;font-size:12px;color:var(--text-primary)}
@@ -197,13 +211,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .toast.error{background:#A32D2D}
 @keyframes toastIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 
-/* ==== Status Dropdown in detail ==== */
+/* ==== Status Actions ==== */
 .status-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .status-actions select{font-size:12px;padding:6px 10px;border-radius:var(--radius-md);border:1px solid var(--border-mid);background:var(--bg-primary);font-family:inherit;cursor:pointer;outline:none}
 
 /* ==== View Toggle ==== */
 .view-section{display:none}
 .view-section.active{display:block}
+
+/* ==== Section divider ==== */
+.section-divider{height:1px;background:var(--border-light);margin:16px 0}
+
+/* ==== Work log ==== */
+.worklog-row{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:12px}
+.worklog-row:last-child{border-bottom:none}
+.worklog-time{color:var(--text-tertiary);width:80px;flex-shrink:0}
+.worklog-user{font-weight:600;color:var(--text-secondary);width:60px;flex-shrink:0}
+.worklog-hours{color:var(--brand-dark);font-weight:600;width:60px;text-align:right;flex-shrink:0}
 
 /* ==== Mobile ==== */
 @media (max-width:768px){
@@ -212,6 +236,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
   .auth-placeholder{display:none}
   .topbar{padding:0 12px}
   .modal{width:100%;height:100%;max-height:100vh;border-radius:0}
+  .form-row,.form-row-3{grid-template-columns:1fr}
 }
 
 /* ==== Empty filter result ==== */
@@ -226,6 +251,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .activity-icon i{font-size:13px;color:var(--text-secondary)}
 .activity-content{flex:1}
 .activity-meta{color:var(--text-tertiary);font-size:11px}
+
+/* ==== Overdue highlight ==== */
+.overdue .issue-title{color:#A32D2D}
+.overdue-badge{font-size:10px;color:#A32D2D;font-weight:600;background:#FCEBEB;padding:2px 6px;border-radius:var(--radius-sm)}
 </style>
 </head>
 <body>
@@ -279,8 +308,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
       </div>
     </div>
     <div class="sidebar-section staff-only">
-      <div class="sidebar-label">クライアント</div>
+      <div class="sidebar-label">顧客別</div>
       <div id="client-nav"></div>
+    </div>
+    <div class="sidebar-section staff-only">
+      <div class="sidebar-label">システム別</div>
+      <div id="system-nav"></div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">設定</div>
@@ -315,22 +348,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 
       <div class="filter-row">
         <span class="filter-chip active" data-filter="all" onclick="filterStatus('all', this)">すべて</span>
-        <span class="filter-chip" data-filter="new" onclick="filterStatus('new', this)">新規</span>
-        <span class="filter-chip" data-filter="open" onclick="filterStatus('open', this)">受付済</span>
+        <span class="filter-chip" data-filter="new" onclick="filterStatus('new', this)">未対応</span>
+        <span class="filter-chip" data-filter="pending10" onclick="filterStatus('pending10', this)">10分対応待ち</span>
         <span class="filter-chip" data-filter="inprogress" onclick="filterStatus('inprogress', this)">対応中</span>
         <span class="filter-chip" data-filter="onhold" onclick="filterStatus('onhold', this)">保留</span>
-        <span class="filter-chip" data-filter="done" onclick="filterStatus('done', this)">完了</span>
+        <span class="filter-chip" data-filter="done" onclick="filterStatus('done', this)">対応完了</span>
         <div class="filter-divider"></div>
-        <select class="form-select" style="width:auto;font-size:12px;padding:5px 10px" id="priority-filter" onchange="renderList()">
-          <option value="all">優先度すべて</option>
-          <option value="high">高</option>
-          <option value="mid">中</option>
-          <option value="low">低</option>
+        <select class="form-select" style="width:auto;font-size:12px;padding:5px 10px" id="level-filter" onchange="renderList()">
+          <option value="all">一次判定すべて</option>
+          <option value="L">L（軽微）</option>
+          <option value="M">M（中）</option>
+          <option value="H">H（重大）</option>
+        </select>
+        <select class="form-select" style="width:auto;font-size:12px;padding:5px 10px" id="system-filter" onchange="renderList()">
+          <option value="all">システムすべて</option>
         </select>
         <select class="form-select" style="width:auto;font-size:12px;padding:5px 10px" id="sort-by" onchange="renderList()">
           <option value="date-desc">新しい順</option>
           <option value="date-asc">古い順</option>
-          <option value="priority">優先度順</option>
+          <option value="deadline">納期順</option>
+          <option value="level">優先度順</option>
           <option value="status">ステータス順</option>
         </select>
       </div>
@@ -341,7 +378,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
           <div class="stat-val" id="s-total">0</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">新規・未対応</div>
+          <div class="stat-label">未対応</div>
           <div class="stat-val" style="color:#185FA5" id="s-new">0</div>
         </div>
         <div class="stat-card">
@@ -351,6 +388,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
         <div class="stat-card">
           <div class="stat-label">今月完了</div>
           <div class="stat-val" style="color:#3B6D11" id="s-done">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">平均対応時間</div>
+          <div class="stat-val" id="s-avgtime">-</div>
+          <div class="stat-sub">時間（完了分）</div>
         </div>
       </div>
 
@@ -372,16 +414,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
           </div>
         </div>
         <div class="dash-card">
-          <div class="dash-card-title"><i class="ti ti-building"></i> クライアント別の課題数</div>
+          <div class="dash-card-title"><i class="ti ti-building"></i> 顧客別の課題数</div>
           <div id="client-bars"></div>
         </div>
         <div class="dash-card">
-          <div class="dash-card-title"><i class="ti ti-flame"></i> 優先度別</div>
-          <div id="priority-bars"></div>
+          <div class="dash-card-title"><i class="ti ti-device-desktop"></i> システム別</div>
+          <div id="system-bars"></div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-title"><i class="ti ti-flame"></i> 一次判定別</div>
+          <div id="level-bars"></div>
         </div>
         <div class="dash-card">
           <div class="dash-card-title"><i class="ti ti-clock"></i> 直近のアクティビティ</div>
           <div class="activity-list" id="activity-list"></div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-title"><i class="ti ti-calendar-exclamation"></i> 納期が近い課題</div>
+          <div id="deadline-list" style="font-size:12px"></div>
         </div>
       </div>
     </div>
@@ -391,47 +441,91 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
       <div class="page-header">
         <div class="page-title">新規課題を起票する</div>
       </div>
-      <div style="max-width:640px;background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:24px">
-        <div class="form-group">
-          <label class="form-label">クライアント<span class="req">*</span></label>
-          <select class="form-select" id="f-client">
-            <option value="">選択してください</option>
-            <option>A社</option>
-            <option>B社</option>
-            <option>C社</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">課題のタイトル<span class="req">*</span></label>
-          <input type="text" class="form-input" id="f-title" placeholder="例：勤怠データの取込でエラーが発生する">
-        </div>
-        <div class="form-group">
-          <label class="form-label">課題の詳細<span class="req">*</span></label>
-          <textarea class="form-textarea" id="f-desc" placeholder="発生している現象、再現手順、エラーメッセージなどをご記入ください"></textarea>
+      <div style="max-width:700px;background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:24px">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">顧客<span class="req">*</span></label>
+            <select class="form-select" id="f-client">
+              <option value="">選択してください</option>
+              <option>AAO</option>
+              <option>BBP</option>
+              <option>CCQ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">顧客No</label>
+            <input type="text" class="form-input" id="f-clientno" placeholder="例：001">
+          </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">カテゴリ</label>
-            <select class="form-select" id="f-category">
+            <label class="form-label">案件<span class="req">*</span></label>
+            <input type="text" class="form-input" id="f-project" placeholder="例：公文書ダウンロード">
+          </div>
+          <div class="form-group">
+            <label class="form-label">システム<span class="req">*</span></label>
+            <select class="form-select" id="f-system">
+              <option value="">選択してください</option>
+              <option>OS</option>
+              <option>HR</option>
+              <option>AP</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">問合せ内容<span class="req">*</span></label>
+          <textarea class="form-textarea" id="f-desc" placeholder="発生している現象、再現手順、エラーメッセージなどをご記入ください"></textarea>
+        </div>
+        <div class="form-row-3">
+          <div class="form-group">
+            <label class="form-label">種別</label>
+            <select class="form-select" id="f-type">
               <option>不具合</option>
               <option>機能追加要望</option>
               <option>操作に関する質問</option>
+              <option>仕様確認</option>
               <option>その他</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">優先度</label>
-            <select class="form-select" id="f-priority">
-              <option value="low">低</option>
-              <option value="mid" selected>中</option>
-              <option value="high">高</option>
+            <label class="form-label">一次判定</label>
+            <select class="form-select" id="f-level">
+              <option value="">未判定</option>
+              <option value="L">L（軽微）</option>
+              <option value="M">M（中）</option>
+              <option value="H">H（重大）</option>
             </select>
-            <div class="form-help">業務への影響度の目安です</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">担当</label>
+            <select class="form-select" id="f-assignee">
+              <option value="">未割当</option>
+              <option>中川</option>
+              <option>田中</option>
+              <option>鈴木</option>
+              <option>佐藤</option>
+            </select>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">発生日時</label>
-          <input type="date" class="form-input" id="f-date">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">日付</label>
+            <input type="date" class="form-input" id="f-date">
+          </div>
+          <div class="form-group">
+            <label class="form-label">納期</label>
+            <input type="date" class="form-input" id="f-deadline">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">作業着手日</label>
+            <input type="date" class="form-input" id="f-startdate">
+          </div>
+          <div class="form-group">
+            <label class="form-label">先方希望納期（作業可能日時）</label>
+            <input type="text" class="form-input" id="f-clientdeadline" placeholder="例：2024/07/10 17:00まで">
+          </div>
         </div>
         <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
           <button class="btn" onclick="setView('list')">キャンセル</button>
@@ -454,68 +548,212 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
       <button class="btn btn-icon btn-ghost" onclick="closeDetail()" aria-label="閉じる"><i class="ti ti-x" style="font-size:20px"></i></button>
     </div>
     <div class="modal-body">
-      <div class="detail-grid">
-        <div class="detail-field">
-          <div class="detail-field-label">ステータス</div>
-          <div class="detail-field-value"><span class="status-badge" id="d-status-badge"></span></div>
+      <!-- タブ -->
+      <div class="modal-tabs">
+        <div class="modal-tab active" onclick="switchTab('tab-info',this)">基本情報</div>
+        <div class="modal-tab" onclick="switchTab('tab-work',this)">対応内容・工数</div>
+        <div class="modal-tab" onclick="switchTab('tab-tags',this)">タグ・分析</div>
+        <div class="modal-tab" onclick="switchTab('tab-comments',this)">やり取り <span id="comment-count-badge" style="font-size:11px"></span></div>
+      </div>
+
+      <!-- 基本情報タブ -->
+      <div class="tab-pane active" id="tab-info">
+        <div class="detail-grid">
+          <div class="detail-field">
+            <div class="detail-field-label">ステータス</div>
+            <div class="detail-field-value"><span class="status-badge" id="d-status-badge"></span></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">一次判定</div>
+            <div class="detail-field-value" id="d-level"></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">顧客</div>
+            <div class="detail-field-value" id="d-client"></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">顧客No</div>
+            <div class="detail-field-value" id="d-clientno"></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">案件</div>
+            <div class="detail-field-value" id="d-project"></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">システム</div>
+            <div class="detail-field-value" id="d-system"></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">種別</div>
+            <div class="detail-field-value" id="d-type"></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">担当</div>
+            <div class="detail-field-value" id="d-assignee"></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">日付</div>
+            <div class="detail-field-value" id="d-date"></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">納期</div>
+            <div class="detail-field-value" id="d-deadline"></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">作業着手日</div>
+            <div class="detail-field-value" id="d-startdate"></div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">先方希望納期</div>
+            <div class="detail-field-value" id="d-clientdeadline"></div>
+          </div>
         </div>
-        <div class="detail-field">
-          <div class="detail-field-label">優先度</div>
-          <div class="detail-field-value" id="d-priority"></div>
-        </div>
-        <div class="detail-field">
-          <div class="detail-field-label">クライアント</div>
-          <div class="detail-field-value" id="d-client"></div>
-        </div>
-        <div class="detail-field">
-          <div class="detail-field-label">担当者</div>
-          <div class="detail-field-value" id="d-assignee"></div>
-        </div>
-        <div class="detail-field">
-          <div class="detail-field-label">カテゴリ</div>
-          <div class="detail-field-value" id="d-category"></div>
-        </div>
-        <div class="detail-field">
-          <div class="detail-field-label">起票日</div>
-          <div class="detail-field-value" id="d-date"></div>
+        <div class="detail-section-title">問合せ内容</div>
+        <div class="detail-desc" id="d-desc"></div>
+
+        <!-- 担当者アクション（staff only） -->
+        <div class="staff-only" id="staff-controls">
+          <div class="detail-section-title">担当者アクション</div>
+          <div class="status-actions">
+            <select id="status-select" onchange="updateField('status',this.value)">
+              <option value="new">未対応</option>
+              <option value="pending10">10分対応待ち</option>
+              <option value="inprogress">対応中</option>
+              <option value="onhold">保留</option>
+              <option value="done">対応完了</option>
+            </select>
+            <select id="assignee-select" onchange="updateField('assignee',this.value)">
+              <option value="">担当者を選択</option>
+              <option>中川</option>
+              <option>田中</option>
+              <option>鈴木</option>
+              <option>佐藤</option>
+            </select>
+            <select id="level-select" onchange="updateField('level',this.value)">
+              <option value="">一次判定未設定</option>
+              <option value="L">L（軽微）</option>
+              <option value="M">M（中）</option>
+              <option value="H">H（重大）</option>
+            </select>
+            <button class="btn btn-sm" onclick="notifyClient()"><i class="ti ti-bell"></i> 通知を送る</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteIssue()"><i class="ti ti-trash"></i> 削除</button>
+          </div>
         </div>
       </div>
 
-      <div class="detail-section-title">詳細</div>
-      <div class="detail-desc" id="d-desc"></div>
+      <!-- 対応内容・工数タブ -->
+      <div class="tab-pane" id="tab-work">
+        <div class="detail-section-title">10分対応実施日時</div>
+        <div style="margin-bottom:16px">
+          <input type="text" class="form-input" id="d-10min-date" placeholder="例：2024/07/06 10:00" oninput="updateWorkField('tenMinDate',this.value)" style="max-width:280px">
+        </div>
 
-      <div class="staff-only" id="staff-controls" style="margin-bottom:20px">
-        <div class="detail-section-title">担当者アクション</div>
-        <div class="status-actions">
-          <select id="status-select" onchange="updateField('status',this.value)">
-            <option value="new">新規</option>
-            <option value="open">受付済</option>
-            <option value="inprogress">対応中</option>
-            <option value="onhold">保留</option>
-            <option value="done">完了</option>
-          </select>
-          <select id="assignee-select" onchange="updateField('assignee',this.value)">
-            <option value="">担当者を選択</option>
-            <option>田中</option>
-            <option>鈴木</option>
-            <option>佐藤</option>
-            <option>高橋</option>
-          </select>
-          <select id="priority-select" onchange="updateField('priority',this.value)">
-            <option value="low">優先度：低</option>
-            <option value="mid">優先度：中</option>
-            <option value="high">優先度：高</option>
-          </select>
-          <button class="btn btn-sm" onclick="notifyClient()"><i class="ti ti-bell"></i> 通知を送る</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteIssue()"><i class="ti ti-trash"></i> 削除</button>
+        <div class="detail-section-title">原因と対応内容</div>
+        <textarea class="form-textarea" id="d-cause-action" placeholder="原因の分析および対応内容を記入してください" oninput="updateWorkField('causeAction',this.value)" style="margin-bottom:16px"></textarea>
+
+        <div class="form-row" style="max-width:400px;margin-bottom:16px">
+          <div class="form-group">
+            <label class="form-label">対応時間（h）</label>
+            <input type="number" class="form-input" id="d-work-hours" min="0" step="0.5" placeholder="0" oninput="updateWorkField('workHours',this.value)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">残り時間（h）</label>
+            <input type="number" class="form-input" id="d-remain-hours" min="0" step="0.5" placeholder="0" oninput="updateWorkField('remainHours',this.value)">
+          </div>
+        </div>
+
+        <div class="form-row" style="max-width:400px;margin-bottom:16px">
+          <div class="form-group">
+            <label class="form-label">完了日</label>
+            <input type="date" class="form-input" id="d-complete-date" oninput="updateWorkField('completeDate',this.value)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">仕様変更有無</label>
+            <select class="form-select" id="d-spec-change" onchange="updateWorkField('specChange',this.value)">
+              <option value="">未設定</option>
+              <option value="なし">なし</option>
+              <option value="あり">あり</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">仕様変更反映</label>
+          <input type="text" class="form-input" id="d-spec-reflect" placeholder="仕様変更がある場合の反映先・内容" oninput="updateWorkField('specReflect',this.value)">
+        </div>
+
+        <div class="section-divider"></div>
+        <div class="detail-section-title">原因分類</div>
+        <div class="form-row-3" style="margin-bottom:12px">
+          <div class="form-group">
+            <label class="form-label">原因</label>
+            <input type="text" class="form-input" id="d-cause-cat" placeholder="例：システム理解不足" oninput="updateWorkField('causeCat',this.value)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">不可避</label>
+            <select class="form-select" id="d-unavoidable" onchange="updateWorkField('unavoidable',this.value)">
+              <option value="">未設定</option>
+              <option value="はい">はい</option>
+              <option value="いいえ">いいえ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">対策案</label>
+            <input type="text" class="form-input" id="d-countermeasure" placeholder="対策案を記入" oninput="updateWorkField('countermeasure',this.value)">
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom:12px">
+          <div class="form-group">
+            <label class="form-label">画面関連</label>
+            <select class="form-select" id="d-screen-related" onchange="updateWorkField('screenRelated',this.value)">
+              <option value="">未設定</option>
+              <option value="〇">〇</option>
+              <option value="×">×</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">手続一覧関連</label>
+            <select class="form-select" id="d-proc-related" onchange="updateWorkField('procRelated',this.value)">
+              <option value="">未設定</option>
+              <option value="〇">〇</option>
+              <option value="×">×</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div class="detail-section-title">やり取り</div>
-      <div class="comment-list" id="comment-list"></div>
-      <div class="comment-input-row">
-        <textarea class="comment-input" id="comment-input" placeholder="コメントを入力（Cmd/Ctrl+Enterで送信）"></textarea>
-        <button class="btn btn-primary" onclick="addComment()"><i class="ti ti-send"></i> 送信</button>
+      <!-- タグ・分析タブ -->
+      <div class="tab-pane" id="tab-tags">
+        <div class="detail-section-title">タグ（手動）</div>
+        <textarea class="form-textarea" id="d-tags-manual" placeholder="タグをカンマ区切りで入力&#10;例：一覧画面,Datatable,画面リフレッシュ" style="min-height:80px;margin-bottom:16px" oninput="updateWorkField('tagsManual',this.value)"></textarea>
+
+        <div class="detail-section-title">AIタグ</div>
+        <div class="detail-tags-wrap" id="d-ai-tags-wrap">
+          <div id="d-ai-tags" class="detail-tags"></div>
+        </div>
+        <div style="margin-bottom:16px">
+          <textarea class="form-textarea" id="d-tags-ai" placeholder="AIタグ（編集可）" style="min-height:80px" oninput="updateWorkField('tagsAI',this.value)"></textarea>
+        </div>
+
+        <div class="detail-section-title">AIマスタータグ</div>
+        <div class="detail-tags-wrap" id="d-ai-master-tags-wrap">
+          <div id="d-ai-master-tags" class="detail-tags"></div>
+        </div>
+        <div style="margin-bottom:16px">
+          <textarea class="form-textarea" id="d-tags-ai-master" placeholder="AIマスタータグ（編集可）" style="min-height:80px" oninput="updateWorkField('tagsAIMaster',this.value)"></textarea>
+        </div>
+
+        <div class="detail-section-title">派生タグ</div>
+        <textarea class="form-textarea" id="d-tags-derived" placeholder="派生タグ（編集可）" style="min-height:60px" oninput="updateWorkField('tagsDerived',this.value)"></textarea>
+      </div>
+
+      <!-- やり取りタブ -->
+      <div class="tab-pane" id="tab-comments">
+        <div class="comment-list" id="comment-list"></div>
+        <div class="comment-input-row">
+          <textarea class="comment-input" id="comment-input" placeholder="コメントを入力（Cmd/Ctrl+Enterで送信）"></textarea>
+          <button class="btn btn-primary" onclick="addComment()"><i class="ti ti-send"></i> 送信</button>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -530,33 +768,123 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 
 <script>
 // ============ State ============
-const STORAGE_KEY = 'enrobo-board-v1';
+const STORAGE_KEY = 'enrobo-board-v2';
 const DEFAULT_DATA = {
   issues: [
-    {id:'ISS-012',title:'給与計算RPAが月末に停止する',status:'new',priority:'high',client:'A社',assignee:'',category:'不具合',date:'2025-05-17',updated:'2025-05-17 14:22',desc:'毎月末の23時頃にRPAが停止します。\n再起動すれば動くのですが、原因が分からず困っています。\nログファイルを添付しています。',comments:[{user:'A社 山田',role:'client',time:'05-17 14:22',text:'毎月末日の23時頃に止まっています。ログを添付します。'}]},
-    {id:'ISS-011',title:'勤怠データの取込でエラーが発生する',status:'inprogress',priority:'high',client:'B社',assignee:'鈴木',category:'不具合',date:'2025-05-15',updated:'2025-05-16 10:00',desc:'勤怠CSVの取込時にエラーで止まります。\n先月までは問題なく動いていました。',comments:[{user:'鈴木',role:'staff',time:'05-16 10:00',text:'原因を調査中です。明日中に状況報告します。'}]},
-    {id:'ISS-010',title:'社保手続きの自動送信が失敗する',status:'open',priority:'mid',client:'A社',assignee:'田中',category:'不具合',date:'2025-05-14',updated:'2025-05-14 16:00',desc:'社会保険手続きの自動送信処理で、特定の従業員データだけ失敗します。',comments:[]},
-    {id:'ISS-009',title:'ログイン画面でパスワードリセットが動作しない',status:'inprogress',priority:'mid',client:'C社',assignee:'佐藤',category:'不具合',date:'2025-05-12',updated:'2025-05-13 15:30',desc:'パスワードリセットメールが届かない事象が発生しています。',comments:[{user:'佐藤',role:'staff',time:'05-13 09:00',text:'修正版をテスト環境にデプロイしました。確認をお願いします。'},{user:'C社 木村',role:'client',time:'05-13 15:30',text:'確認しました。本番反映を依頼します。'}]},
-    {id:'ISS-008',title:'帳票PDFの文字化けを修正してほしい',status:'done',priority:'low',client:'B社',assignee:'鈴木',category:'不具合',date:'2025-05-10',updated:'2025-05-11 11:00',desc:'出力したPDFで一部の漢字が文字化けします。',comments:[{user:'鈴木',role:'staff',time:'05-11 11:00',text:'修正完了しました。フォント設定を変更しています。'}]},
-    {id:'ISS-007',title:'RPA実行ログのエクスポート機能追加',status:'inprogress',priority:'mid',client:'C社',assignee:'田中',category:'機能追加要望',date:'2025-05-08',updated:'2025-05-09 14:00',desc:'実行ログをCSV形式でエクスポートする機能を追加してほしい。',comments:[]},
-    {id:'ISS-006',title:'マスタデータ更新後に反映されない',status:'done',priority:'high',client:'A社',assignee:'佐藤',category:'不具合',date:'2025-05-05',updated:'2025-05-06 14:00',desc:'マスタデータを更新しても、すぐに反映されない事象があります。',comments:[{user:'佐藤',role:'staff',time:'05-06 14:00',text:'キャッシュの問題でした。修正しました。'}]},
-    {id:'ISS-005',title:'操作マニュアルの最新版が欲しい',status:'done',priority:'low',client:'B社',assignee:'高橋',category:'操作に関する質問',date:'2025-05-02',updated:'2025-05-03 10:00',desc:'最新版の操作マニュアルを送ってください。',comments:[]},
-    {id:'ISS-004',title:'バッチ処理の実行時間を短縮したい',status:'onhold',priority:'low',client:'C社',assignee:'田中',category:'機能追加要望',date:'2025-04-28',updated:'2025-05-01 09:00',desc:'夜間バッチが朝までに終わらないことがあります。',comments:[]},
-    {id:'ISS-003',title:'API連携のタイムアウト設定変更',status:'done',priority:'mid',client:'A社',assignee:'鈴木',category:'機能追加要望',date:'2025-04-25',updated:'2025-04-26 15:00',desc:'外部API連携のタイムアウト設定を延長したい。',comments:[]},
-    {id:'ISS-002',title:'年末調整画面のレイアウト改善',status:'done',priority:'low',client:'B社',assignee:'佐藤',category:'機能追加要望',date:'2025-04-20',updated:'2025-04-22 11:00',desc:'年末調整画面が見づらいので改善してほしい。',comments:[]},
-    {id:'ISS-001',title:'初期設定マニュアルの記載誤り',status:'done',priority:'low',client:'A社',assignee:'高橋',category:'操作に関する質問',date:'2025-04-15',updated:'2025-04-16 13:00',desc:'マニュアルの記載に誤りがありました。',comments:[]},
+    {
+      id: 1,
+      date: '2024/07/05', weekday: '金',
+      clientNo: '', client: 'AAO', project: '公文書ダウンロード', system: 'OS',
+      assignee: '中川', status: 'done', type: '不具合',
+      deadline: '', startDate: '', clientDeadline: '',
+      desc: '保存した公文書ファイルのファイル名と内容が不一致',
+      level: 'L',
+      tenMinDate: '',
+      causeAction: '最初に一覧画面のデータをDatatableで読み取るが、1つのデータについて一通り処理をして一覧画面に戻った際に画面がリフレッシュされて最初に読み取ったDatatableと実際の画面が食い違ってしまっていた\nOSのダウンロード画面を別タブで開くようにして画面のリフレッシュが起きないように修正した',
+      tagsManual: '一覧画面,Datatable,画面リフレッシュ,別タブで開く,新規タブ,データと画面の不一致',
+      tagsAI: '現象: ファイル名の不一致,公文書,データ不整合,ダウンロード,画面遷移,UI',
+      tagsAIMaster: 'ファイル名不一致,FilenameMismatch,公文書,OfficialDocument,データ不整合,DataInconsistency',
+      tagsDerived: '',
+      specChange: 'なし', specReflect: '',
+      completeDate: '2024/07/06',
+      workHours: 2, remainHours: 0,
+      causeCat: 'システム理解不足', unavoidable: 'いいえ',
+      screenRelated: '〇', procRelated: '',
+      countermeasure: '別タブ対応を標準化する',
+      updated: '2024/07/06 10:00',
+      comments: [{user:'中川',role:'staff',time:'07-06 10:00',text:'原因調査完了。別タブ対応で修正しました。'}]
+    },
+    {
+      id: 2,
+      date: '2024/07/08', weekday: '月',
+      clientNo: '', client: 'BBP', project: '勤怠データ取込', system: 'HR',
+      assignee: '田中', status: 'inprogress', type: '不具合',
+      deadline: '2024/07/12', startDate: '2024/07/09', clientDeadline: '2024/07/12 17:00まで',
+      desc: '勤怠CSVの取込時にエラーが発生して止まります。先月までは問題なく動いていました。',
+      level: 'H',
+      tenMinDate: '2024/07/08 14:00',
+      causeAction: '調査中',
+      tagsManual: 'CSV取込,エラー,勤怠',
+      tagsAI: '', tagsAIMaster: '', tagsDerived: '',
+      specChange: '', specReflect: '',
+      completeDate: '', workHours: 1.5, remainHours: 2,
+      causeCat: '', unavoidable: '',
+      screenRelated: '', procRelated: '',
+      countermeasure: '',
+      updated: '2024/07/09 10:00',
+      comments: [{user:'田中',role:'staff',time:'07-09 10:00',text:'原因を調査中です。明日中に状況報告します。'}]
+    },
+    {
+      id: 3,
+      date: '2024/07/10', weekday: '水',
+      clientNo: '', client: 'AAO', project: '社保手続き自動送信', system: 'AP',
+      assignee: '鈴木', status: 'pending10', type: '不具合',
+      deadline: '2024/07/15', startDate: '', clientDeadline: '',
+      desc: '社会保険手続きの自動送信処理で、特定の従業員データだけ失敗します。',
+      level: 'M',
+      tenMinDate: '', causeAction: '',
+      tagsManual: '自動送信,社保,特定データ',
+      tagsAI: '', tagsAIMaster: '', tagsDerived: '',
+      specChange: '', specReflect: '',
+      completeDate: '', workHours: 0, remainHours: 3,
+      causeCat: '', unavoidable: '',
+      screenRelated: '', procRelated: '〇',
+      countermeasure: '',
+      updated: '2024/07/10 16:00',
+      comments: []
+    },
+    {
+      id: 4,
+      date: '2024/07/11', weekday: '木',
+      clientNo: '', client: 'CCQ', project: 'ログイン・パスワードリセット', system: 'OS',
+      assignee: '佐藤', status: 'inprogress', type: '不具合',
+      deadline: '2024/07/14', startDate: '2024/07/12', clientDeadline: '2024/07/14 12:00まで',
+      desc: 'パスワードリセットメールが届かない事象が発生しています。',
+      level: 'M',
+      tenMinDate: '2024/07/11 15:00',
+      causeAction: 'メールサーバーの設定確認中',
+      tagsManual: 'パスワードリセット,メール未着,ログイン',
+      tagsAI: '', tagsAIMaster: '', tagsDerived: '',
+      specChange: '', specReflect: '',
+      completeDate: '', workHours: 2, remainHours: 1,
+      causeCat: '', unavoidable: '',
+      screenRelated: '〇', procRelated: '',
+      countermeasure: '',
+      updated: '2024/07/12 09:00',
+      comments: [{user:'佐藤',role:'staff',time:'07-12 09:00',text:'修正版をテスト環境にデプロイしました。確認をお願いします。'},{user:'CCQ 木村',role:'client',time:'07-12 15:30',text:'確認しました。本番反映を依頼します。'}]
+    },
+    {
+      id: 5,
+      date: '2024/07/03', weekday: '水',
+      clientNo: '', client: 'BBP', project: '帳票PDF文字化け', system: 'AP',
+      assignee: '鈴木', status: 'done', type: '不具合',
+      deadline: '2024/07/07', startDate: '2024/07/04', clientDeadline: '',
+      desc: '出力したPDFで一部の漢字が文字化けします。',
+      level: 'L',
+      tenMinDate: '2024/07/03 16:00',
+      causeAction: 'フォント設定を変更することで文字化けを解消しました。',
+      tagsManual: 'PDF,文字化け,帳票',
+      tagsAI: '帳票,PDF出力,文字化け', tagsAIMaster: '', tagsDerived: '',
+      specChange: 'なし', specReflect: '',
+      completeDate: '2024/07/05',
+      workHours: 1, remainHours: 0,
+      causeCat: 'フォント設定誤り', unavoidable: 'いいえ',
+      screenRelated: '', procRelated: '',
+      countermeasure: 'フォント管理ガイドラインを整備する',
+      updated: '2024/07/05 11:00',
+      comments: [{user:'鈴木',role:'staff',time:'07-05 11:00',text:'修正完了しました。フォント設定を変更しています。'}]
+    },
   ],
   notifications: [
-    {id:1,title:'ISS-012 に新しいコメントが追加されました',issueId:'ISS-012',time:'14:22',read:false},
-    {id:2,title:'ISS-009 のステータスが対応中になりました',issueId:'ISS-009',time:'昨日',read:false},
-    {id:3,title:'ISS-011 が起票されました',issueId:'ISS-011',time:'2日前',read:false},
+    {id:1, title:'No.3 に新しい課題が起票されました', issueId:3, time:'16:00', read:false},
+    {id:2, title:'No.4 のステータスが対応中になりました', issueId:4, time:'昨日', read:false},
+    {id:3, title:'No.2 担当者から対応状況報告があります', issueId:2, time:'2日前', read:false},
   ],
   activity: [
-    {time:'14:22',text:'A社 山田 さんが ISS-012 にコメントしました',icon:'message'},
-    {time:'10:00',text:'鈴木 さんが ISS-011 のステータスを「対応中」に変更しました',icon:'arrow-right'},
-    {time:'昨日',text:'佐藤 さんが ISS-009 にコメントしました',icon:'message'},
-    {time:'昨日',text:'田中 さんが ISS-010 を受付しました',icon:'check'},
-    {time:'2日前',text:'B社 鈴木 さんが ISS-008 を完了にしました',icon:'circle-check'},
+    {time:'16:00', text:'鈴木 さんが No.3 を起票しました', icon:'plus'},
+    {time:'10:00', text:'田中 さんが No.2 のステータスを「対応中」に変更しました', icon:'arrow-right'},
+    {time:'昨日', text:'佐藤 さんが No.4 にコメントしました', icon:'message'},
+    {time:'2日前', text:'中川 さんが No.1 を完了にしました', icon:'circle-check'},
   ]
 };
 
@@ -565,6 +893,7 @@ let currentRole = 'staff';
 let currentView = 'list';
 let currentFilter = 'all';
 let currentClient = null;
+let currentSystem = null;
 let currentIssue = null;
 
 function loadState(){
@@ -579,18 +908,17 @@ function saveState(){
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
 }
 
-const statusLabel = {new:'新規',open:'受付済',inprogress:'対応中',onhold:'保留',done:'完了'};
-const priorityLabel = {high:'高',mid:'中',low:'低'};
-const statusClass = {new:'s-new',open:'s-open',inprogress:'s-inprogress',onhold:'s-onhold',done:'s-done'};
-const priorityClass = {high:'p-high',mid:'p-mid',low:'p-low'};
-const statusColors = {new:'#378ADD',open:'#EF9F27',inprogress:'#1D9E75',onhold:'#888780',done:'#639922'};
+const statusLabel = {new:'未対応', pending10:'10分対応待ち', inprogress:'対応中', onhold:'保留', done:'対応完了'};
+const statusClass = {new:'s-new', pending10:'s-pending10', inprogress:'s-inprogress', onhold:'s-onhold', done:'s-done'};
+const statusColors = {new:'#378ADD', pending10:'#EF9F27', inprogress:'#1D9E75', onhold:'#888780', done:'#639922'};
+const levelLabel = {L:'L（軽微）', M:'M（中）', H:'H（重大）'};
+const levelClass = {L:'level-L', M:'level-M', H:'level-H'};
 
 // ============ Role / View ============
 function setRole(r){
   currentRole = r;
   document.querySelectorAll('.role-btn').forEach(b=>b.classList.toggle('active', b.dataset.role===r));
   document.querySelectorAll('.staff-only').forEach(el=>el.style.display = r==='staff'?'':'none');
-  // Refresh current view
   if(currentIssue) openDetail(currentIssue.id);
   renderAll();
 }
@@ -606,6 +934,13 @@ function setView(v){
   }
 }
 
+function switchTab(tabId, el){
+  document.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
 // ============ Filter ============
 function filterStatus(s, el){
   currentFilter = s;
@@ -616,9 +951,18 @@ function filterStatus(s, el){
 
 function filterByClient(client){
   currentClient = currentClient===client?null:client;
-  document.querySelectorAll('#client-nav .nav-item').forEach(el=>{
-    el.classList.toggle('active', el.dataset.client===currentClient);
-  });
+  currentSystem = null;
+  document.querySelectorAll('#client-nav .nav-item').forEach(el=>el.classList.toggle('active', el.dataset.client===currentClient));
+  document.querySelectorAll('#system-nav .nav-item').forEach(el=>el.classList.remove('active'));
+  setView('list');
+  renderList();
+}
+
+function filterBySystem(sys){
+  currentSystem = currentSystem===sys?null:sys;
+  currentClient = null;
+  document.querySelectorAll('#system-nav .nav-item').forEach(el=>el.classList.toggle('active', el.dataset.system===currentSystem));
+  document.querySelectorAll('#client-nav .nav-item').forEach(el=>el.classList.remove('active'));
   setView('list');
   renderList();
 }
@@ -626,31 +970,44 @@ function filterByClient(client){
 // ============ List Rendering ============
 function getFilteredIssues(){
   const search = document.getElementById('search-input').value.trim().toLowerCase();
-  const priorityFilter = document.getElementById('priority-filter').value;
+  const levelFilter = document.getElementById('level-filter').value;
+  const systemFilter = document.getElementById('system-filter').value;
   const sortBy = document.getElementById('sort-by').value;
 
   let filtered = state.issues.filter(i=>{
     if(currentFilter!=='all' && i.status!==currentFilter) return false;
-    if(priorityFilter!=='all' && i.priority!==priorityFilter) return false;
+    if(levelFilter!=='all' && i.level!==levelFilter) return false;
+    if(systemFilter!=='all' && i.system!==systemFilter) return false;
     if(currentClient && i.client!==currentClient) return false;
-    if(currentRole==='client' && i.client!=='A社') return false; // Demo: client only sees their own
+    if(currentSystem && i.system!==currentSystem) return false;
+    if(currentRole==='client' && i.client!=='AAO') return false;
     if(search){
-      const hay = (i.title+' '+i.desc+' '+i.id).toLowerCase();
+      const hay = (i.project+' '+i.desc+' '+i.client+' '+i.system+' '+(i.tagsManual||'')+' '+i.id).toLowerCase();
       if(!hay.includes(search)) return false;
     }
     return true;
   });
 
-  const priorityOrder = {high:0,mid:1,low:2};
-  const statusOrder = {new:0,open:1,inprogress:2,onhold:3,done:4};
+  const levelOrder = {H:0, M:1, L:2, '':3};
+  const statusOrder = {new:0, pending10:1, inprogress:2, onhold:3, done:4};
   filtered.sort((a,b)=>{
-    if(sortBy==='date-desc') return b.date.localeCompare(a.date);
-    if(sortBy==='date-asc') return a.date.localeCompare(b.date);
-    if(sortBy==='priority') return priorityOrder[a.priority]-priorityOrder[b.priority];
-    if(sortBy==='status') return statusOrder[a.status]-statusOrder[b.status];
-    return 0;
+    if(sortBy==='date-desc') return String(b.date).localeCompare(String(a.date));
+    if(sortBy==='date-asc') return String(a.date).localeCompare(String(b.date));
+    if(sortBy==='deadline'){
+      const da = a.deadline||'9999'; const db = b.deadline||'9999';
+      return da.localeCompare(db);
+    }
+    if(sortBy==='level') return (levelOrder[a.level]??3)-(levelOrder[b.level]??3);
+    if(sortBy==='status') return (statusOrder[a.status]??5)-(statusOrder[b.status]??5);
+    return b.id - a.id;
   });
   return filtered;
+}
+
+function isOverdue(issue){
+  if(!issue.deadline || issue.status==='done') return false;
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
+  return issue.deadline < today;
 }
 
 function renderList(){
@@ -658,54 +1015,78 @@ function renderList(){
   const list = document.getElementById('issue-list');
 
   if(filtered.length===0){
-    list.innerHTML = `<div class="no-results">
-      <i class="ti ti-search-off"></i>
-      条件に合う課題が見つかりませんでした
-    </div>`;
+    list.innerHTML = `<div class="no-results"><i class="ti ti-search-off"></i>条件に合う課題が見つかりませんでした</div>`;
   } else {
-    list.innerHTML = filtered.map(i=>`
-      <div class="issue-card${currentIssue&&currentIssue.id===i.id?' selected':''}" onclick="openDetail('${i.id}')">
+    list.innerHTML = filtered.map(i=>{
+      const overdue = isOverdue(i);
+      const tags = (i.tagsManual||'').split(',').filter(Boolean).slice(0,4);
+      return `
+      <div class="issue-card${currentIssue&&currentIssue.id===i.id?' selected':''}${overdue?' overdue':''}" onclick="openDetail(${i.id})">
         <div class="issue-top">
-          <div class="priority-dot ${priorityClass[i.priority]}" title="優先度：${priorityLabel[i.priority]}"></div>
+          ${i.level?`<span class="level-badge ${levelClass[i.level]}">${i.level}</span>`:''}
           <div style="flex:1;min-width:0">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-              <span class="issue-id">${i.id}</span>
+              <span class="issue-id">No.${i.id}</span>
               <span class="status-badge ${statusClass[i.status]}">${statusLabel[i.status]}</span>
-              <span style="font-size:11px;color:var(--text-tertiary)">${i.category||''}</span>
+              <span style="font-size:11px;color:var(--text-tertiary)">${i.type||''}</span>
+              ${overdue?`<span class="overdue-badge"><i class="ti ti-alert-triangle" style="font-size:11px"></i> 納期超過</span>`:''}
             </div>
-            <div class="issue-title">${escapeHtml(i.title)}</div>
+            <div class="issue-title">${escapeHtml(i.project)}</div>
+            <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">${escapeHtml(i.desc).substring(0,80)}${i.desc&&i.desc.length>80?'…':''}</div>
           </div>
         </div>
         <div class="issue-meta">
           <span class="meta-item"><i class="ti ti-building"></i>${i.client}</span>
+          <span class="meta-item"><i class="ti ti-device-desktop"></i>${i.system||'-'}</span>
           ${i.assignee?`<span class="assignee-chip"><div class="avatar">${i.assignee[0]}</div>${i.assignee}</span>`:'<span style="font-size:11px;color:var(--text-tertiary)">担当未割当</span>'}
-          <span class="meta-item" style="margin-left:auto"><i class="ti ti-message"></i>${i.comments.length}</span>
-          <span class="meta-item"><i class="ti ti-calendar"></i>${i.date.slice(5)}</span>
+          ${i.deadline?`<span class="meta-item" style="${overdue?'color:#E24B4A;font-weight:600':''}"><i class="ti ti-calendar-due"></i>納期: ${i.deadline}</span>`:''}
+          <span class="meta-item" style="margin-left:auto"><i class="ti ti-message"></i>${(i.comments||[]).length}</span>
+          <span class="meta-item"><i class="ti ti-calendar"></i>${i.date}</span>
         </div>
+        ${tags.length>0?`<div class="tags-row">${tags.map(t=>`<span class="tag-chip">${escapeHtml(t.trim())}</span>`).join('')}</div>`:''}
       </div>
-    `).join('');
+    `}).join('');
   }
 
   // Stats
   const total = state.issues.length;
-  const newCount = state.issues.filter(i=>i.status==='new').length;
+  const newCount = state.issues.filter(i=>i.status==='new'||i.status==='pending10').length;
   const progCount = state.issues.filter(i=>i.status==='inprogress').length;
   const thisMonth = new Date().toISOString().slice(0,7);
   const doneThisMonth = state.issues.filter(i=>i.status==='done' && i.updated && i.updated.startsWith(thisMonth)).length;
+  const doneTimes = state.issues.filter(i=>i.status==='done' && i.workHours>0).map(i=>Number(i.workHours));
+  const avgTime = doneTimes.length>0 ? (doneTimes.reduce((a,b)=>a+b,0)/doneTimes.length).toFixed(1) : '-';
 
   document.getElementById('s-total').textContent = total;
   document.getElementById('s-new').textContent = newCount;
   document.getElementById('s-prog').textContent = progCount;
   document.getElementById('s-done').textContent = doneThisMonth;
+  document.getElementById('s-avgtime').textContent = avgTime;
   document.getElementById('nav-list-count').textContent = total;
+
+  // Populate system filter dropdown
+  const systems = [...new Set(state.issues.map(i=>i.system).filter(Boolean))];
+  const sysFilter = document.getElementById('system-filter');
+  const current = sysFilter.value;
+  sysFilter.innerHTML = `<option value="all">システムすべて</option>` +
+    systems.map(s=>`<option value="${s}"${current===s?' selected':''}>${s}</option>`).join('');
 }
 
 function renderClientNav(){
-  const clients = [...new Set(state.issues.map(i=>i.client))];
+  const clients = [...new Set(state.issues.map(i=>i.client).filter(Boolean))];
   document.getElementById('client-nav').innerHTML = clients.map(c=>{
     const count = state.issues.filter(i=>i.client===c).length;
     return `<div class="nav-item${currentClient===c?' active':''}" data-client="${c}" onclick="filterByClient('${c}')">
       <i class="ti ti-building"></i>${c}
+      <span class="badge-count">${count}</span>
+    </div>`;
+  }).join('');
+
+  const sysAll = [...new Set(state.issues.map(i=>i.system).filter(Boolean))];
+  document.getElementById('system-nav').innerHTML = sysAll.map(s=>{
+    const count = state.issues.filter(i=>i.system===s).length;
+    return `<div class="nav-item${currentSystem===s?' active':''}" data-system="${s}" onclick="filterBySystem('${s}')">
+      <i class="ti ti-device-desktop"></i>${s}
       <span class="badge-count">${count}</span>
     </div>`;
   }).join('');
@@ -717,28 +1098,72 @@ function openDetail(id){
   if(!i) return;
   currentIssue = i;
 
-  document.getElementById('d-id').textContent = i.id;
-  document.getElementById('d-title').textContent = i.title;
-  document.getElementById('d-priority').textContent = priorityLabel[i.priority];
-  document.getElementById('d-client').textContent = i.client;
+  document.getElementById('d-id').textContent = `No.${i.id}`;
+  document.getElementById('d-title').textContent = i.project;
+  document.getElementById('d-client').textContent = i.client||'-';
+  document.getElementById('d-clientno').textContent = i.clientNo||'-';
+  document.getElementById('d-project').textContent = i.project||'-';
+  document.getElementById('d-system').textContent = i.system||'-';
+  document.getElementById('d-type').textContent = i.type||'-';
   document.getElementById('d-assignee').textContent = i.assignee||'未割当';
-  document.getElementById('d-category').textContent = i.category||'-';
-  document.getElementById('d-date').textContent = i.date;
-  document.getElementById('d-desc').textContent = i.desc||'(詳細記載なし)';
+  document.getElementById('d-date').textContent = i.date||'-';
+  document.getElementById('d-deadline').textContent = i.deadline||'未設定';
+  document.getElementById('d-startdate').textContent = i.startDate||'-';
+  document.getElementById('d-clientdeadline').textContent = i.clientDeadline||'-';
+  document.getElementById('d-desc').textContent = i.desc||'(記載なし)';
   document.getElementById('d-updated').textContent = i.updated?`最終更新: ${i.updated}`:'';
 
+  const lv = document.getElementById('d-level');
+  lv.innerHTML = i.level?`<span class="level-badge ${levelClass[i.level]}">${levelLabel[i.level]||i.level}</span>`:'未設定';
+
   const sb = document.getElementById('d-status-badge');
-  sb.className = 'status-badge '+statusClass[i.status];
-  sb.textContent = statusLabel[i.status];
+  sb.className = 'status-badge '+(statusClass[i.status]||'');
+  sb.textContent = statusLabel[i.status]||i.status;
 
   document.getElementById('status-select').value = i.status;
   document.getElementById('assignee-select').value = i.assignee||'';
-  document.getElementById('priority-select').value = i.priority;
+  document.getElementById('level-select').value = i.level||'';
+
+  // Work tab
+  document.getElementById('d-10min-date').value = i.tenMinDate||'';
+  document.getElementById('d-cause-action').value = i.causeAction||'';
+  document.getElementById('d-work-hours').value = i.workHours||'';
+  document.getElementById('d-remain-hours').value = i.remainHours||'';
+  document.getElementById('d-complete-date').value = i.completeDate||'';
+  document.getElementById('d-spec-change').value = i.specChange||'';
+  document.getElementById('d-spec-reflect').value = i.specReflect||'';
+  document.getElementById('d-cause-cat').value = i.causeCat||'';
+  document.getElementById('d-unavoidable').value = i.unavoidable||'';
+  document.getElementById('d-countermeasure').value = i.countermeasure||'';
+  document.getElementById('d-screen-related').value = i.screenRelated||'';
+  document.getElementById('d-proc-related').value = i.procRelated||'';
+
+  // Tags tab
+  document.getElementById('d-tags-manual').value = i.tagsManual||'';
+  document.getElementById('d-tags-ai').value = i.tagsAI||'';
+  document.getElementById('d-tags-ai-master').value = i.tagsAIMaster||'';
+  document.getElementById('d-tags-derived').value = i.tagsDerived||'';
+
+  renderTagChips('d-ai-tags', i.tagsAI);
+  renderTagChips('d-ai-master-tags', i.tagsAIMaster);
 
   renderComments(i);
 
+  const badge = document.getElementById('comment-count-badge');
+  badge.textContent = (i.comments||[]).length > 0 ? `(${(i.comments||[]).length})` : '';
+
   document.getElementById('detail-modal').classList.add('show');
+  // Reset to first tab
+  document.querySelectorAll('.modal-tab').forEach((t,idx)=>t.classList.toggle('active',idx===0));
+  document.querySelectorAll('.tab-pane').forEach((p,idx)=>p.classList.toggle('active',idx===0));
   renderList();
+}
+
+function renderTagChips(elId, tagStr){
+  const el = document.getElementById(elId);
+  if(!tagStr){ el.innerHTML='<span style="font-size:11px;color:var(--text-tertiary)">なし</span>'; return; }
+  const tags = tagStr.split(',').filter(Boolean).slice(0,12);
+  el.innerHTML = tags.map(t=>`<span class="detail-tag">${escapeHtml(t.trim())}</span>`).join('');
 }
 
 function closeDetail(){
@@ -749,7 +1174,7 @@ function closeDetail(){
 
 function renderComments(i){
   const cl = document.getElementById('comment-list');
-  if(i.comments.length===0){
+  if(!i.comments||i.comments.length===0){
     cl.innerHTML = `<div style="font-size:12px;color:var(--text-tertiary);text-align:center;padding:16px">まだコメントはありません</div>`;
     return;
   }
@@ -776,50 +1201,64 @@ function addComment(){
   const now = new Date();
   const t = `${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
   const userName = currentRole==='staff'?'担当者':(currentIssue.client+' '+'ユーザー');
+  if(!currentIssue.comments) currentIssue.comments = [];
   currentIssue.comments.push({user:userName, role:currentRole, time:t, text});
   currentIssue.updated = formatNow();
   inp.value = '';
   saveState();
   renderComments(currentIssue);
+  const badge = document.getElementById('comment-count-badge');
+  badge.textContent = `(${currentIssue.comments.length})`;
   renderList();
   showToast('コメントを送信しました', 'success');
   if(currentRole==='client'){
-    addNotification(`${currentIssue.id} に新しいコメントが追加されました`, currentIssue.id);
+    addNotification(`No.${currentIssue.id} に新しいコメントが追加されました`, currentIssue.id);
   }
 }
 
 function updateField(field, value){
   if(!currentIssue) return;
-  const oldVal = currentIssue[field];
   currentIssue[field] = value;
   currentIssue.updated = formatNow();
   if(field==='status'){
     const sb = document.getElementById('d-status-badge');
-    sb.className = 'status-badge '+statusClass[value];
-    sb.textContent = statusLabel[value];
-    addActivity(`${currentIssue.id} のステータスを「${statusLabel[value]}」に変更しました`, 'arrow-right');
+    sb.className = 'status-badge '+(statusClass[value]||'');
+    sb.textContent = statusLabel[value]||value;
+    addActivity(`No.${currentIssue.id} のステータスを「${statusLabel[value]}」に変更しました`, 'arrow-right');
+    // 完了日を自動セット
+    if(value==='done' && !currentIssue.completeDate){
+      currentIssue.completeDate = new Date().toISOString().slice(0,10).replace(/-/g,'/');
+      document.getElementById('d-complete-date').value = currentIssue.completeDate;
+    }
   }
-  if(field==='assignee'){
-    document.getElementById('d-assignee').textContent = value||'未割当';
-  }
-  if(field==='priority'){
-    document.getElementById('d-priority').textContent = priorityLabel[value];
+  if(field==='assignee') document.getElementById('d-assignee').textContent = value||'未割当';
+  if(field==='level'){
+    const lv = document.getElementById('d-level');
+    lv.innerHTML = value?`<span class="level-badge ${levelClass[value]}">${levelLabel[value]}</span>`:'未設定';
   }
   saveState();
   renderList();
-  showToast(`${field==='status'?'ステータス':field==='assignee'?'担当者':'優先度'}を更新しました`, 'success');
+  const fieldNames = {status:'ステータス',assignee:'担当者',level:'一次判定'};
+  showToast(`${fieldNames[field]||field}を更新しました`, 'success');
+}
+
+function updateWorkField(field, value){
+  if(!currentIssue) return;
+  currentIssue[field] = value;
+  currentIssue.updated = formatNow();
+  saveState();
 }
 
 function notifyClient(){
   if(!currentIssue) return;
-  addNotification(`${currentIssue.id} について担当者から通知があります`, currentIssue.id);
-  addActivity(`${currentIssue.id} のクライアントに通知を送信しました`, 'bell');
+  addNotification(`No.${currentIssue.id} について担当者から通知があります`, currentIssue.id);
+  addActivity(`No.${currentIssue.id} のクライアントに通知を送信しました`, 'bell');
   showToast('クライアントに通知を送信しました', 'success');
 }
 
 function deleteIssue(){
   if(!currentIssue) return;
-  if(!confirm(`${currentIssue.id} を削除しますか？この操作は取り消せません。`)) return;
+  if(!confirm(`No.${currentIssue.id} を削除しますか？この操作は取り消せません。`)) return;
   state.issues = state.issues.filter(i=>i.id!==currentIssue.id);
   saveState();
   closeDetail();
@@ -830,37 +1269,57 @@ function deleteIssue(){
 // ============ New Issue Form ============
 function submitNewIssue(){
   const client = document.getElementById('f-client').value;
-  const title = document.getElementById('f-title').value.trim();
+  const project = document.getElementById('f-project').value.trim();
   const desc = document.getElementById('f-desc').value.trim();
-  const category = document.getElementById('f-category').value;
-  const priority = document.getElementById('f-priority').value;
-  const date = document.getElementById('f-date').value || new Date().toISOString().slice(0,10);
+  const system = document.getElementById('f-system').value;
+  const type = document.getElementById('f-type').value;
+  const level = document.getElementById('f-level').value;
+  const assignee = document.getElementById('f-assignee').value;
+  const date = document.getElementById('f-date').value||new Date().toISOString().slice(0,10);
+  const deadline = document.getElementById('f-deadline').value;
+  const startDate = document.getElementById('f-startdate').value;
+  const clientDeadline = document.getElementById('f-clientdeadline').value;
+  const clientNo = document.getElementById('f-clientno').value;
 
-  if(!client || !title || !desc){
-    showToast('必須項目を入力してください', 'error');
+  if(!client || !project || !desc || !system){
+    showToast('必須項目（顧客・案件・問合せ内容・システム）を入力してください', 'error');
     return;
   }
 
-  const maxId = state.issues.reduce((m,i)=>Math.max(m, parseInt(i.id.replace('ISS-',''))||0), 0);
+  const maxId = state.issues.reduce((m,i)=>Math.max(m, Number(i.id)||0), 0);
+  const d = new Date(date);
+  const weekdays = ['日','月','火','水','木','金','土'];
+
   const newIssue = {
-    id: 'ISS-'+pad(maxId+1, 3),
-    title, desc, category, priority, client, date,
+    id: maxId+1,
+    date: date.replace(/-/g,'/'),
+    weekday: weekdays[d.getDay()],
+    clientNo, client, project, system, type, level, assignee,
+    deadline: deadline.replace(/-/g,'/'),
+    startDate: startDate.replace(/-/g,'/'),
+    clientDeadline,
+    desc,
     status: 'new',
-    assignee: '',
+    tenMinDate: '', causeAction: '',
+    tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '',
+    specChange: '', specReflect: '',
+    completeDate: '', workHours: 0, remainHours: 0,
+    causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '',
     updated: formatNow(),
     comments: []
   };
   state.issues.unshift(newIssue);
   saveState();
 
-  addActivity(`${newIssue.id} が起票されました`, 'plus');
-  addNotification(`新規課題 ${newIssue.id} が起票されました`, newIssue.id);
+  addActivity(`No.${newIssue.id} 「${newIssue.project}」が起票されました`, 'plus');
+  addNotification(`新規課題 No.${newIssue.id} が起票されました`, newIssue.id);
 
   // Reset form
-  document.getElementById('f-client').value = '';
-  document.getElementById('f-title').value = '';
-  document.getElementById('f-desc').value = '';
-  document.getElementById('f-priority').value = 'mid';
+  ['f-client','f-clientno','f-project','f-system','f-desc','f-deadline','f-startdate','f-clientdeadline'].forEach(id=>{
+    document.getElementById(id).value='';
+  });
+  document.getElementById('f-level').value='';
+  document.getElementById('f-assignee').value='';
 
   showToast('課題を登録しました', 'success');
   setView('list');
@@ -918,12 +1377,7 @@ function markAllRead(){
 }
 
 function addNotification(title, issueId){
-  state.notifications.unshift({
-    id: Date.now(),
-    title, issueId,
-    time: 'たった今',
-    read: false
-  });
+  state.notifications.unshift({ id:Date.now(), title, issueId, time:'たった今', read:false });
   if(state.notifications.length>20) state.notifications = state.notifications.slice(0,20);
   saveState();
   updateNotifyBadge();
@@ -944,22 +1398,20 @@ function addActivity(text, icon){
 
 // ============ Dashboard ============
 function renderDashboard(){
-  // Stats
   const total = state.issues.length;
-  const newCount = state.issues.filter(i=>i.status==='new').length;
+  const newCount = state.issues.filter(i=>i.status==='new'||i.status==='pending10').length;
   const progCount = state.issues.filter(i=>i.status==='inprogress').length;
   const doneCount = state.issues.filter(i=>i.status==='done').length;
-  const avgDays = total>0 ? Math.round(state.issues.filter(i=>i.status==='done').length / total * 100) : 0;
+  const rate = total>0?Math.round(doneCount/total*100):0;
 
   document.getElementById('dash-stats').innerHTML = `
     <div class="stat-card"><div class="stat-label">総課題数</div><div class="stat-val">${total}</div></div>
     <div class="stat-card"><div class="stat-label">未対応</div><div class="stat-val" style="color:#185FA5">${newCount}</div></div>
     <div class="stat-card"><div class="stat-label">対応中</div><div class="stat-val" style="color:#0F6E56">${progCount}</div></div>
     <div class="stat-card"><div class="stat-label">完了</div><div class="stat-val" style="color:#3B6D11">${doneCount}</div></div>
-    <div class="stat-card"><div class="stat-label">完了率</div><div class="stat-val">${avgDays}%</div></div>
+    <div class="stat-card"><div class="stat-label">完了率</div><div class="stat-val">${rate}%</div></div>
   `;
 
-  // Donut chart
   renderDonut();
 
   // Client bars
@@ -972,18 +1424,30 @@ function renderDashboard(){
       <div class="bar-track"><div class="bar-fill" style="width:${n/maxClient*100}%"></div></div>
       <div class="bar-val">${n}</div>
     </div>
-  `).join('');
+  `).join('') || '<div style="font-size:12px;color:var(--text-tertiary)">データなし</div>';
 
-  // Priority bars
-  const priorities = {high:0,mid:0,low:0};
-  state.issues.forEach(i=>{ priorities[i.priority]++ });
-  const maxP = Math.max(...Object.values(priorities), 1);
-  const pColors = {high:'#E24B4A', mid:'#EF9F27', low:'#639922'};
-  document.getElementById('priority-bars').innerHTML = ['high','mid','low'].map(p=>`
+  // System bars
+  const systems = {};
+  state.issues.forEach(i=>{ if(i.system) systems[i.system]=(systems[i.system]||0)+1 });
+  const maxSys = Math.max(...Object.values(systems), 1);
+  document.getElementById('system-bars').innerHTML = Object.entries(systems).map(([s,n])=>`
     <div class="bar-row">
-      <div class="bar-label">${priorityLabel[p]}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${priorities[p]/maxP*100}%;background:${pColors[p]}"></div></div>
-      <div class="bar-val">${priorities[p]}</div>
+      <div class="bar-label">${s}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${n/maxSys*100}%;background:#5B8AF0"></div></div>
+      <div class="bar-val">${n}</div>
+    </div>
+  `).join('') || '<div style="font-size:12px;color:var(--text-tertiary)">データなし</div>';
+
+  // Level bars
+  const levels = {H:0, M:0, L:0};
+  state.issues.forEach(i=>{ if(i.level) levels[i.level]++ });
+  const maxL = Math.max(...Object.values(levels), 1);
+  const lColors = {H:'#E24B4A', M:'#EF9F27', L:'#378ADD'};
+  document.getElementById('level-bars').innerHTML = ['H','M','L'].map(l=>`
+    <div class="bar-row">
+      <div class="bar-label">${levelLabel[l]}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${levels[l]/maxL*100}%;background:${lColors[l]}"></div></div>
+      <div class="bar-val">${levels[l]}</div>
     </div>
   `).join('');
 
@@ -997,6 +1461,23 @@ function renderDashboard(){
       </div>
     </div>
   `).join('') || `<div style="font-size:12px;color:var(--text-tertiary);text-align:center;padding:16px">アクティビティはありません</div>`;
+
+  // Deadline list
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
+  const upcoming = state.issues
+    .filter(i=>i.deadline && i.status!=='done')
+    .sort((a,b)=>a.deadline.localeCompare(b.deadline))
+    .slice(0,6);
+  document.getElementById('deadline-list').innerHTML = upcoming.length===0
+    ? `<div style="color:var(--text-tertiary);padding:8px 0">対応中の納期設定課題はありません</div>`
+    : upcoming.map(i=>{
+        const over = i.deadline < today;
+        return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-light);cursor:pointer" onclick="openDetail(${i.id})">
+          <span class="status-badge ${statusClass[i.status]}" style="font-size:10px">${statusLabel[i.status]}</span>
+          <span style="flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(i.project)}</span>
+          <span style="font-size:11px;font-weight:600;${over?'color:#E24B4A':'color:var(--text-secondary)'}">${i.deadline}</span>
+        </div>`;
+      }).join('');
 }
 
 function renderDonut(){
@@ -1004,11 +1485,10 @@ function renderDonut(){
   const counts = {};
   state.issues.forEach(i=>{ counts[i.status]=(counts[i.status]||0)+1 });
   const total = state.issues.length || 1;
-
   const cx=60, cy=60, r=45, sw=14;
   let angle = -Math.PI/2;
   let paths = '';
-  const order = ['new','open','inprogress','onhold','done'];
+  const order = ['new','pending10','inprogress','onhold','done'];
 
   order.forEach(s=>{
     const n = counts[s]||0;
@@ -1043,7 +1523,7 @@ function renderDonut(){
 function pad(n, len){ return String(n).padStart(len||2,'0') }
 function formatNow(){
   const n = new Date();
-  return `${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
+  return `${n.getFullYear()}/${pad(n.getMonth()+1)}/${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
 }
 function escapeHtml(s){
   if(!s) return '';
@@ -1068,18 +1548,15 @@ function exportData(){
   const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `enrobo-board-${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  a.href = url; a.download = `enrobo-board-${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(url);
   showToast('データを書き出しました', 'success');
 }
 
 function resetData(){
   if(!confirm('保存されているデータをすべて初期状態に戻します。よろしいですか？')) return;
   state = JSON.parse(JSON.stringify(DEFAULT_DATA));
-  saveState();
-  renderAll();
+  saveState(); renderAll();
   showToast('初期データに戻しました', 'success');
 }
 
@@ -1093,9 +1570,7 @@ function renderAll(){
 // Keyboard shortcuts
 document.addEventListener('keydown', e=>{
   if(e.key==='Escape' && currentIssue) closeDetail();
-  if((e.metaKey||e.ctrlKey) && e.key==='Enter' && currentIssue){
-    addComment();
-  }
+  if((e.metaKey||e.ctrlKey) && e.key==='Enter' && currentIssue) addComment();
 });
 
 // Init
