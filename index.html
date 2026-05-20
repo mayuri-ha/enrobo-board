@@ -50,6 +50,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .sidebar{width:220px;background:var(--bg-primary);border-right:1px solid var(--border-light);padding:16px 12px;flex-shrink:0}
 .sidebar-section{margin-bottom:20px}
 .sidebar-label{font-size:11px;color:var(--text-tertiary);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;padding:0 8px}
+
+/* ==== Collapsible sidebar sections ==== */
+.sidebar-section-header{display:flex;align-items:center;justify-content:space-between;padding:0 8px;margin-bottom:8px;cursor:pointer;user-select:none}
+.sidebar-section-header:hover .sidebar-section-title{color:var(--text-secondary)}
+.sidebar-section-title{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-tertiary);font-weight:600;text-transform:uppercase;letter-spacing:.05em;transition:color .15s}
+.sidebar-chevron{font-size:13px !important;transition:transform .2s;color:var(--text-tertiary)}
+.sidebar-collapsible.collapsed ~ * .sidebar-chevron,
+.sidebar-section.collapsed .sidebar-chevron{transform:rotate(-90deg)}
+.section-count{background:var(--bg-secondary);color:var(--text-tertiary);font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;margin-left:4px;text-transform:none}
+.sidebar-sort-btn{border:none;background:transparent;padding:3px;border-radius:4px;cursor:pointer;color:var(--text-tertiary);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.sidebar-sort-btn:hover{background:var(--bg-secondary);color:var(--text-primary)}
+.sidebar-sort-btn i{font-size:14px}
+.sidebar-collapsible{overflow:hidden;transition:max-height .2s ease-out;max-height:1000px}
+.sidebar-collapsible.collapsed{max-height:0}
+
+.sidebar-search{position:relative;margin-bottom:6px;padding:0 4px}
+.sidebar-search input{width:100%;padding:6px 8px 6px 26px;border:1px solid var(--border-light);border-radius:var(--radius-sm);font-size:11px;background:var(--bg-secondary);outline:none;transition:all .15s}
+.sidebar-search input:focus{background:var(--bg-primary);border-color:var(--brand-mid)}
+.sidebar-search i{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-tertiary);pointer-events:none}
+
+.sidebar-nav-list{max-height:280px;overflow-y:auto;padding-right:2px}
+.sidebar-nav-list::-webkit-scrollbar{width:6px}
+.sidebar-nav-list::-webkit-scrollbar-track{background:transparent}
+.sidebar-nav-list::-webkit-scrollbar-thumb{background:var(--border-mid);border-radius:3px}
+.sidebar-nav-list::-webkit-scrollbar-thumb:hover{background:var(--text-tertiary)}
+.sidebar-empty{font-size:11px;color:var(--text-tertiary);text-align:center;padding:12px 8px;font-style:italic}
+
 .nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius-md);font-size:13px;color:var(--text-secondary);cursor:pointer;margin-bottom:2px;transition:all .15s;font-weight:500}
 .nav-item:hover{background:var(--bg-secondary)}
 .nav-item.active{background:var(--brand-light);color:var(--brand-dark)}
@@ -177,10 +204,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .form-help{font-size:11px;color:var(--text-tertiary);margin-top:4px}
 
 /* ==== Dashboard ==== */
-.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.dash-card{background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:16px 18px}
-.dash-card-title{font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.dash-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;align-items:start}
+.dash-card{background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:16px 18px;grid-column:span 12;transition:opacity .15s,box-shadow .15s,transform .15s;position:relative}
+.dash-card[data-default-span="4"]{grid-column:span 4}
+.dash-card[data-default-span="5"]{grid-column:span 5}
+.dash-card[data-default-span="6"]{grid-column:span 6}
+.dash-card[data-default-span="7"]{grid-column:span 7}
+.dash-card[data-default-span="8"]{grid-column:span 8}
+@media (max-width:1100px){
+  .dash-card[data-default-span]{grid-column:span 12 !important}
+  .dash-card[data-default-span="4"],.dash-card[data-default-span="5"],.dash-card[data-default-span="6"]{grid-column:span 6 !important}
+}
+@media (max-width:700px){
+  .dash-card[data-default-span]{grid-column:span 12 !important}
+}
+.dash-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.dash-card-title{font-size:13px;font-weight:600;color:var(--text-secondary);display:flex;align-items:center;gap:6px;margin-bottom:0}
 .dash-card-title i{font-size:16px}
+.dash-drag-handle{display:none;font-size:16px;color:var(--text-tertiary);cursor:grab;padding:4px;border-radius:4px}
+.dash-drag-handle:hover{background:var(--bg-secondary);color:var(--text-secondary)}
+
+/* 並び替えモード */
+.dash-grid.editing .dash-card{cursor:move;border:1.5px dashed var(--brand-mid);background:linear-gradient(180deg, #FAFCFB 0%, var(--bg-primary) 100%)}
+.dash-grid.editing .dash-drag-handle{display:inline-flex}
+.dash-grid.editing .dash-card.dragging{opacity:0.4;transform:scale(0.98)}
+.dash-grid.editing .dash-card.drag-over{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-light)}
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
 .bar-label{width:90px;color:var(--text-secondary);flex-shrink:0;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar-track{flex:1;height:8px;background:var(--bg-secondary);border-radius:4px;overflow:hidden}
@@ -255,6 +303,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .activity-content{flex:1}
 .activity-meta{color:var(--text-tertiary);font-size:11px}
 
+/* ==== Pin ==== */
+.pin-btn{background:transparent;border:none;cursor:pointer;padding:4px;border-radius:4px;color:var(--text-tertiary);transition:all .15s;display:flex;align-items:center;justify-content:center}
+.pin-btn:hover{background:var(--bg-secondary);color:#D67617}
+.pin-btn.pinned{color:#D67617}
+.pin-btn i{font-size:16px}
+.issue-card{position:relative}
+.issue-card .pin-btn{position:absolute;top:14px;right:14px;z-index:2}
+.issue-card.is-pinned{border-left:3px solid #D67617}
+.issue-card.is-pinned .issue-title-row{padding-right:36px}
+
+.pinned-section{background:linear-gradient(180deg, #FFF8EC 0%, var(--bg-primary) 100%);border:1px solid #F0D586;border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:18px}
+.pinned-section-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:13px;font-weight:700;color:#854F0B}
+.pinned-section-header i{font-size:18px}
+.pinned-empty{font-size:12px;color:var(--text-tertiary);font-style:italic;padding:6px 0}
+
 /* ==== Overdue highlight ==== */
 .overdue .issue-title{color:#A32D2D}
 .overdue-badge{font-size:10px;color:#A32D2D;font-weight:600;background:#FCEBEB;padding:2px 6px;border-radius:var(--radius-sm)}
@@ -269,10 +332,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .client-fullname-cell{font-size:12px;color:var(--text-secondary)}
 .client-count-chip{background:var(--bg-secondary);border-radius:10px;padding:2px 8px;font-size:11px;font-weight:600;color:var(--text-secondary);display:inline-block}
 .client-action-btns{display:flex;gap:4px;justify-content:flex-end}
+.client-assignees-cell{display:flex;flex-direction:column;gap:2px;font-size:12px}
+.assignee-mini{display:flex;align-items:center;gap:4px}
+.assignee-mini-role{font-size:10px;color:var(--text-tertiary);background:var(--bg-secondary);padding:1px 5px;border-radius:3px}
 @media (max-width:768px){
   .client-row{grid-template-columns:1fr;gap:6px}
   .client-row.header{display:none}
 }
+
+/* ==== Assignee multi-row editor ==== */
+.assignee-list{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.assignee-row{background:var(--bg-secondary);padding:12px;border-radius:var(--radius-md);border:1px solid var(--border-light);position:relative}
+.assignee-row-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:11px;color:var(--text-tertiary);font-weight:600}
+.assignee-row-remove{background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;padding:2px 6px;border-radius:4px;font-size:12px;display:flex;align-items:center;gap:3px;transition:all .15s}
+.assignee-row-remove:hover{background:#FCEBEB;color:#A32D2D}
+.assignee-row-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.assignee-row-grid input{padding:6px 8px;font-size:12.5px;border:1px solid var(--border-mid);border-radius:var(--radius-sm);background:var(--bg-primary);outline:none}
+.assignee-row-grid input:focus{border-color:var(--brand-mid)}
+.assignee-empty{font-size:12px;color:var(--text-tertiary);text-align:center;padding:16px;background:var(--bg-secondary);border-radius:var(--radius-md);border:1px dashed var(--border-mid)}
 
 /* ==== Inquiry form ==== */
 .form-step-title{font-size:13px;font-weight:700;color:var(--text-secondary);padding:8px 14px;background:var(--bg-secondary);border-radius:var(--radius-md);margin:24px 0 16px 0;display:flex;align-items:center;gap:8px;letter-spacing:.02em}
@@ -365,12 +442,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
       </div>
     </div>
     <div class="sidebar-section staff-only">
-      <div class="sidebar-label">顧客別</div>
-      <div id="client-nav"></div>
+      <div class="sidebar-section-header" onclick="toggleSidebarGroup('client-group')">
+        <div class="sidebar-section-title">
+          <i class="ti ti-chevron-down sidebar-chevron" id="client-group-chevron"></i>
+          顧客別
+          <span class="section-count" id="client-section-count">0</span>
+        </div>
+        <button class="sidebar-sort-btn" onclick="event.stopPropagation();toggleClientSort()" title="並び替え">
+          <i class="ti ti-arrows-sort" id="client-sort-icon"></i>
+        </button>
+      </div>
+      <div class="sidebar-collapsible" id="client-group">
+        <div class="sidebar-search">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="顧客を検索..." id="client-search" oninput="renderClientNav()">
+        </div>
+        <div id="client-nav" class="sidebar-nav-list"></div>
+      </div>
     </div>
     <div class="sidebar-section staff-only">
-      <div class="sidebar-label">システム別</div>
-      <div id="system-nav"></div>
+      <div class="sidebar-section-header" onclick="toggleSidebarGroup('system-group')">
+        <div class="sidebar-section-title">
+          <i class="ti ti-chevron-down sidebar-chevron" id="system-group-chevron"></i>
+          システム別
+          <span class="section-count" id="system-section-count">0</span>
+        </div>
+      </div>
+      <div class="sidebar-collapsible" id="system-group">
+        <div id="system-nav" class="sidebar-nav-list"></div>
+      </div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">設定</div>
@@ -457,6 +557,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
         </div>
       </div>
 
+      <!-- ピン留め課題セクション -->
+      <div id="pinned-section" style="display:none"></div>
+
       <div class="issue-list" id="issue-list"></div>
     </div>
 
@@ -464,35 +567,67 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
     <div class="view-section" id="view-dashboard">
       <div class="page-header">
         <div class="page-title">ダッシュボード</div>
+        <div class="page-actions">
+          <button class="btn btn-sm btn-ghost" id="dash-edit-toggle" onclick="toggleDashEdit()" title="ウィジェットの並び替え">
+            <i class="ti ti-arrows-move"></i> 並び替え
+          </button>
+          <button class="btn btn-sm btn-ghost" onclick="resetDashOrder()" title="順序を初期化">
+            <i class="ti ti-refresh"></i>
+          </button>
+        </div>
       </div>
       <div class="stats-row" id="dash-stats"></div>
-      <div class="dash-grid">
-        <div class="dash-card">
-          <div class="dash-card-title"><i class="ti ti-chart-pie"></i> ステータス別</div>
+      <div class="dash-grid" id="dash-grid">
+        <!-- ステータス別: 中サイズ -->
+        <div class="dash-card" data-card-id="status" data-default-span="4" draggable="false">
+          <div class="dash-card-header">
+            <div class="dash-card-title"><i class="ti ti-chart-pie"></i> ステータス別</div>
+            <i class="ti ti-grip-vertical dash-drag-handle"></i>
+          </div>
           <div class="donut-wrap">
             <svg class="donut-svg" id="donut-chart" width="120" height="120"></svg>
             <div class="donut-legend" id="donut-legend"></div>
           </div>
         </div>
-        <div class="dash-card">
-          <div class="dash-card-title"><i class="ti ti-building"></i> 顧客別の課題数</div>
+        <!-- 顧客別: 大サイズ（リスト長め） -->
+        <div class="dash-card" data-card-id="client" data-default-span="8" draggable="false">
+          <div class="dash-card-header">
+            <div class="dash-card-title"><i class="ti ti-building"></i> 顧客別の課題数</div>
+            <i class="ti ti-grip-vertical dash-drag-handle"></i>
+          </div>
           <div id="client-bars"></div>
         </div>
-        <div class="dash-card">
-          <div class="dash-card-title"><i class="ti ti-device-desktop"></i> システム別</div>
+        <!-- システム別: 中サイズ -->
+        <div class="dash-card" data-card-id="system" data-default-span="6" draggable="false">
+          <div class="dash-card-header">
+            <div class="dash-card-title"><i class="ti ti-device-desktop"></i> システム別</div>
+            <i class="ti ti-grip-vertical dash-drag-handle"></i>
+          </div>
           <div id="system-bars"></div>
         </div>
-        <div class="dash-card">
-          <div class="dash-card-title"><i class="ti ti-flame"></i> 一次判定別</div>
+        <!-- 一次判定別: 中サイズ -->
+        <div class="dash-card" data-card-id="level" data-default-span="6" draggable="false">
+          <div class="dash-card-header">
+            <div class="dash-card-title"><i class="ti ti-flame"></i> 一次判定別</div>
+            <i class="ti ti-grip-vertical dash-drag-handle"></i>
+          </div>
           <div id="level-bars"></div>
         </div>
-        <div class="dash-card">
-          <div class="dash-card-title"><i class="ti ti-clock"></i> 直近のアクティビティ</div>
-          <div class="activity-list" id="activity-list"></div>
-        </div>
-        <div class="dash-card">
-          <div class="dash-card-title"><i class="ti ti-calendar-exclamation"></i> 納期が近い課題</div>
+        <!-- 納期が近い課題: 大サイズ -->
+        <div class="dash-card" data-card-id="deadline" data-default-span="7" draggable="false">
+          <div class="dash-card-header">
+            <div class="dash-card-title"><i class="ti ti-calendar-exclamation"></i> 納期が近い課題</div>
+            <i class="ti ti-grip-vertical dash-drag-handle"></i>
+          </div>
           <div id="deadline-list" style="font-size:12px"></div>
+        </div>
+        <!-- アクティビティ: 中サイズ -->
+        <div class="dash-card" data-card-id="activity" data-default-span="5" draggable="false">
+          <div class="dash-card-header">
+            <div class="dash-card-title"><i class="ti ti-clock"></i> 直近のアクティビティ</div>
+            <i class="ti ti-grip-vertical dash-drag-handle"></i>
+          </div>
+          <div class="activity-list" id="activity-list"></div>
         </div>
       </div>
     </div>
@@ -898,7 +1033,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 
 <!-- ===== Client Form Modal ===== -->
 <div class="modal-overlay" id="client-modal" onclick="if(event.target===this)closeClientForm()">
-  <div class="modal" style="max-width:560px">
+  <div class="modal" style="max-width:640px">
     <div class="modal-header">
       <div style="flex:1">
         <div class="detail-id" id="cf-mode">新規顧客追加</div>
@@ -922,38 +1057,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
         <label class="form-label">正式名称</label>
         <input type="text" class="form-input" id="cf-fullname" placeholder="例：株式会社○○">
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">主担当者</label>
-          <select class="form-select" id="cf-main-assignee">
-            <option value="">未割当</option>
-            <option>中川</option>
-            <option>田中</option>
-            <option>鈴木</option>
-            <option>佐藤</option>
-          </select>
+
+      <div class="form-group">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <label class="form-label" style="margin-bottom:0">担当者・連絡先</label>
+          <button type="button" class="btn btn-sm btn-ghost" onclick="addAssigneeRow()"><i class="ti ti-plus"></i> 担当者を追加</button>
         </div>
-        <div class="form-group">
-          <label class="form-label">副担当者</label>
-          <select class="form-select" id="cf-sub-assignee">
-            <option value="">未割当</option>
-            <option>中川</option>
-            <option>田中</option>
-            <option>鈴木</option>
-            <option>佐藤</option>
-          </select>
+        <div id="cf-assignees" class="assignee-list">
+          <!-- 動的生成 -->
         </div>
+        <div class="form-help">主担当・副担当・連絡先担当など、必要な人数分を登録できます</div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">担当者メール</label>
-          <input type="email" class="form-input" id="cf-email" placeholder="contact@example.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">電話番号</label>
-          <input type="text" class="form-input" id="cf-tel" placeholder="03-1234-5678">
-        </div>
-      </div>
+
       <div class="form-group">
         <label class="form-label">備考</label>
         <textarea class="form-textarea" id="cf-note" placeholder="契約内容・利用システム・特記事項など" style="min-height:60px"></textarea>
@@ -977,6 +1092,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
         <div class="detail-id" id="d-id"></div>
         <div class="detail-title" id="d-title"></div>
       </div>
+      <button class="pin-btn" id="d-pin-btn" onclick="togglePin(currentIssue&&currentIssue.id)" title="ピン留め" style="margin-right:4px">
+        <i class="ti ti-pin"></i>
+      </button>
       <button class="btn btn-icon btn-ghost" onclick="closeDetail()" aria-label="閉じる"><i class="ti ti-x" style="font-size:20px"></i></button>
     </div>
     <div class="modal-body">
@@ -1204,40 +1322,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 
 <script>
 // ============ State ============
-const STORAGE_KEY = 'enrobo-board-v4';
+const STORAGE_KEY = 'enrobo-board-v5';
+const DASH_ORDER_KEY = 'enrobo-dash-order-v1';
 const DEFAULT_DATA = {
   clients: [
-    { no: '002', name: 'A社', fullname: '株式会社A', mainAssignee: '早坂', subAssignee: '宮崎', email: 'contact@a.example', tel: '03-2428-7672', note: '' },
-    { no: '003', name: 'B社', fullname: '株式会社B', mainAssignee: '宮崎', subAssignee: '大和', email: 'contact@b.example', tel: '03-1625-7211', note: '' },
-    { no: '005', name: 'C社', fullname: '株式会社C', mainAssignee: '髙竹', subAssignee: '髙竹', email: 'contact@c.example', tel: '03-6442-6583', note: '' },
-    { no: '010', name: 'D社', fullname: '株式会社D', mainAssignee: '早坂', subAssignee: '千々岩', email: 'contact@d.example', tel: '03-3212-6524', note: '' },
-    { no: '014', name: 'E社', fullname: '株式会社E', mainAssignee: '髙竹', subAssignee: '小佐井', email: 'contact@e.example', tel: '03-5016-3683', note: '' },
-    { no: '019', name: 'F社', fullname: '株式会社F', mainAssignee: '早坂', subAssignee: '桑原', email: 'contact@f.example', tel: '03-2435-7186', note: '' },
-    { no: '031', name: 'G社', fullname: '株式会社G', mainAssignee: '大和', subAssignee: '早坂', email: 'contact@g.example', tel: '03-6168-8345', note: '' },
-    { no: '053', name: 'H社', fullname: '株式会社H', mainAssignee: '大和', subAssignee: '早坂', email: 'contact@h.example', tel: '03-2519-3329', note: '' },
-    { no: '054', name: 'I社', fullname: '株式会社I', mainAssignee: '千々岩', subAssignee: '早坂', email: 'contact@i.example', tel: '03-5780-8055', note: '' },
-    { no: '079', name: 'つくば', fullname: '株式会社つくば', mainAssignee: '田野', subAssignee: '宮崎', email: 'contact@つくば.example', tel: '03-8688-1602', note: '' },
-    { no: '081', name: 'J社', fullname: '株式会社J', mainAssignee: '宮崎', subAssignee: '小佐井', email: 'contact@j.example', tel: '03-9547-8912', note: '' },
-    { no: '087', name: 'K社', fullname: '株式会社K', mainAssignee: '金栗', subAssignee: '髙竹', email: 'contact@k.example', tel: '03-6165-1205', note: '' },
-    { no: '096', name: 'L社', fullname: '株式会社L', mainAssignee: '桑原', subAssignee: '髙竹', email: 'contact@l.example', tel: '03-8116-9823', note: '' },
-    { no: '121', name: 'M社', fullname: '株式会社M', mainAssignee: '田野', subAssignee: '髙竹', email: 'contact@m.example', tel: '03-7873-7136', note: '' },
-    { no: '123', name: 'N社', fullname: '株式会社N', mainAssignee: '髙竹', subAssignee: '早坂', email: 'contact@n.example', tel: '03-3973-2353', note: '' },
-    { no: '126', name: 'O社', fullname: '株式会社O', mainAssignee: '田野', subAssignee: '宮崎', email: 'contact@o.example', tel: '03-3787-6487', note: '' },
-    { no: '137', name: 'P社', fullname: '株式会社P', mainAssignee: '小佐井', subAssignee: '髙竹', email: 'contact@p.example', tel: '03-7409-2200', note: '' },
-    { no: '143', name: 'Q社', fullname: '株式会社Q', mainAssignee: '田野', subAssignee: '桑原', email: 'contact@q.example', tel: '03-6506-1267', note: '' },
-    { no: '148', name: 'R社', fullname: '株式会社R', mainAssignee: '金栗', subAssignee: '大和', email: 'contact@r.example', tel: '03-6955-1210', note: '' },
-    { no: '156', name: '山田事務所', fullname: '株式会社山田事務所', mainAssignee: '小佐井', subAssignee: '金栗', email: 'contact@山田事務所.example', tel: '03-7647-9716', note: '' },
-    { no: '158', name: 'プロフェス', fullname: '株式会社プロフェス', mainAssignee: '髙竹', subAssignee: '早坂', email: 'contact@プロフェス.example', tel: '03-5713-9106', note: '' },
-    { no: '166', name: '飯田労務', fullname: '株式会社飯田労務', mainAssignee: '金栗', subAssignee: '髙竹', email: 'contact@飯田労務.example', tel: '03-8926-3909', note: '' },
-    { no: '181', name: 'S社', fullname: '株式会社S', mainAssignee: '千々岩', subAssignee: '髙竹', email: 'contact@s.example', tel: '03-8282-7202', note: '' },
-    { no: '206', name: 'T社', fullname: '株式会社T', mainAssignee: '田野', subAssignee: '早坂', email: 'contact@t.example', tel: '03-1166-3207', note: '' },
-    { no: '212', name: 'NAKA', fullname: '株式会社NAKA', mainAssignee: '田野', subAssignee: '金栗', email: 'contact@naka.example', tel: '03-1344-5200', note: '' },
-    { no: '214', name: 'U社', fullname: '株式会社U', mainAssignee: '小佐井', subAssignee: '宮崎', email: 'contact@u.example', tel: '03-8115-7887', note: '' },
-    { no: '219', name: 'ダーウィン', fullname: '株式会社ダーウィン', mainAssignee: '早坂', subAssignee: '大和', email: 'contact@ダーウィン.example', tel: '03-2025-9361', note: '' },
-    { no: '225', name: 'BDO', fullname: '株式会社BDO', mainAssignee: '小佐井', subAssignee: '大和', email: 'contact@bdo.example', tel: '03-2358-8097', note: '' },
-    { no: '232', name: 'いわき', fullname: '株式会社いわき', mainAssignee: '早坂', subAssignee: '髙竹', email: 'contact@いわき.example', tel: '03-7184-2203', note: '' },
-    { no: '237', name: 'V社', fullname: '株式会社V', mainAssignee: '髙竹', subAssignee: '桑原', email: 'contact@v.example', tel: '03-1477-6283', note: '' },
-    { no: '240', name: 'W社', fullname: '株式会社W', mainAssignee: '宮崎', subAssignee: '田野', email: 'contact@w.example', tel: '03-1541-6485', note: '' }
+    { no: '002', name: 'A社', fullname: '株式会社A', assignees: [{ role: '主担当', name: '早坂', email: 'contact@a.example', tel: '03-2428-7672' }, { role: '副担当', name: '宮崎', email: '', tel: '' }], note: '' },
+    { no: '003', name: 'B社', fullname: '株式会社B', assignees: [{ role: '主担当', name: '宮崎', email: 'contact@b.example', tel: '03-1625-7211' }, { role: '副担当', name: '大和', email: '', tel: '' }], note: '' },
+    { no: '005', name: 'C社', fullname: '株式会社C', assignees: [{ role: '主担当', name: '髙竹', email: 'contact@c.example', tel: '03-6442-6583' }], note: '' },
+    { no: '010', name: 'D社', fullname: '株式会社D', assignees: [{ role: '主担当', name: '早坂', email: 'contact@d.example', tel: '03-3212-6524' }, { role: '副担当', name: '千々岩', email: '', tel: '' }], note: '' },
+    { no: '014', name: 'E社', fullname: '株式会社E', assignees: [{ role: '主担当', name: '髙竹', email: 'contact@e.example', tel: '03-5016-3683' }, { role: '副担当', name: '小佐井', email: '', tel: '' }], note: '' },
+    { no: '019', name: 'F社', fullname: '株式会社F', assignees: [{ role: '主担当', name: '早坂', email: 'contact@f.example', tel: '03-2435-7186' }, { role: '副担当', name: '桑原', email: '', tel: '' }], note: '' },
+    { no: '031', name: 'G社', fullname: '株式会社G', assignees: [{ role: '主担当', name: '大和', email: 'contact@g.example', tel: '03-6168-8345' }, { role: '副担当', name: '早坂', email: '', tel: '' }], note: '' },
+    { no: '053', name: 'H社', fullname: '株式会社H', assignees: [{ role: '主担当', name: '大和', email: 'contact@h.example', tel: '03-2519-3329' }, { role: '副担当', name: '早坂', email: '', tel: '' }], note: '' },
+    { no: '054', name: 'I社', fullname: '株式会社I', assignees: [{ role: '主担当', name: '千々岩', email: 'contact@i.example', tel: '03-5780-8055' }, { role: '副担当', name: '早坂', email: '', tel: '' }], note: '' },
+    { no: '079', name: 'つくば', fullname: '株式会社つくば', assignees: [{ role: '主担当', name: '田野', email: 'contact@つくば.example', tel: '03-8688-1602' }, { role: '副担当', name: '宮崎', email: '', tel: '' }], note: '' },
+    { no: '081', name: 'J社', fullname: '株式会社J', assignees: [{ role: '主担当', name: '宮崎', email: 'contact@j.example', tel: '03-9547-8912' }, { role: '副担当', name: '小佐井', email: '', tel: '' }], note: '' },
+    { no: '087', name: 'K社', fullname: '株式会社K', assignees: [{ role: '主担当', name: '金栗', email: 'contact@k.example', tel: '03-6165-1205' }, { role: '副担当', name: '髙竹', email: '', tel: '' }], note: '' },
+    { no: '096', name: 'L社', fullname: '株式会社L', assignees: [{ role: '主担当', name: '桑原', email: 'contact@l.example', tel: '03-8116-9823' }, { role: '副担当', name: '髙竹', email: '', tel: '' }], note: '' },
+    { no: '121', name: 'M社', fullname: '株式会社M', assignees: [{ role: '主担当', name: '田野', email: 'contact@m.example', tel: '03-7873-7136' }, { role: '副担当', name: '髙竹', email: '', tel: '' }], note: '' },
+    { no: '123', name: 'N社', fullname: '株式会社N', assignees: [{ role: '主担当', name: '髙竹', email: 'contact@n.example', tel: '03-3973-2353' }, { role: '副担当', name: '早坂', email: '', tel: '' }], note: '' },
+    { no: '126', name: 'O社', fullname: '株式会社O', assignees: [{ role: '主担当', name: '田野', email: 'contact@o.example', tel: '03-3787-6487' }, { role: '副担当', name: '宮崎', email: '', tel: '' }], note: '' },
+    { no: '137', name: 'P社', fullname: '株式会社P', assignees: [{ role: '主担当', name: '小佐井', email: 'contact@p.example', tel: '03-7409-2200' }, { role: '副担当', name: '髙竹', email: '', tel: '' }], note: '' },
+    { no: '143', name: 'Q社', fullname: '株式会社Q', assignees: [{ role: '主担当', name: '田野', email: 'contact@q.example', tel: '03-6506-1267' }, { role: '副担当', name: '桑原', email: '', tel: '' }], note: '' },
+    { no: '148', name: 'R社', fullname: '株式会社R', assignees: [{ role: '主担当', name: '金栗', email: 'contact@r.example', tel: '03-6955-1210' }, { role: '副担当', name: '大和', email: '', tel: '' }], note: '' },
+    { no: '156', name: '山田事務所', fullname: '株式会社山田事務所', assignees: [{ role: '主担当', name: '小佐井', email: 'contact@山田事務所.example', tel: '03-7647-9716' }, { role: '副担当', name: '金栗', email: '', tel: '' }], note: '' },
+    { no: '158', name: 'プロフェス', fullname: '株式会社プロフェス', assignees: [{ role: '主担当', name: '髙竹', email: 'contact@プロフェス.example', tel: '03-5713-9106' }, { role: '副担当', name: '早坂', email: '', tel: '' }], note: '' },
+    { no: '166', name: '飯田労務', fullname: '株式会社飯田労務', assignees: [{ role: '主担当', name: '金栗', email: 'contact@飯田労務.example', tel: '03-8926-3909' }, { role: '副担当', name: '髙竹', email: '', tel: '' }], note: '' },
+    { no: '181', name: 'S社', fullname: '株式会社S', assignees: [{ role: '主担当', name: '千々岩', email: 'contact@s.example', tel: '03-8282-7202' }, { role: '副担当', name: '髙竹', email: '', tel: '' }], note: '' },
+    { no: '206', name: 'T社', fullname: '株式会社T', assignees: [{ role: '主担当', name: '田野', email: 'contact@t.example', tel: '03-1166-3207' }, { role: '副担当', name: '早坂', email: '', tel: '' }], note: '' },
+    { no: '212', name: 'NAKA', fullname: '株式会社NAKA', assignees: [{ role: '主担当', name: '田野', email: 'contact@naka.example', tel: '03-1344-5200' }, { role: '副担当', name: '金栗', email: '', tel: '' }], note: '' },
+    { no: '214', name: 'U社', fullname: '株式会社U', assignees: [{ role: '主担当', name: '小佐井', email: 'contact@u.example', tel: '03-8115-7887' }, { role: '副担当', name: '宮崎', email: '', tel: '' }], note: '' },
+    { no: '219', name: 'ダーウィン', fullname: '株式会社ダーウィン', assignees: [{ role: '主担当', name: '早坂', email: 'contact@ダーウィン.example', tel: '03-2025-9361' }, { role: '副担当', name: '大和', email: '', tel: '' }], note: '' },
+    { no: '225', name: 'BDO', fullname: '株式会社BDO', assignees: [{ role: '主担当', name: '小佐井', email: 'contact@bdo.example', tel: '03-2358-8097' }, { role: '副担当', name: '大和', email: '', tel: '' }], note: '' },
+    { no: '232', name: 'いわき', fullname: '株式会社いわき', assignees: [{ role: '主担当', name: '早坂', email: 'contact@いわき.example', tel: '03-7184-2203' }, { role: '副担当', name: '髙竹', email: '', tel: '' }], note: '' },
+    { no: '237', name: 'V社', fullname: '株式会社V', assignees: [{ role: '主担当', name: '髙竹', email: 'contact@v.example', tel: '03-1477-6283' }, { role: '副担当', name: '桑原', email: '', tel: '' }], note: '' },
+    { no: '240', name: 'W社', fullname: '株式会社W', assignees: [{ role: '主担当', name: '宮崎', email: 'contact@w.example', tel: '03-1541-6485' }, { role: '副担当', name: '田野', email: '', tel: '' }], note: '' }
   ],
   issues: [
     { id: 2, date: '2026/03/17', weekday: '月', clientNo: '137', client: 'P社', project: '公文書ダウンロード', system: '社労夢', assignee: '早坂', status: 'inprogress', type: '仕様変更', deadline: '2026/05/29', startDate: '2026/04/27', clientDeadline: '作業時間確認中', desc: '【振り返り時のご依頼】 500件上限への対処（繁忙期） 期間指定版ロボを追加（実行時に「データ作成日：自〜至」を入力→その範囲のみ処理）。 既存の"通常版"も併存し、時期で使い分け。\n公文書ダウンロードをコピーしてロボを作成。実行直後にデータ作成日の期間を指定する画面を出す。指定の期間のみ処理対象とする。', level: '', tenMinDate: '', causeAction: '3/17 16:00 先方より再検討のご連絡あり→社内確認中\n3/31 2つの案をご提案中、実施するか返答待ち。着手は4月初旬とお伝え。\n4/3 2回目のご提案済み。返答待ち\n4/14 詳細を先方とMTG予定→先方提案を採用\n申請時に備考欄に入力されている申請者名（20名分のいずれか）をもとに1データずつ検索を実施する仕様とする\n納期：6/10、作業期間：4/27,28の10-15時で連絡済み（早坂）\n4/27変更点（202604-05繁忙期対応でリージョン作成）：3h\nMain_繁忙期対応中を作成、初期処理サブフロー→Excel読込部追加、検索サブフロー→備考欄入力部分追加\n残りの対応は5月に実施予定→5/25・26にて作業予定', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: 'あり', specReflect: '済', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/03/17 10:00', comments: [] },
@@ -1299,7 +1418,13 @@ const DEFAULT_DATA = {
     {time:'昨日', text:'髙竹 さんが No.13 のステータスを「対応中」に変更しました', icon:'arrow-right'},
     {time:'昨日', text:'桑原 さんが No.21 のステータスを「対応中」に変更しました', icon:'arrow-right'},
     {time:'2日前', text:'宮崎 さんが No.37 にコメントしました', icon:'message'},
-  ]
+  ],
+  pinned: {
+    // 担当者は急ぎ案件をピン留め
+    staff: [18, 40, 13],
+    // クライアント（D社）は自社課題の中で重要なものをピン留め
+    client: [5, 29]
+  }
 };
 
 let state = loadState();
@@ -1313,9 +1438,18 @@ let currentIssue = null;
 function loadState(){
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw) return JSON.parse(raw);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      // 古いデータにピン情報が無ければ DEFAULT_DATA のピン情報を使う
+      if(!parsed.pinned) parsed.pinned = JSON.parse(JSON.stringify(DEFAULT_DATA.pinned || { staff: [], client: [] }));
+      if(!parsed.pinned.staff) parsed.pinned.staff = (DEFAULT_DATA.pinned && DEFAULT_DATA.pinned.staff) ? [...DEFAULT_DATA.pinned.staff] : [];
+      if(!parsed.pinned.client) parsed.pinned.client = (DEFAULT_DATA.pinned && DEFAULT_DATA.pinned.client) ? [...DEFAULT_DATA.pinned.client] : [];
+      return parsed;
+    }
   } catch(e) {}
-  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+  const d = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  if(!d.pinned) d.pinned = { staff: [], client: [] };
+  return d;
 }
 
 function saveState(){
@@ -1351,7 +1485,11 @@ function setView(v){
   document.querySelectorAll('.view-section').forEach(el=>el.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   document.querySelectorAll('.nav-item[data-view]').forEach(el=>el.classList.toggle('active', el.dataset.view===v));
-  if(v==='dashboard') renderDashboard();
+  if(v==='dashboard'){
+    renderDashboard();
+    applyDashOrder();
+    setupDashDragDrop();
+  }
   if(v==='new') initNewIssueForm();
   if(v==='clients') renderClientMaster();
 }
@@ -1487,42 +1625,123 @@ function isOverdue(issue){
   return issue.deadline < today;
 }
 
+// ============ Pin ============
+function getPinnedIds(){
+  if(!state.pinned) state.pinned = { staff: [], client: [] };
+  if(!state.pinned[currentRole]) state.pinned[currentRole] = [];
+  return state.pinned[currentRole];
+}
+
+function isPinned(id){
+  return getPinnedIds().includes(Number(id));
+}
+
+function togglePin(id, ev){
+  if(ev) ev.stopPropagation();
+  id = Number(id);
+  const pins = getPinnedIds();
+  const idx = pins.indexOf(id);
+  if(idx >= 0){
+    pins.splice(idx, 1);
+    showToast('ピン留めを解除しました', 'info');
+  } else {
+    pins.unshift(id); // 先頭に追加
+    showToast('ピン留めしました', 'success');
+  }
+  saveState();
+  renderList();
+  // 詳細モーダルを開いていれば更新
+  if(currentIssue && currentIssue.id === id) updatePinBtnInDetail();
+}
+
+function updatePinBtnInDetail(){
+  const btn = document.getElementById('d-pin-btn');
+  if(!btn || !currentIssue) return;
+  const pinned = isPinned(currentIssue.id);
+  btn.classList.toggle('pinned', pinned);
+  btn.title = pinned ? 'ピン留めを解除' : 'ピン留め';
+  btn.querySelector('i').className = pinned ? 'ti ti-pin-filled' : 'ti ti-pin';
+}
+
+function renderIssueCard(i, opts){
+  opts = opts || {};
+  const overdue = isOverdue(i);
+  const tags = (i.tagsManual||'').split(',').filter(Boolean).slice(0,4);
+  const pinned = isPinned(i.id);
+  return `
+    <div class="issue-card${currentIssue&&currentIssue.id===i.id?' selected':''}${overdue?' overdue':''}${pinned&&!opts.inPinnedSection?' is-pinned':''}" onclick="openDetail(${i.id})">
+      <button class="pin-btn ${pinned?'pinned':''}" onclick="togglePin(${i.id}, event)" title="${pinned?'ピン留めを解除':'ピン留め'}">
+        <i class="ti ${pinned?'ti-pin-filled':'ti-pin'}"></i>
+      </button>
+      <div class="issue-top">
+        ${i.level?`<span class="level-badge ${levelClass[i.level]}">${i.level}</span>`:''}
+        <div style="flex:1;min-width:0">
+          <div class="issue-title-row" style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+            <span class="issue-id">No.${i.id}</span>
+            <span class="status-badge ${statusClass[i.status]}">${statusLabel[i.status]}</span>
+            <span style="font-size:11px;color:var(--text-tertiary)">${i.type||''}</span>
+            ${overdue?`<span class="overdue-badge"><i class="ti ti-alert-triangle" style="font-size:11px"></i> 納期超過</span>`:''}
+          </div>
+          <div class="issue-title">${escapeHtml(i.project)}</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">${escapeHtml(i.desc).substring(0,80)}${i.desc&&i.desc.length>80?'…':''}</div>
+        </div>
+      </div>
+      <div class="issue-meta">
+        <span class="meta-item"><i class="ti ti-building"></i>${escapeHtml(i.client)}</span>
+        <span class="meta-item"><i class="ti ti-device-desktop"></i>${escapeHtml(i.system||'-')}</span>
+        ${i.assignee?`<span class="assignee-chip"><div class="avatar">${i.assignee[0]}</div>${escapeHtml(i.assignee)}</span>`:'<span style="font-size:11px;color:var(--text-tertiary)">担当未割当</span>'}
+        ${i.deadline?`<span class="meta-item" style="${overdue?'color:#E24B4A;font-weight:600':''}"><i class="ti ti-calendar-due"></i>納期: ${i.deadline}</span>`:''}
+        <span class="meta-item" style="margin-left:auto"><i class="ti ti-message"></i>${(i.comments||[]).length}</span>
+        <span class="meta-item"><i class="ti ti-calendar"></i>${i.date}</span>
+      </div>
+      ${tags.length>0?`<div class="tags-row">${tags.map(t=>`<span class="tag-chip">${escapeHtml(t.trim())}</span>`).join('')}</div>`:''}
+    </div>
+  `;
+}
+
+function renderPinnedSection(){
+  const sec = document.getElementById('pinned-section');
+  if(!sec) return;
+  const pinIds = getPinnedIds();
+  // ロールに応じてスコープを絞る（クライアントロールなら自社の課題のみ）
+  let scoped = state.issues;
+  if(currentRole === 'client'){
+    scoped = state.issues.filter(i => i.client === CLIENT_ROLE_SELF);
+  }
+  const pinnedIssues = pinIds
+    .map(id => scoped.find(i => i.id === id))
+    .filter(Boolean);
+
+  if(pinnedIssues.length === 0){
+    sec.style.display = 'none';
+    return;
+  }
+
+  sec.style.display = '';
+  sec.innerHTML = `
+    <div class="pinned-section">
+      <div class="pinned-section-header">
+        <i class="ti ti-pin-filled"></i>
+        ピン留めした課題（${pinnedIssues.length}件）
+      </div>
+      <div class="issue-list">
+        ${pinnedIssues.map(i => renderIssueCard(i, {inPinnedSection: true})).join('')}
+      </div>
+    </div>
+  `;
+}
+
 function renderList(){
   const filtered = getFilteredIssues();
   const list = document.getElementById('issue-list');
 
+  // ピン留めセクション
+  renderPinnedSection();
+
   if(filtered.length===0){
     list.innerHTML = `<div class="no-results"><i class="ti ti-search-off"></i>条件に合う課題が見つかりませんでした</div>`;
   } else {
-    list.innerHTML = filtered.map(i=>{
-      const overdue = isOverdue(i);
-      const tags = (i.tagsManual||'').split(',').filter(Boolean).slice(0,4);
-      return `
-      <div class="issue-card${currentIssue&&currentIssue.id===i.id?' selected':''}${overdue?' overdue':''}" onclick="openDetail(${i.id})">
-        <div class="issue-top">
-          ${i.level?`<span class="level-badge ${levelClass[i.level]}">${i.level}</span>`:''}
-          <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-              <span class="issue-id">No.${i.id}</span>
-              <span class="status-badge ${statusClass[i.status]}">${statusLabel[i.status]}</span>
-              <span style="font-size:11px;color:var(--text-tertiary)">${i.type||''}</span>
-              ${overdue?`<span class="overdue-badge"><i class="ti ti-alert-triangle" style="font-size:11px"></i> 納期超過</span>`:''}
-            </div>
-            <div class="issue-title">${escapeHtml(i.project)}</div>
-            <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">${escapeHtml(i.desc).substring(0,80)}${i.desc&&i.desc.length>80?'…':''}</div>
-          </div>
-        </div>
-        <div class="issue-meta">
-          <span class="meta-item"><i class="ti ti-building"></i>${i.client}</span>
-          <span class="meta-item"><i class="ti ti-device-desktop"></i>${i.system||'-'}</span>
-          ${i.assignee?`<span class="assignee-chip"><div class="avatar">${i.assignee[0]}</div>${i.assignee}</span>`:'<span style="font-size:11px;color:var(--text-tertiary)">担当未割当</span>'}
-          ${i.deadline?`<span class="meta-item" style="${overdue?'color:#E24B4A;font-weight:600':''}"><i class="ti ti-calendar-due"></i>納期: ${i.deadline}</span>`:''}
-          <span class="meta-item" style="margin-left:auto"><i class="ti ti-message"></i>${(i.comments||[]).length}</span>
-          <span class="meta-item"><i class="ti ti-calendar"></i>${i.date}</span>
-        </div>
-        ${tags.length>0?`<div class="tags-row">${tags.map(t=>`<span class="tag-chip">${escapeHtml(t.trim())}</span>`).join('')}</div>`:''}
-      </div>
-    `}).join('');
+    list.innerHTML = filtered.map(i => renderIssueCard(i)).join('');
   }
 
   // Stats（クライアントロールの場合は自社のみで集計）
@@ -1552,24 +1771,100 @@ function renderList(){
     systems.map(s=>`<option value="${s}"${current===s?' selected':''}>${s}</option>`).join('');
 }
 
-function renderClientNav(){
-  const clients = [...new Set(state.issues.map(i=>i.client).filter(Boolean))];
-  document.getElementById('client-nav').innerHTML = clients.map(c=>{
-    const count = state.issues.filter(i=>i.client===c).length;
-    return `<div class="nav-item${currentClient===c?' active':''}" data-client="${c}" onclick="filterByClient('${c}')">
-      <i class="ti ti-building"></i>${c}
-      <span class="badge-count">${count}</span>
-    </div>`;
-  }).join('');
+// 顧客別・システム別のソート方向（'count' or 'name'）
+let clientSortMode = 'count'; // デフォルトは件数の多い順
 
-  const sysAll = [...new Set(state.issues.map(i=>i.system).filter(Boolean))];
-  document.getElementById('system-nav').innerHTML = sysAll.map(s=>{
-    const count = state.issues.filter(i=>i.system===s).length;
-    return `<div class="nav-item${currentSystem===s?' active':''}" data-system="${s}" onclick="filterBySystem('${s}')">
-      <i class="ti ti-device-desktop"></i>${s}
-      <span class="badge-count">${count}</span>
-    </div>`;
-  }).join('');
+function toggleClientSort(){
+  clientSortMode = clientSortMode === 'count' ? 'name' : 'count';
+  const icon = document.getElementById('client-sort-icon');
+  if(icon) icon.className = 'ti ' + (clientSortMode === 'count' ? 'ti-arrows-sort' : 'ti-sort-ascending-letters');
+  renderClientNav();
+}
+
+function toggleSidebarGroup(groupId){
+  const el = document.getElementById(groupId);
+  if(!el) return;
+  el.classList.toggle('collapsed');
+  const chevron = document.getElementById(groupId + '-chevron');
+  if(chevron){
+    const collapsed = el.classList.contains('collapsed');
+    chevron.style.transform = collapsed ? 'rotate(-90deg)' : 'rotate(0)';
+  }
+}
+
+// 日本語名 + アルファベット名を「読み」順でソートするためのキー生成
+function getClientSortKey(name){
+  if(!name) return 'zzz';
+  // A社, B社... のような形式は先頭の英字で判定
+  const m = name.match(/^([A-Za-z])社$/);
+  if(m) return '1_' + m[1].toLowerCase(); // 1_a, 1_b...
+  // ローマ字（NAKA, BDO等）
+  if(/^[A-Za-z]/.test(name)) return '2_' + name.toLowerCase();
+  // 日本語は最後にひらがな/カナで並べる
+  return '3_' + name;
+}
+
+function renderClientNav(){
+  // 顧客別
+  const clientCounts = {};
+  state.issues.forEach(i=>{ if(i.client) clientCounts[i.client]=(clientCounts[i.client]||0)+1 });
+  let clients = Object.keys(clientCounts);
+
+  // 検索フィルタ
+  const searchEl = document.getElementById('client-search');
+  const q = (searchEl ? searchEl.value : '').trim().toLowerCase();
+  if(q){
+    clients = clients.filter(c => c.toLowerCase().includes(q));
+  }
+
+  // ソート
+  if(clientSortMode === 'count'){
+    clients.sort((a, b) => clientCounts[b] - clientCounts[a] || getClientSortKey(a).localeCompare(getClientSortKey(b)));
+  } else {
+    clients.sort((a, b) => getClientSortKey(a).localeCompare(getClientSortKey(b)));
+  }
+
+  const navEl = document.getElementById('client-nav');
+  if(!navEl) return;
+
+  if(clients.length === 0){
+    navEl.innerHTML = `<div class="sidebar-empty">${q ? '該当する顧客がありません' : '課題のある顧客はいません'}</div>`;
+  } else {
+    navEl.innerHTML = clients.map(c => {
+      const count = clientCounts[c];
+      return `<div class="nav-item${currentClient===c?' active':''}" data-client="${c}" onclick="filterByClient('${c.replace(/'/g, "\\'")}')">
+        <i class="ti ti-building"></i>${escapeHtml(c)}
+        <span class="badge-count">${count}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // ヘッダーの件数表示
+  const totalClients = Object.keys(clientCounts).length;
+  const countEl = document.getElementById('client-section-count');
+  if(countEl) countEl.textContent = totalClients;
+
+  // システム別
+  const systemCounts = {};
+  state.issues.forEach(i=>{ if(i.system) systemCounts[i.system]=(systemCounts[i.system]||0)+1 });
+  const systems = Object.keys(systemCounts).sort((a, b) => systemCounts[b] - systemCounts[a]);
+
+  const sysEl = document.getElementById('system-nav');
+  if(sysEl){
+    if(systems.length === 0){
+      sysEl.innerHTML = `<div class="sidebar-empty">該当データなし</div>`;
+    } else {
+      sysEl.innerHTML = systems.map(s => {
+        const count = systemCounts[s];
+        return `<div class="nav-item${currentSystem===s?' active':''}" data-system="${s}" onclick="filterBySystem('${s.replace(/'/g, "\\'")}')">
+          <i class="ti ti-device-desktop"></i>${escapeHtml(s)}
+          <span class="badge-count">${count}</span>
+        </div>`;
+      }).join('');
+    }
+  }
+  const sysCountEl = document.getElementById('system-section-count');
+  if(sysCountEl) sysCountEl.textContent = systems.length;
 }
 
 // ============ Detail Modal ============
@@ -1636,6 +1931,7 @@ function openDetail(id){
   // Reset to first tab
   document.querySelectorAll('.modal-tab').forEach((t,idx)=>t.classList.toggle('active',idx===0));
   document.querySelectorAll('.tab-pane').forEach((p,idx)=>p.classList.toggle('active',idx===0));
+  updatePinBtnInDetail();
   renderList();
 }
 
@@ -1962,6 +2258,133 @@ function addActivity(text, icon){
 }
 
 // ============ Dashboard ============
+// ============ Dashboard Reorder ============
+let dashEditing = false;
+
+function loadDashOrder(){
+  try {
+    const raw = localStorage.getItem(DASH_ORDER_KEY);
+    if(raw) return JSON.parse(raw);
+  } catch(e){}
+  return null;
+}
+
+function saveDashOrder(order){
+  try { localStorage.setItem(DASH_ORDER_KEY, JSON.stringify(order)); } catch(e){}
+}
+
+function applyDashOrder(){
+  const order = loadDashOrder();
+  if(!order || !Array.isArray(order)) return;
+  const grid = document.getElementById('dash-grid');
+  if(!grid) return;
+  const cards = {};
+  grid.querySelectorAll('.dash-card').forEach(c => cards[c.dataset.cardId] = c);
+  // 保存された順序にカードを並び替え
+  order.forEach(id => {
+    if(cards[id]){
+      grid.appendChild(cards[id]);
+      delete cards[id];
+    }
+  });
+  // 保存順序になかったカード（追加されたカードなど）は末尾に
+  Object.values(cards).forEach(c => grid.appendChild(c));
+}
+
+function toggleDashEdit(){
+  dashEditing = !dashEditing;
+  const grid = document.getElementById('dash-grid');
+  const btn = document.getElementById('dash-edit-toggle');
+  if(dashEditing){
+    grid.classList.add('editing');
+    btn.innerHTML = '<i class="ti ti-check"></i> 完了';
+    btn.classList.remove('btn-ghost');
+    btn.classList.add('btn-primary');
+    // ドラッグ可能に
+    grid.querySelectorAll('.dash-card').forEach(c => c.setAttribute('draggable', 'true'));
+    showToast('カードをドラッグして並び替えできます', 'info');
+  } else {
+    grid.classList.remove('editing');
+    btn.innerHTML = '<i class="ti ti-arrows-move"></i> 並び替え';
+    btn.classList.remove('btn-primary');
+    btn.classList.add('btn-ghost');
+    grid.querySelectorAll('.dash-card').forEach(c => c.setAttribute('draggable', 'false'));
+    // 現在の順序を保存
+    const order = [...grid.querySelectorAll('.dash-card')].map(c => c.dataset.cardId);
+    saveDashOrder(order);
+    showToast('レイアウトを保存しました', 'success');
+  }
+}
+
+function resetDashOrder(){
+  if(!confirm('ダッシュボードの並び順を初期状態に戻しますか？')) return;
+  try { localStorage.removeItem(DASH_ORDER_KEY); } catch(e){}
+  // 初期順序に戻す
+  const grid = document.getElementById('dash-grid');
+  if(!grid) return;
+  const defaultOrder = ['status','client','system','level','deadline','activity'];
+  const cards = {};
+  grid.querySelectorAll('.dash-card').forEach(c => cards[c.dataset.cardId] = c);
+  defaultOrder.forEach(id => { if(cards[id]) grid.appendChild(cards[id]); });
+  showToast('レイアウトを初期化しました', 'success');
+}
+
+// ドラッグ＆ドロップのセットアップ
+function setupDashDragDrop(){
+  const grid = document.getElementById('dash-grid');
+  if(!grid || grid.dataset.dndInit === '1') return;
+  grid.dataset.dndInit = '1';
+
+  let draggedEl = null;
+
+  grid.addEventListener('dragstart', e => {
+    const card = e.target.closest('.dash-card');
+    if(!card || !grid.classList.contains('editing')) return;
+    draggedEl = card;
+    card.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', card.dataset.cardId);
+  });
+
+  grid.addEventListener('dragend', e => {
+    const card = e.target.closest('.dash-card');
+    if(card) card.classList.remove('dragging');
+    grid.querySelectorAll('.dash-card').forEach(c => c.classList.remove('drag-over'));
+    draggedEl = null;
+  });
+
+  grid.addEventListener('dragover', e => {
+    if(!draggedEl) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const target = e.target.closest('.dash-card');
+    if(!target || target === draggedEl) return;
+    grid.querySelectorAll('.dash-card').forEach(c => c.classList.remove('drag-over'));
+    target.classList.add('drag-over');
+  });
+
+  grid.addEventListener('dragleave', e => {
+    const target = e.target.closest('.dash-card');
+    if(target) target.classList.remove('drag-over');
+  });
+
+  grid.addEventListener('drop', e => {
+    if(!draggedEl) return;
+    e.preventDefault();
+    const target = e.target.closest('.dash-card');
+    if(!target || target === draggedEl) return;
+    // 挿入位置を判定（中央より左なら前、右なら後）
+    const rect = target.getBoundingClientRect();
+    const after = (e.clientX - rect.left) > rect.width / 2;
+    if(after){
+      target.parentNode.insertBefore(draggedEl, target.nextSibling);
+    } else {
+      target.parentNode.insertBefore(draggedEl, target);
+    }
+    target.classList.remove('drag-over');
+  });
+}
+
 function renderDashboard(){
   const isClient = currentRole==='client';
   // クライアントロールは自社データのみ
@@ -1992,15 +2415,40 @@ function renderDashboard(){
   } else {
     clientCard.style.display = '';
     const clients = {};
-    scopeIssues.forEach(i=>{ clients[i.client]=(clients[i.client]||0)+1 });
-    const maxClient = Math.max(...Object.values(clients), 1);
-    document.getElementById('client-bars').innerHTML = Object.entries(clients).map(([c,n])=>`
+    scopeIssues.forEach(i=>{ if(i.client) clients[i.client]=(clients[i.client]||0)+1 });
+
+    // 件数の多い順にソートして上位10社＋その他
+    const TOP_N = 10;
+    const sorted = Object.entries(clients).sort((a,b)=>b[1]-a[1]);
+    const top = sorted.slice(0, TOP_N);
+    const rest = sorted.slice(TOP_N);
+    const restCount = rest.reduce((sum, [,n])=>sum+n, 0);
+    const restClients = rest.length;
+
+    const allValues = top.map(([,n])=>n);
+    if(restCount > 0) allValues.push(restCount);
+    const maxClient = Math.max(...allValues, 1);
+
+    let html = top.map(([c,n])=>`
       <div class="bar-row">
-        <div class="bar-label">${c}</div>
+        <div class="bar-label" title="${escapeHtml(c)}">${escapeHtml(c)}</div>
         <div class="bar-track"><div class="bar-fill" style="width:${n/maxClient*100}%"></div></div>
         <div class="bar-val">${n}</div>
       </div>
-    `).join('') || '<div style="font-size:12px;color:var(--text-tertiary)">データなし</div>';
+    `).join('');
+
+    if(restCount > 0){
+      const restTooltip = rest.map(([c,n])=>`${c}: ${n}`).join('\n');
+      html += `
+        <div class="bar-row" style="opacity:0.65" title="${escapeHtml(restTooltip)}">
+          <div class="bar-label" style="font-style:italic">その他 ${restClients}社</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${restCount/maxClient*100}%;background:var(--text-tertiary)"></div></div>
+          <div class="bar-val">${restCount}</div>
+        </div>
+      `;
+    }
+
+    document.getElementById('client-bars').innerHTML = html || '<div style="font-size:12px;color:var(--text-tertiary)">データなし</div>';
   }
 
   // System bars
@@ -2168,8 +2616,10 @@ function autoFillClientNo(){
   if(no){
     const c = state.clients.find(x=>x.no===no);
     const assigneeEl = document.getElementById('f-assignee');
-    if(c && c.mainAssignee && assigneeEl && !assigneeEl.value){
-      assigneeEl.value = c.mainAssignee;
+    if(c && c.assignees && c.assignees.length > 0 && assigneeEl && !assigneeEl.value){
+      // 主担当（assignees[0]）の名前をセット
+      const mainName = c.assignees[0].name;
+      if(mainName) assigneeEl.value = mainName;
     }
   }
 }
@@ -2187,7 +2637,7 @@ function renderClientMaster(){
       <div>顧客No</div>
       <div>顧客名</div>
       <div>正式名称</div>
-      <div>主担当</div>
+      <div>担当者</div>
       <div>課題数</div>
       <div style="text-align:right">操作</div>
     </div>`;
@@ -2200,23 +2650,95 @@ function renderClientMaster(){
   const rows = state.clients
     .slice()
     .sort((a,b)=>String(a.no).localeCompare(String(b.no)))
-    .map(c=>`
+    .map(c=>{
+      const assignees = c.assignees || [];
+      const assigneeHtml = assignees.length === 0
+        ? '<span style="color:var(--text-tertiary);font-size:11px">未設定</span>'
+        : assignees.slice(0,2).map(a=>`<div class="assignee-mini"><span class="assignee-mini-role">${escapeHtml(a.role||'担当')}</span>${escapeHtml(a.name||'-')}</div>`).join('') +
+          (assignees.length > 2 ? `<div style="font-size:10px;color:var(--text-tertiary)">+${assignees.length-2}名</div>` : '');
+
+      return `
       <div class="client-row" style="cursor:pointer" onclick="openClientForm('${escapeHtml(c.no)}')">
         <div><span class="client-no-chip">${escapeHtml(c.no)}</span></div>
         <div class="client-name-cell">${escapeHtml(c.name)}</div>
         <div class="client-fullname-cell">${escapeHtml(c.fullname||'-')}</div>
-        <div style="font-size:12px">${escapeHtml(c.mainAssignee||'未設定')}</div>
+        <div class="client-assignees-cell">${assigneeHtml}</div>
         <div><span class="client-count-chip">${counts[c.no]||0} 件</span></div>
         <div class="client-action-btns">
           <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();openClientForm('${escapeHtml(c.no)}')" title="編集"><i class="ti ti-edit"></i></button>
         </div>
       </div>
-    `).join('');
+    `}).join('');
 
   root.innerHTML = header + rows;
 }
 
 let editingClientNo = null;
+
+// 担当者行を1つレンダリング
+function renderAssigneeRow(a, idx){
+  const role = (a && a.role) || '';
+  const name = (a && a.name) || '';
+  const email = (a && a.email) || '';
+  const tel = (a && a.tel) || '';
+  return `
+    <div class="assignee-row" data-idx="${idx}">
+      <div class="assignee-row-header">
+        <span>担当者 #${idx+1}</span>
+        <button type="button" class="assignee-row-remove" onclick="removeAssigneeRow(${idx})"><i class="ti ti-x"></i> 削除</button>
+      </div>
+      <div class="assignee-row-grid">
+        <input type="text" placeholder="役割（例：主担当）" value="${escapeHtml(role)}" data-field="role">
+        <input type="text" placeholder="氏名" value="${escapeHtml(name)}" data-field="name">
+        <input type="email" placeholder="メールアドレス" value="${escapeHtml(email)}" data-field="email">
+        <input type="text" placeholder="電話番号" value="${escapeHtml(tel)}" data-field="tel">
+      </div>
+    </div>`;
+}
+
+// モーダル内の担当者リストを再描画
+function renderAssigneesInForm(assignees){
+  const root = document.getElementById('cf-assignees');
+  if(!root) return;
+  if(!assignees || assignees.length === 0){
+    root.innerHTML = `<div class="assignee-empty">担当者が登録されていません。「担当者を追加」から登録してください。</div>`;
+    return;
+  }
+  root.innerHTML = assignees.map((a,idx)=>renderAssigneeRow(a,idx)).join('');
+}
+
+// モーダルから現在の担当者リストを取得
+function collectAssigneesFromForm(){
+  const rows = document.querySelectorAll('#cf-assignees .assignee-row');
+  const result = [];
+  rows.forEach(row=>{
+    const get = (f)=> {
+      const el = row.querySelector(`[data-field="${f}"]`);
+      return el ? el.value.trim() : '';
+    };
+    const role = get('role');
+    const name = get('name');
+    const email = get('email');
+    const tel = get('tel');
+    // 全部空ならスキップ
+    if(role || name || email || tel){
+      result.push({ role, name, email, tel });
+    }
+  });
+  return result;
+}
+
+function addAssigneeRow(){
+  const current = collectAssigneesFromForm();
+  current.push({ role: '', name: '', email: '', tel: '' });
+  renderAssigneesInForm(current);
+}
+
+function removeAssigneeRow(idx){
+  const current = collectAssigneesFromForm();
+  current.splice(idx, 1);
+  renderAssigneesInForm(current);
+}
 
 function openClientForm(no){
   ensureClients();
@@ -2235,11 +2757,8 @@ function openClientForm(no){
     document.getElementById('cf-no').style.background = 'var(--bg-secondary)';
     document.getElementById('cf-name').value = c.name||'';
     document.getElementById('cf-fullname').value = c.fullname||'';
-    document.getElementById('cf-main-assignee').value = c.mainAssignee||'';
-    document.getElementById('cf-sub-assignee').value = c.subAssignee||'';
-    document.getElementById('cf-email').value = c.email||'';
-    document.getElementById('cf-tel').value = c.tel||'';
     document.getElementById('cf-note').value = c.note||'';
+    renderAssigneesInForm(c.assignees || []);
   } else {
     // 次の番号をサジェスト
     const used = new Set(state.clients.map(c=>c.no));
@@ -2248,9 +2767,9 @@ function openClientForm(no){
     document.getElementById('cf-no').value = pad(next,3);
     document.getElementById('cf-no').removeAttribute('readonly');
     document.getElementById('cf-no').style.background = '';
-    ['cf-name','cf-fullname','cf-email','cf-tel','cf-note'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('cf-main-assignee').value = '';
-    document.getElementById('cf-sub-assignee').value = '';
+    ['cf-name','cf-fullname','cf-note'].forEach(id=>document.getElementById(id).value='');
+    // 新規時はデフォルトで主担当1行を表示
+    renderAssigneesInForm([{ role: '主担当', name: '', email: '', tel: '' }]);
   }
 
   modal.classList.add('show');
@@ -2269,13 +2788,11 @@ function saveClient(){
     showToast('顧客No と 顧客名 は必須です', 'error');
     return;
   }
+  const assignees = collectAssigneesFromForm();
   const data = {
     no, name,
     fullname: document.getElementById('cf-fullname').value.trim(),
-    mainAssignee: document.getElementById('cf-main-assignee').value,
-    subAssignee: document.getElementById('cf-sub-assignee').value,
-    email: document.getElementById('cf-email').value.trim(),
-    tel: document.getElementById('cf-tel').value.trim(),
+    assignees,
     note: document.getElementById('cf-note').value.trim(),
   };
 
