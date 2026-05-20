@@ -77,6 +77,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .sidebar-nav-list::-webkit-scrollbar-thumb:hover{background:var(--text-tertiary)}
 .sidebar-empty{font-size:11px;color:var(--text-tertiary);text-align:center;padding:12px 8px;font-style:italic}
 
+/* セクション並び替え */
+.sidebar-sections{display:flex;flex-direction:column}
+.sidebar-section-drag{display:none;font-size:14px !important;color:var(--text-tertiary);cursor:grab;margin-right:4px}
+.sidebar-sections.editing .sidebar-section-drag{display:inline-flex}
+.sidebar-sections.editing .sidebar-reorderable{border:1.5px dashed var(--brand-mid);border-radius:var(--radius-md);padding:6px;background:linear-gradient(180deg, #FAFCFB 0%, var(--bg-primary) 100%);margin-bottom:8px}
+.sidebar-sections.editing .sidebar-reorderable.dragging{opacity:0.4}
+.sidebar-sections.editing .sidebar-reorderable.drag-over-top{border-top-color:var(--brand);border-top-width:3px}
+.sidebar-sections.editing .sidebar-reorderable.drag-over-bottom{border-bottom-color:var(--brand);border-bottom-width:3px}
+.sidebar-edit-toggle{background:transparent;border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:6px 8px;font-size:11px;color:var(--text-secondary);cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .15s}
+.sidebar-edit-toggle:hover{background:var(--bg-secondary);border-color:var(--border-mid)}
+.sidebar-edit-toggle.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.sidebar-edit-toggle i{font-size:14px}
+
+/* フォルダ */
+.folder-nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius-md);font-size:13px;color:var(--text-secondary);cursor:pointer;margin-bottom:2px;transition:all .15s;font-weight:500;position:relative}
+.folder-nav-item:hover{background:var(--bg-secondary)}
+.folder-nav-item.active{background:var(--brand-light);color:var(--brand-dark)}
+.folder-nav-item .folder-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.folder-nav-item i{font-size:14px;flex-shrink:0}
+.folder-nav-item .badge-count{margin-left:auto}
+.folder-nav-item .folder-menu-btn{display:none;background:transparent;border:none;cursor:pointer;padding:2px;border-radius:3px;color:var(--text-tertiary)}
+.folder-nav-item:hover .folder-menu-btn{display:flex}
+.folder-nav-item .folder-menu-btn:hover{background:var(--border-light);color:var(--text-secondary)}
+
 .nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius-md);font-size:13px;color:var(--text-secondary);cursor:pointer;margin-bottom:2px;transition:all .15s;font-weight:500}
 .nav-item:hover{background:var(--bg-secondary)}
 .nav-item.active{background:var(--brand-light);color:var(--brand-dark)}
@@ -304,19 +328,65 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 .activity-meta{color:var(--text-tertiary);font-size:11px}
 
 /* ==== Pin ==== */
-.pin-btn{background:transparent;border:none;cursor:pointer;padding:4px;border-radius:4px;color:var(--text-tertiary);transition:all .15s;display:flex;align-items:center;justify-content:center}
-.pin-btn:hover{background:var(--bg-secondary);color:#D67617}
-.pin-btn.pinned{color:#D67617}
-.pin-btn i{font-size:16px}
+.pin-btn{background:transparent;border:1px solid transparent;cursor:pointer;padding:5px 7px;border-radius:6px;color:var(--text-tertiary);transition:all .15s;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600}
+.pin-btn:hover{background:#FFF3CD;color:#854F0B;border-color:#F0D586}
+.pin-btn.pinned{background:#FFE9B8;color:#854F0B;border-color:#E0A800}
+.pin-btn.pinned:hover{background:#FFD980}
+.pin-btn i{font-size:14px}
+.pin-btn .pin-label{display:none}
+.issue-card .pin-btn:hover .pin-label{display:inline}
+.pin-btn.pinned .pin-label{display:inline}
+
 .issue-card{position:relative}
-.issue-card .pin-btn{position:absolute;top:14px;right:14px;z-index:2}
-.issue-card.is-pinned{border-left:3px solid #D67617}
-.issue-card.is-pinned .issue-title-row{padding-right:36px}
+.issue-card .pin-btn{position:absolute;top:10px;right:10px;z-index:2}
+.issue-card.is-pinned{border-left:3px solid #E0A800;background:linear-gradient(90deg, #FFFBF0 0%, var(--bg-primary) 80%)}
+.issue-card.is-pinned .issue-title-row{padding-right:80px}
+.issue-card:not(.is-pinned) .issue-title-row{padding-right:50px}
 
 .pinned-section{background:linear-gradient(180deg, #FFF8EC 0%, var(--bg-primary) 100%);border:1px solid #F0D586;border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:18px}
 .pinned-section-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:13px;font-weight:700;color:#854F0B}
 .pinned-section-header i{font-size:18px}
 .pinned-empty{font-size:12px;color:var(--text-tertiary);font-style:italic;padding:6px 0}
+
+/* 詳細モーダルのピンボタン */
+#detail-modal .pin-btn{padding:6px 10px;font-size:12px}
+#detail-modal .pin-btn .pin-label{display:inline}
+
+/* ==== Alert Banners (top of page) ==== */
+.alert-banners{display:flex;flex-direction:column;gap:0}
+.alert-banner{padding:10px 24px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;border-bottom:1px solid rgba(0,0,0,0.06)}
+.alert-banner:hover{filter:brightness(0.97)}
+.alert-banner i{font-size:18px;flex-shrink:0}
+.alert-banner-text{flex:1}
+.alert-banner-action{font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,0.5)}
+.alert-banner-close{background:transparent;border:none;color:inherit;cursor:pointer;padding:4px;border-radius:4px;opacity:0.6;display:flex;align-items:center}
+.alert-banner-close:hover{opacity:1;background:rgba(0,0,0,0.05)}
+.alert-banner.overdue{background:linear-gradient(90deg, #FCEBEB 0%, #FDF3F2 100%);color:#A32D2D;border-bottom:1px solid #F4C8C5}
+.alert-banner.new-issue{background:linear-gradient(90deg, #E6F1FB 0%, #F0F7FE 100%);color:#185FA5;border-bottom:1px solid #C8DFF4}
+
+/* ==== Folder ==== */
+.folder-nav-item .ti-folder,.folder-nav-item .ti-folder-filled{font-size:14px}
+
+/* フォルダ編集モーダル */
+.folder-color-picker{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.folder-color-option{width:28px;height:28px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.folder-color-option:hover{transform:scale(1.1)}
+.folder-color-option.selected{border-color:var(--text-primary);box-shadow:0 0 0 2px var(--bg-primary), 0 0 0 4px var(--text-primary)}
+.folder-color-option i{color:#fff;font-size:14px;opacity:0;transition:opacity .15s}
+.folder-color-option.selected i{opacity:1}
+
+/* 課題詳細のフォルダ追加 */
+.folder-add-section{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.folder-chip{display:inline-flex;align-items:center;gap:4px;background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:14px;padding:4px 10px;font-size:11px;color:var(--text-secondary);transition:all .15s}
+.folder-chip.added{background:var(--brand-light);border-color:var(--brand-mid);color:var(--brand-dark)}
+.folder-chip.added .folder-dot{background:currentColor}
+.folder-chip-toggle{cursor:pointer}
+.folder-chip-toggle:hover{transform:translateY(-1px)}
+.folder-chip .folder-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.folder-chip-remove{cursor:pointer;color:var(--text-tertiary);font-size:14px;margin-left:2px}
+.folder-chip-remove:hover{color:#A32D2D}
+
+
 
 /* ==== Overdue highlight ==== */
 .overdue .issue-title{color:#A32D2D}
@@ -418,6 +488,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
   <div class="notify-list" id="notify-list"></div>
 </div>
 
+<!-- ===== Alert Banners ===== -->
+<div class="alert-banners" id="alert-banners"></div>
+
 <!-- ===== Layout ===== -->
 <div class="layout">
   <div class="sidebar">
@@ -441,37 +514,70 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
         顧客マスタ
       </div>
     </div>
-    <div class="sidebar-section staff-only">
-      <div class="sidebar-section-header" onclick="toggleSidebarGroup('client-group')">
-        <div class="sidebar-section-title">
-          <i class="ti ti-chevron-down sidebar-chevron" id="client-group-chevron"></i>
-          顧客別
-          <span class="section-count" id="client-section-count">0</span>
+
+    <!-- 並び替え可能なセクション群 -->
+    <div id="sidebar-sections" class="sidebar-sections">
+      <div class="sidebar-section sidebar-reorderable staff-only" data-section-id="client" draggable="false">
+        <div class="sidebar-section-header" onclick="toggleSidebarGroup('client-group')">
+          <i class="ti ti-grip-vertical sidebar-section-drag"></i>
+          <div class="sidebar-section-title">
+            <i class="ti ti-chevron-down sidebar-chevron" id="client-group-chevron"></i>
+            顧客別
+            <span class="section-count" id="client-section-count">0</span>
+          </div>
+          <button class="sidebar-sort-btn" onclick="event.stopPropagation();toggleClientSort()" title="並び替え">
+            <i class="ti ti-arrows-sort" id="client-sort-icon"></i>
+          </button>
         </div>
-        <button class="sidebar-sort-btn" onclick="event.stopPropagation();toggleClientSort()" title="並び替え">
-          <i class="ti ti-arrows-sort" id="client-sort-icon"></i>
+        <div class="sidebar-collapsible" id="client-group">
+          <div class="sidebar-search">
+            <i class="ti ti-search"></i>
+            <input type="text" placeholder="顧客を検索..." id="client-search" oninput="renderClientNav()">
+          </div>
+          <div id="client-nav" class="sidebar-nav-list"></div>
+        </div>
+      </div>
+
+      <div class="sidebar-section sidebar-reorderable staff-only" data-section-id="system" draggable="false">
+        <div class="sidebar-section-header" onclick="toggleSidebarGroup('system-group')">
+          <i class="ti ti-grip-vertical sidebar-section-drag"></i>
+          <div class="sidebar-section-title">
+            <i class="ti ti-chevron-down sidebar-chevron" id="system-group-chevron"></i>
+            システム別
+            <span class="section-count" id="system-section-count">0</span>
+          </div>
+        </div>
+        <div class="sidebar-collapsible" id="system-group">
+          <div id="system-nav" class="sidebar-nav-list"></div>
+        </div>
+      </div>
+
+      <div class="sidebar-section sidebar-reorderable" data-section-id="folder" draggable="false">
+        <div class="sidebar-section-header" onclick="toggleSidebarGroup('folder-group')">
+          <i class="ti ti-grip-vertical sidebar-section-drag"></i>
+          <div class="sidebar-section-title">
+            <i class="ti ti-chevron-down sidebar-chevron" id="folder-group-chevron"></i>
+            マイフォルダ
+            <span class="section-count" id="folder-section-count">0</span>
+          </div>
+          <button class="sidebar-sort-btn" onclick="event.stopPropagation();openFolderEditor()" title="フォルダを追加">
+            <i class="ti ti-folder-plus"></i>
+          </button>
+        </div>
+        <div class="sidebar-collapsible" id="folder-group">
+          <div id="folder-nav" class="sidebar-nav-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">
+        <button class="sidebar-edit-toggle" id="sidebar-edit-btn" onclick="toggleSidebarEdit()" title="セクションを並び替え">
+          <i class="ti ti-arrows-move"></i> セクション並び替え
         </button>
       </div>
-      <div class="sidebar-collapsible" id="client-group">
-        <div class="sidebar-search">
-          <i class="ti ti-search"></i>
-          <input type="text" placeholder="顧客を検索..." id="client-search" oninput="renderClientNav()">
-        </div>
-        <div id="client-nav" class="sidebar-nav-list"></div>
-      </div>
     </div>
-    <div class="sidebar-section staff-only">
-      <div class="sidebar-section-header" onclick="toggleSidebarGroup('system-group')">
-        <div class="sidebar-section-title">
-          <i class="ti ti-chevron-down sidebar-chevron" id="system-group-chevron"></i>
-          システム別
-          <span class="section-count" id="system-section-count">0</span>
-        </div>
-      </div>
-      <div class="sidebar-collapsible" id="system-group">
-        <div id="system-nav" class="sidebar-nav-list"></div>
-      </div>
-    </div>
+
     <div class="sidebar-section">
       <div class="sidebar-label">設定</div>
       <div class="nav-item" onclick="exportData()">
@@ -1031,6 +1137,44 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
   </div>
 </div>
 
+<!-- ===== Folder Editor Modal ===== -->
+<div class="modal-overlay" id="folder-modal" onclick="if(event.target===this)closeFolderEditor()">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <div style="flex:1">
+        <div class="detail-id" id="ff-mode">新規フォルダ</div>
+        <div class="detail-title">フォルダ情報を入力</div>
+      </div>
+      <button class="btn btn-icon btn-ghost" onclick="closeFolderEditor()"><i class="ti ti-x" style="font-size:20px"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">フォルダ名<span class="req">*</span></label>
+        <input type="text" class="form-input" id="ff-name" placeholder="例：急ぎ対応中">
+      </div>
+      <div class="form-group">
+        <label class="form-label">カラー</label>
+        <div class="folder-color-picker" id="ff-colors">
+          <!-- カラーオプションは動的生成 -->
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">アイコン</label>
+        <div class="folder-color-picker" id="ff-icons">
+          <!-- アイコンオプションは動的生成 -->
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="ff-delete-btn" onclick="deleteFolder()" style="display:none"><i class="ti ti-trash"></i> 削除</button>
+      <div style="display:flex;gap:8px;margin-left:auto">
+        <button class="btn" onclick="closeFolderEditor()">キャンセル</button>
+        <button class="btn btn-primary" onclick="saveFolder()"><i class="ti ti-check"></i> 保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===== Client Form Modal ===== -->
 <div class="modal-overlay" id="client-modal" onclick="if(event.target===this)closeClientForm()">
   <div class="modal" style="max-width:640px">
@@ -1094,6 +1238,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
       </div>
       <button class="pin-btn" id="d-pin-btn" onclick="togglePin(currentIssue&&currentIssue.id)" title="ピン留め" style="margin-right:4px">
         <i class="ti ti-pin"></i>
+        <span class="pin-label">ピン留め</span>
       </button>
       <button class="btn btn-icon btn-ghost" onclick="closeDetail()" aria-label="閉じる"><i class="ti ti-x" style="font-size:20px"></i></button>
     </div>
@@ -1158,6 +1303,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
             <div class="detail-field-value" id="d-clientdeadline"></div>
           </div>
         </div>
+        <div class="detail-section-title"><i class="ti ti-folders" style="font-size:14px;vertical-align:middle"></i> フォルダに追加</div>
+        <div class="folder-add-section" id="d-folders" style="margin-bottom:14px"></div>
+
         <div class="detail-section-title">問合せ内容</div>
         <div class="detail-desc" id="d-desc"></div>
 
@@ -1322,8 +1470,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 
 <script>
 // ============ State ============
-const STORAGE_KEY = 'enrobo-board-v5';
+const STORAGE_KEY = 'enrobo-board-v6';
 const DASH_ORDER_KEY = 'enrobo-dash-order-v1';
+const SIDEBAR_ORDER_KEY = 'enrobo-sidebar-order-v1';
+const LAST_SEEN_KEY = 'enrobo-last-seen-v1';
 const DEFAULT_DATA = {
   clients: [
     { no: '002', name: 'A社', fullname: '株式会社A', assignees: [{ role: '主担当', name: '早坂', email: 'contact@a.example', tel: '03-2428-7672' }, { role: '副担当', name: '宮崎', email: '', tel: '' }], note: '' },
@@ -1424,6 +1574,17 @@ const DEFAULT_DATA = {
     staff: [18, 40, 13],
     // クライアント（D社）は自社課題の中で重要なものをピン留め
     client: [5, 29]
+  },
+  folders: {
+    // ロール別の自作フォルダ
+    staff: [
+      { id: 'f-urgent', name: '急ぎ対応中', color: '#E24B4A', icon: 'flame', issueIds: [18, 40, 21] },
+      { id: 'f-spec', name: '仕様変更案件', color: '#7B3FAB', icon: 'settings', issueIds: [2, 8, 19, 29, 32, 43] },
+      { id: 'f-watch', name: '要ウォッチ', color: '#D67617', icon: 'eye', issueIds: [13, 37] },
+    ],
+    client: [
+      { id: 'f-prio', name: '優先確認', color: '#E24B4A', icon: 'flame', issueIds: [5, 7] },
+    ]
   }
 };
 
@@ -1444,11 +1605,16 @@ function loadState(){
       if(!parsed.pinned) parsed.pinned = JSON.parse(JSON.stringify(DEFAULT_DATA.pinned || { staff: [], client: [] }));
       if(!parsed.pinned.staff) parsed.pinned.staff = (DEFAULT_DATA.pinned && DEFAULT_DATA.pinned.staff) ? [...DEFAULT_DATA.pinned.staff] : [];
       if(!parsed.pinned.client) parsed.pinned.client = (DEFAULT_DATA.pinned && DEFAULT_DATA.pinned.client) ? [...DEFAULT_DATA.pinned.client] : [];
+      // フォルダ情報の初期化
+      if(!parsed.folders) parsed.folders = JSON.parse(JSON.stringify(DEFAULT_DATA.folders || { staff: [], client: [] }));
+      if(!parsed.folders.staff) parsed.folders.staff = (DEFAULT_DATA.folders && DEFAULT_DATA.folders.staff) ? JSON.parse(JSON.stringify(DEFAULT_DATA.folders.staff)) : [];
+      if(!parsed.folders.client) parsed.folders.client = (DEFAULT_DATA.folders && DEFAULT_DATA.folders.client) ? JSON.parse(JSON.stringify(DEFAULT_DATA.folders.client)) : [];
       return parsed;
     }
   } catch(e) {}
   const d = JSON.parse(JSON.stringify(DEFAULT_DATA));
   if(!d.pinned) d.pinned = { staff: [], client: [] };
+  if(!d.folders) d.folders = { staff: [], client: [] };
   return d;
 }
 
@@ -1472,6 +1638,10 @@ function setRole(r){
   currentRole = r;
   document.querySelectorAll('.role-btn').forEach(b=>b.classList.toggle('active', b.dataset.role===r));
   document.querySelectorAll('.staff-only').forEach(el=>el.style.display = r==='staff'?'':'none');
+  // ロール変更時はフォルダフィルタを解除（フォルダIDはロール別なので）
+  currentFolder = null;
+  // overdue / new-issues フィルタも解除
+  if(currentFilter === 'overdue' || currentFilter === 'new-issues') currentFilter = 'all';
   // クライアントロール時は staff-only ビュー（顧客マスタ）を開いていれば一覧へ
   if(r==='client' && currentView==='clients') setView('list');
   // 起票画面を開いていればロール変更を反映するため再初期化
@@ -1558,16 +1728,21 @@ function switchTab(tabId, el){
 // ============ Filter ============
 function filterStatus(s, el){
   currentFilter = s;
+  currentFolder = null; // フォルダフィルタ解除
   document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
+  if(el) el.classList.add('active');
+  renderFolderNav();
   renderList();
 }
 
 function filterByClient(client){
   currentClient = currentClient===client?null:client;
   currentSystem = null;
+  currentFolder = null;
+  if(currentFilter === 'overdue' || currentFilter === 'new-issues') currentFilter = 'all';
   document.querySelectorAll('#client-nav .nav-item').forEach(el=>el.classList.toggle('active', el.dataset.client===currentClient));
   document.querySelectorAll('#system-nav .nav-item').forEach(el=>el.classList.remove('active'));
+  renderFolderNav();
   setView('list');
   renderList();
 }
@@ -1575,8 +1750,11 @@ function filterByClient(client){
 function filterBySystem(sys){
   currentSystem = currentSystem===sys?null:sys;
   currentClient = null;
+  currentFolder = null;
+  if(currentFilter === 'overdue' || currentFilter === 'new-issues') currentFilter = 'all';
   document.querySelectorAll('#system-nav .nav-item').forEach(el=>el.classList.toggle('active', el.dataset.system===currentSystem));
   document.querySelectorAll('#client-nav .nav-item').forEach(el=>el.classList.remove('active'));
+  renderFolderNav();
   setView('list');
   renderList();
 }
@@ -1588,12 +1766,35 @@ function getFilteredIssues(){
   const systemFilter = document.getElementById('system-filter').value;
   const sortBy = document.getElementById('sort-by').value;
 
+  // 新着フィルタ用に最終閲覧時刻を取得
+  const lsObj = getLastSeen();
+  const lastSeenStr = lsObj[currentRole];
+  const lastSeen = lastSeenStr ? new Date(lastSeenStr) : null;
+
+  // フォルダフィルタ用に対象IDを取得
+  let folderIssueIds = null;
+  if(currentFolder){
+    const folder = getCurrentFolders().find(f => f.id === currentFolder);
+    if(folder) folderIssueIds = new Set(folder.issueIds || []);
+  }
+
   let filtered = state.issues.filter(i=>{
-    if(currentFilter!=='all' && i.status!==currentFilter) return false;
+    // 特殊フィルタ
+    if(currentFilter === 'overdue'){
+      if(!isOverdue(i) || i.status === 'done' || i.status === 'cancel') return false;
+    } else if(currentFilter === 'new-issues'){
+      if(!lastSeen) return true;
+      const d = parseIssueDate(i);
+      if(!d || d <= lastSeen) return false;
+    } else if(currentFilter !== 'all' && i.status !== currentFilter){
+      return false;
+    }
+
     if(levelFilter!=='all' && i.level!==levelFilter) return false;
     if(systemFilter!=='all' && i.system!==systemFilter) return false;
     if(currentClient && i.client!==currentClient) return false;
     if(currentSystem && i.system!==currentSystem) return false;
+    if(folderIssueIds && !folderIssueIds.has(i.id)) return false;
     if(currentRole==='client' && i.client!==CLIENT_ROLE_SELF) return false;
     if(search){
       const hay = (i.project+' '+i.desc+' '+i.client+' '+i.system+' '+(i.tagsManual||'')+' '+i.id).toLowerCase();
@@ -1660,7 +1861,10 @@ function updatePinBtnInDetail(){
   const pinned = isPinned(currentIssue.id);
   btn.classList.toggle('pinned', pinned);
   btn.title = pinned ? 'ピン留めを解除' : 'ピン留め';
-  btn.querySelector('i').className = pinned ? 'ti ti-pin-filled' : 'ti ti-pin';
+  const icon = btn.querySelector('i');
+  if(icon) icon.className = pinned ? 'ti ti-pin-filled' : 'ti ti-pin';
+  const label = btn.querySelector('.pin-label');
+  if(label) label.textContent = pinned ? 'ピン留め中' : 'ピン留め';
 }
 
 function renderIssueCard(i, opts){
@@ -1672,6 +1876,7 @@ function renderIssueCard(i, opts){
     <div class="issue-card${currentIssue&&currentIssue.id===i.id?' selected':''}${overdue?' overdue':''}${pinned&&!opts.inPinnedSection?' is-pinned':''}" onclick="openDetail(${i.id})">
       <button class="pin-btn ${pinned?'pinned':''}" onclick="togglePin(${i.id}, event)" title="${pinned?'ピン留めを解除':'ピン留め'}">
         <i class="ti ${pinned?'ti-pin-filled':'ti-pin'}"></i>
+        <span class="pin-label">${pinned?'ピン留め中':'ピン'}</span>
       </button>
       <div class="issue-top">
         ${i.level?`<span class="level-badge ${levelClass[i.level]}">${i.level}</span>`:''}
@@ -1769,6 +1974,436 @@ function renderList(){
   const current = sysFilter.value;
   sysFilter.innerHTML = `<option value="all">システムすべて</option>` +
     systems.map(s=>`<option value="${s}"${current===s?' selected':''}>${s}</option>`).join('');
+}
+
+// ============ Folders ============
+function getCurrentFolders(){
+  if(!state.folders) state.folders = { staff: [], client: [] };
+  if(!state.folders[currentRole]) state.folders[currentRole] = [];
+  return state.folders[currentRole];
+}
+
+const FOLDER_COLORS = ['#E24B4A','#D67617','#E0A800','#1D9E75','#1098A0','#5B8AF0','#7B3FAB','#888780'];
+const FOLDER_ICONS = ['folder','flame','settings','eye','star','bookmark','tag','bell'];
+
+let editingFolderId = null;
+let folderEditDraft = { color: FOLDER_COLORS[0], icon: 'folder' };
+
+function openFolderEditor(folderId){
+  editingFolderId = folderId || null;
+  const isEdit = !!folderId;
+  document.getElementById('ff-mode').textContent = isEdit ? 'フォルダを編集' : '新規フォルダ';
+  document.getElementById('ff-delete-btn').style.display = isEdit ? '' : 'none';
+
+  if(isEdit){
+    const folder = getCurrentFolders().find(f => f.id === folderId);
+    if(!folder){ closeFolderEditor(); return; }
+    document.getElementById('ff-name').value = folder.name;
+    folderEditDraft = { color: folder.color || FOLDER_COLORS[0], icon: folder.icon || 'folder' };
+  } else {
+    document.getElementById('ff-name').value = '';
+    folderEditDraft = { color: FOLDER_COLORS[0], icon: 'folder' };
+  }
+  renderFolderColorPicker();
+  renderFolderIconPicker();
+  document.getElementById('folder-modal').classList.add('show');
+}
+
+function closeFolderEditor(){
+  document.getElementById('folder-modal').classList.remove('show');
+  editingFolderId = null;
+}
+
+function renderFolderColorPicker(){
+  const root = document.getElementById('ff-colors');
+  if(!root) return;
+  root.innerHTML = FOLDER_COLORS.map(c => `
+    <div class="folder-color-option${c === folderEditDraft.color ? ' selected' : ''}" style="background:${c}" onclick="selectFolderColor('${c}')">
+      <i class="ti ti-check"></i>
+    </div>
+  `).join('');
+}
+
+function renderFolderIconPicker(){
+  const root = document.getElementById('ff-icons');
+  if(!root) return;
+  root.innerHTML = FOLDER_ICONS.map(ic => `
+    <div class="folder-color-option${ic === folderEditDraft.icon ? ' selected' : ''}" style="background:${folderEditDraft.color}" onclick="selectFolderIcon('${ic}')">
+      <i class="ti ti-${ic}"></i>
+    </div>
+  `).join('');
+}
+
+function selectFolderColor(c){
+  folderEditDraft.color = c;
+  renderFolderColorPicker();
+  renderFolderIconPicker(); // アイコンの背景色も更新
+}
+
+function selectFolderIcon(ic){
+  folderEditDraft.icon = ic;
+  renderFolderIconPicker();
+}
+
+function saveFolder(){
+  const name = document.getElementById('ff-name').value.trim();
+  if(!name){ showToast('フォルダ名を入力してください', 'error'); return; }
+  const folders = getCurrentFolders();
+
+  if(editingFolderId){
+    const folder = folders.find(f => f.id === editingFolderId);
+    if(folder){
+      folder.name = name;
+      folder.color = folderEditDraft.color;
+      folder.icon = folderEditDraft.icon;
+    }
+    showToast('フォルダを更新しました', 'success');
+  } else {
+    folders.push({
+      id: 'f-' + Date.now(),
+      name,
+      color: folderEditDraft.color,
+      icon: folderEditDraft.icon,
+      issueIds: []
+    });
+    showToast('フォルダを作成しました', 'success');
+  }
+
+  saveState();
+  closeFolderEditor();
+  renderFolderNav();
+  // 詳細モーダル開いていれば追加UIを更新
+  if(currentIssue) renderFolderAddSection();
+}
+
+function deleteFolder(){
+  if(!editingFolderId) return;
+  if(!confirm('このフォルダを削除しますか？（中の課題は削除されません）')) return;
+  const folders = getCurrentFolders();
+  const idx = folders.findIndex(f => f.id === editingFolderId);
+  if(idx >= 0) folders.splice(idx, 1);
+  saveState();
+  closeFolderEditor();
+  // フォルダフィルタ中だった場合は解除
+  if(currentFolder === editingFolderId){
+    currentFolder = null;
+    currentFilter = 'all';
+  }
+  renderFolderNav();
+  if(currentIssue) renderFolderAddSection();
+  showToast('フォルダを削除しました', 'success');
+}
+
+function toggleIssueInFolder(folderId, issueId){
+  const folder = getCurrentFolders().find(f => f.id === folderId);
+  if(!folder) return;
+  if(!folder.issueIds) folder.issueIds = [];
+  const idx = folder.issueIds.indexOf(issueId);
+  if(idx >= 0){
+    folder.issueIds.splice(idx, 1);
+    showToast(`「${folder.name}」から削除しました`, 'info');
+  } else {
+    folder.issueIds.push(issueId);
+    showToast(`「${folder.name}」に追加しました`, 'success');
+  }
+  saveState();
+  renderFolderNav();
+  renderFolderAddSection();
+}
+
+let currentFolder = null; // 現在フィルタしているフォルダID
+
+function filterByFolder(folderId){
+  currentFolder = folderId;
+  currentFilter = 'all';
+  currentClient = null;
+  currentSystem = null;
+  document.querySelectorAll('.filter-chip').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.filter-chip[data-filter="all"]').forEach(t => t.classList.add('active'));
+  document.querySelectorAll('#client-nav .nav-item, #system-nav .nav-item').forEach(el => el.classList.remove('active'));
+  setView('list');
+  renderFolderNav();
+  renderList();
+}
+
+function clearFolderFilter(){
+  currentFolder = null;
+  renderFolderNav();
+  renderList();
+}
+
+function renderFolderNav(){
+  const navEl = document.getElementById('folder-nav');
+  if(!navEl) return;
+  const folders = getCurrentFolders();
+  const countEl = document.getElementById('folder-section-count');
+  if(countEl) countEl.textContent = folders.length;
+
+  if(folders.length === 0){
+    navEl.innerHTML = `<div class="sidebar-empty">フォルダがありません<br><a onclick="openFolderEditor()" style="color:var(--brand);cursor:pointer;text-decoration:underline">＋ 新しいフォルダ</a></div>`;
+    return;
+  }
+
+  navEl.innerHTML = folders.map(f => {
+    // ロールに応じてスコープした有効な課題のみカウント
+    let scopedIssues = state.issues;
+    if(currentRole === 'client'){
+      scopedIssues = scopedIssues.filter(i => i.client === CLIENT_ROLE_SELF);
+    }
+    const count = (f.issueIds || []).filter(id => scopedIssues.some(i => i.id === id)).length;
+    return `
+      <div class="folder-nav-item ${currentFolder === f.id ? 'active' : ''}" onclick="filterByFolder('${f.id}')">
+        <span class="folder-dot" style="background:${f.color}"></span>
+        <i class="ti ti-${f.icon || 'folder'}" style="color:${f.color}"></i>
+        ${escapeHtml(f.name)}
+        <span class="badge-count">${count}</span>
+        <button class="folder-menu-btn" onclick="event.stopPropagation();openFolderEditor('${f.id}')" title="編集"><i class="ti ti-dots-vertical"></i></button>
+      </div>
+    `;
+  }).join('');
+}
+
+// 課題詳細モーダル内のフォルダ追加UI
+function renderFolderAddSection(){
+  const root = document.getElementById('d-folders');
+  if(!root || !currentIssue) return;
+  const folders = getCurrentFolders();
+  const id = currentIssue.id;
+  if(folders.length === 0){
+    root.innerHTML = `<span style="font-size:11px;color:var(--text-tertiary)">フォルダがありません</span> <a onclick="openFolderEditor()" style="color:var(--brand);cursor:pointer;text-decoration:underline;font-size:11px">＋ 新規作成</a>`;
+    return;
+  }
+  root.innerHTML = folders.map(f => {
+    const added = (f.issueIds || []).includes(id);
+    return `
+      <span class="folder-chip folder-chip-toggle ${added ? 'added' : ''}" onclick="toggleIssueInFolder('${f.id}', ${id})" title="${added ? 'クリックで削除' : 'クリックで追加'}">
+        <span class="folder-dot" style="background:${f.color}"></span>
+        ${escapeHtml(f.name)}
+        ${added ? '<i class="ti ti-check" style="font-size:12px"></i>' : '<i class="ti ti-plus" style="font-size:12px"></i>'}
+      </span>
+    `;
+  }).join('') + ` <a onclick="openFolderEditor()" style="color:var(--brand);cursor:pointer;text-decoration:underline;font-size:11px;align-self:center">＋ 新規作成</a>`;
+}
+
+// ============ Sidebar Section Reorder ============
+let sidebarEditing = false;
+
+function loadSidebarOrder(){
+  try {
+    const raw = localStorage.getItem(SIDEBAR_ORDER_KEY);
+    if(raw) return JSON.parse(raw);
+  } catch(e){}
+  return null;
+}
+
+function saveSidebarOrder(order){
+  try { localStorage.setItem(SIDEBAR_ORDER_KEY, JSON.stringify(order)); } catch(e){}
+}
+
+function applySidebarOrder(){
+  const order = loadSidebarOrder();
+  if(!order || !Array.isArray(order)) return;
+  const container = document.getElementById('sidebar-sections');
+  if(!container) return;
+  const sections = {};
+  container.querySelectorAll('.sidebar-reorderable').forEach(s => sections[s.dataset.sectionId] = s);
+  order.forEach(id => {
+    if(sections[id]){
+      container.appendChild(sections[id]);
+      delete sections[id];
+    }
+  });
+  Object.values(sections).forEach(s => container.appendChild(s));
+}
+
+function toggleSidebarEdit(){
+  sidebarEditing = !sidebarEditing;
+  const container = document.getElementById('sidebar-sections');
+  const btn = document.getElementById('sidebar-edit-btn');
+  if(sidebarEditing){
+    container.classList.add('editing');
+    btn.classList.add('active');
+    btn.innerHTML = '<i class="ti ti-check"></i> 完了';
+    container.querySelectorAll('.sidebar-reorderable').forEach(s => s.setAttribute('draggable', 'true'));
+    showToast('セクションをドラッグして並び替えできます', 'info');
+  } else {
+    container.classList.remove('editing');
+    btn.classList.remove('active');
+    btn.innerHTML = '<i class="ti ti-arrows-move"></i> セクション並び替え';
+    container.querySelectorAll('.sidebar-reorderable').forEach(s => s.setAttribute('draggable', 'false'));
+    const order = [...container.querySelectorAll('.sidebar-reorderable')].map(s => s.dataset.sectionId);
+    saveSidebarOrder(order);
+    showToast('レイアウトを保存しました', 'success');
+  }
+}
+
+function setupSidebarDragDrop(){
+  const container = document.getElementById('sidebar-sections');
+  if(!container || container.dataset.dndInit === '1') return;
+  container.dataset.dndInit = '1';
+
+  let draggedEl = null;
+
+  container.addEventListener('dragstart', e => {
+    const section = e.target.closest('.sidebar-reorderable');
+    if(!section || !container.classList.contains('editing')) return;
+    draggedEl = section;
+    section.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', section.dataset.sectionId);
+  });
+
+  container.addEventListener('dragend', e => {
+    const section = e.target.closest('.sidebar-reorderable');
+    if(section) section.classList.remove('dragging');
+    container.querySelectorAll('.sidebar-reorderable').forEach(s => {
+      s.classList.remove('drag-over-top','drag-over-bottom');
+    });
+    draggedEl = null;
+  });
+
+  container.addEventListener('dragover', e => {
+    if(!draggedEl) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const target = e.target.closest('.sidebar-reorderable');
+    if(!target || target === draggedEl) return;
+    container.querySelectorAll('.sidebar-reorderable').forEach(s => {
+      s.classList.remove('drag-over-top','drag-over-bottom');
+    });
+    // 上半分なら上に、下半分なら下にインジケータ
+    const rect = target.getBoundingClientRect();
+    const after = (e.clientY - rect.top) > rect.height / 2;
+    target.classList.add(after ? 'drag-over-bottom' : 'drag-over-top');
+  });
+
+  container.addEventListener('drop', e => {
+    if(!draggedEl) return;
+    e.preventDefault();
+    const target = e.target.closest('.sidebar-reorderable');
+    if(!target || target === draggedEl) return;
+    const rect = target.getBoundingClientRect();
+    const after = (e.clientY - rect.top) > rect.height / 2;
+    if(after){
+      target.parentNode.insertBefore(draggedEl, target.nextSibling);
+    } else {
+      target.parentNode.insertBefore(draggedEl, target);
+    }
+    target.classList.remove('drag-over-top','drag-over-bottom');
+  });
+}
+
+// ============ Alert Banners (overdue & new issues) ============
+function getLastSeen(){
+  try {
+    const raw = localStorage.getItem(LAST_SEEN_KEY);
+    if(raw) return JSON.parse(raw);
+  } catch(e){}
+  return { staff: null, client: null };
+}
+
+function setLastSeen(){
+  const ls = getLastSeen();
+  ls[currentRole] = new Date().toISOString();
+  try { localStorage.setItem(LAST_SEEN_KEY, JSON.stringify(ls)); } catch(e){}
+}
+
+function parseIssueDate(i){
+  // i.date は 'YYYY/MM/DD' 形式
+  if(!i.date) return null;
+  try {
+    return new Date(i.date.replace(/\//g, '-'));
+  } catch(e){ return null; }
+}
+
+function countNewIssues(){
+  const ls = getLastSeen();
+  const lastSeenStr = ls[currentRole];
+  if(!lastSeenStr) return 0; // 初回は0
+  const lastSeen = new Date(lastSeenStr);
+  let scoped = state.issues;
+  if(currentRole === 'client'){
+    scoped = scoped.filter(i => i.client === CLIENT_ROLE_SELF);
+  }
+  return scoped.filter(i => {
+    const d = parseIssueDate(i);
+    return d && d > lastSeen;
+  }).length;
+}
+
+function countOverdueIssues(){
+  let scoped = state.issues;
+  if(currentRole === 'client'){
+    scoped = scoped.filter(i => i.client === CLIENT_ROLE_SELF);
+  }
+  return scoped.filter(i => isOverdue(i) && i.status !== 'done' && i.status !== 'cancel').length;
+}
+
+function showOverdueIssues(){
+  currentFilter = 'overdue';
+  currentClient = null;
+  currentSystem = null;
+  currentFolder = null;
+  document.querySelectorAll('.filter-chip').forEach(t => t.classList.remove('active'));
+  setView('list');
+  renderList();
+  renderFolderNav();
+  // 上部へスクロール
+  const main = document.querySelector('.main');
+  if(main) main.scrollTop = 0;
+}
+
+function showNewIssues(){
+  currentFilter = 'new-issues';
+  currentClient = null;
+  currentSystem = null;
+  currentFolder = null;
+  document.querySelectorAll('.filter-chip').forEach(t => t.classList.remove('active'));
+  setView('list');
+  renderList();
+  renderFolderNav();
+  const main = document.querySelector('.main');
+  if(main) main.scrollTop = 0;
+}
+
+function dismissAlertBanner(type){
+  const root = document.getElementById('alert-banners');
+  const banner = root.querySelector(`.alert-banner.${type}`);
+  if(banner) banner.style.display = 'none';
+  if(type === 'new-issue'){
+    // 既読としてマーク
+    setLastSeen();
+  }
+}
+
+function renderAlertBanners(){
+  const root = document.getElementById('alert-banners');
+  if(!root) return;
+  const overdueCount = countOverdueIssues();
+  const newCount = countNewIssues();
+
+  let html = '';
+  if(overdueCount > 0){
+    html += `
+      <div class="alert-banner overdue" onclick="showOverdueIssues()">
+        <i class="ti ti-alert-triangle"></i>
+        <span class="alert-banner-text">納期超過の課題が <strong>${overdueCount}件</strong> あります。ご確認ください。</span>
+        <span class="alert-banner-action">確認する →</span>
+        <button class="alert-banner-close" onclick="event.stopPropagation();dismissAlertBanner('overdue')" title="閉じる"><i class="ti ti-x" style="font-size:14px"></i></button>
+      </div>
+    `;
+  }
+  if(newCount > 0){
+    html += `
+      <div class="alert-banner new-issue" onclick="showNewIssues()">
+        <i class="ti ti-sparkles"></i>
+        <span class="alert-banner-text">前回ご覧になってから <strong>${newCount}件</strong> の新しい課題が起票されました。</span>
+        <span class="alert-banner-action">確認する →</span>
+        <button class="alert-banner-close" onclick="event.stopPropagation();dismissAlertBanner('new-issue')" title="既読にする"><i class="ti ti-x" style="font-size:14px"></i></button>
+      </div>
+    `;
+  }
+  root.innerHTML = html;
 }
 
 // 顧客別・システム別のソート方向（'count' or 'name'）
@@ -1932,6 +2567,7 @@ function openDetail(id){
   document.querySelectorAll('.modal-tab').forEach((t,idx)=>t.classList.toggle('active',idx===0));
   document.querySelectorAll('.tab-pane').forEach((p,idx)=>p.classList.toggle('active',idx===0));
   updatePinBtnInDetail();
+  renderFolderAddSection();
   renderList();
 }
 
@@ -2843,6 +3479,8 @@ function renderAll(){
   ensureClients();
   renderList();
   renderClientNav();
+  renderFolderNav();
+  renderAlertBanners();
   updateNotifyBadge();
   if(currentView==='dashboard') renderDashboard();
   if(currentView==='clients') renderClientMaster();
@@ -2867,6 +3505,8 @@ document.addEventListener('change', e=>{
 });
 
 // Init
+applySidebarOrder();
+setupSidebarDragDrop();
 renderAll();
 </script>
 </body>
