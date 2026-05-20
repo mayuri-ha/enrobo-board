@@ -273,6 +273,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
   .client-row{grid-template-columns:1fr;gap:6px}
   .client-row.header{display:none}
 }
+
+/* ==== Inquiry form ==== */
+.form-step-title{font-size:13px;font-weight:700;color:var(--text-secondary);padding:8px 14px;background:var(--bg-secondary);border-radius:var(--radius-md);margin:24px 0 16px 0;display:flex;align-items:center;gap:8px;letter-spacing:.02em}
+.form-step-title:first-child{margin-top:0}
+.form-step-title i{font-size:16px}
+.form-section-hint{font-size:12px;color:var(--text-secondary);margin-bottom:16px;line-height:1.6}
+
+.inquiry-type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.inquiry-card{cursor:pointer;border:1.5px solid var(--border-mid);border-radius:var(--radius-md);padding:14px 16px;transition:all .15s;background:var(--bg-primary);position:relative}
+.inquiry-card:hover{border-color:var(--brand-mid);background:var(--bg-secondary)}
+.inquiry-card input[type=radio]{position:absolute;opacity:0;pointer-events:none}
+.inquiry-card:has(input:checked){border-color:var(--brand);background:var(--brand-light);box-shadow:0 0 0 3px rgba(29,158,117,0.12)}
+.inquiry-card-inner{display:flex;flex-direction:column;gap:4px}
+.inquiry-card i{font-size:22px;color:var(--brand);margin-bottom:4px}
+.inquiry-card:has(input:checked) i{color:var(--brand-dark)}
+.inquiry-card-title{font-size:14px;font-weight:600;color:var(--text-primary)}
+.inquiry-card-desc{font-size:11px;color:var(--text-secondary);line-height:1.4}
+
+.checkbox-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.cb-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--border-mid);border-radius:var(--radius-sm);font-size:12.5px;cursor:pointer;transition:all .15s;background:var(--bg-primary)}
+.cb-item:hover{border-color:var(--brand-mid);background:var(--bg-secondary)}
+.cb-item:has(input:checked){background:var(--brand-light);border-color:var(--brand);color:var(--brand-dark);font-weight:500}
+.cb-item input[type=checkbox]{width:14px;height:14px;accent-color:var(--brand)}
+
+.inquiry-section{padding-top:8px;border-top:1px dashed var(--border-light);margin-top:16px}
+.inquiry-section.show{display:block !important}
+
+.schedule-block{background:var(--bg-secondary);padding:12px 14px;border-radius:var(--radius-md)}
+.schedule-label{font-size:11px;font-weight:700;color:var(--brand-dark);margin-bottom:8px;letter-spacing:.04em}
+
+@media (max-width:768px){
+  .inquiry-type-grid{grid-template-columns:1fr}
+  .checkbox-grid{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -465,99 +500,378 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
     <!-- ===== New Issue Form View ===== -->
     <div class="view-section" id="view-new">
       <div class="page-header">
-        <div class="page-title">新規課題を起票する</div>
+        <div class="page-title">ENROBO サポートデスク</div>
       </div>
-      <div style="max-width:700px;background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:24px">
+      <div style="max-width:760px;background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:24px">
+
+        <!-- フォームの案内 -->
+        <div style="background:var(--brand-light);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--brand-dark);line-height:1.7">
+          <div style="font-weight:600;margin-bottom:6px">いつもENROBOをご利用いただきありがとうございます。</div>
+          【お願い】複数のご用件がある場合は、お手数ですが用件ごとに分けてご送信ください。<br>
+          【作業について】ご送信後、保守担当よりご対応いたします。エラー対応の場合は、ご入力いただいた作業可能日時の範囲内でPCに随時接続させていただきます。
+        </div>
+
+        <!-- ===== Step 1: 共通情報 ===== -->
+        <div class="form-step-title">基本情報</div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">顧客<span class="req">*</span></label>
             <select class="form-select" id="f-client" onchange="autoFillClientNo()">
               <option value="">選択してください</option>
             </select>
+            <div class="form-help">クライアント環境では自社が自動選択されます</div>
           </div>
           <div class="form-group">
-            <label class="form-label">顧客No</label>
+            <label class="form-label">顧客No<span class="req">*</span></label>
             <input type="text" class="form-input" id="f-clientno" placeholder="顧客を選択すると自動入力" readonly style="background:var(--bg-secondary);color:var(--text-secondary)">
+            <div class="form-help">チャット名冒頭、もしくは概要欄記載の3桁の番号</div>
           </div>
         </div>
+
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">案件<span class="req">*</span></label>
-            <input type="text" class="form-input" id="f-project" placeholder="例：公文書ダウンロード">
+            <label class="form-label">ご担当者名<span class="req">*</span></label>
+            <input type="text" class="form-input" id="f-contact-name" placeholder="例：山田 太郎">
           </div>
           <div class="form-group">
-            <label class="form-label">システム<span class="req">*</span></label>
-            <select class="form-select" id="f-system">
-              <option value="">選択してください</option>
-              <option>セルズ台帳</option>
-              <option>OS</option>
-              <option>社労夢</option>
-              <option>MyKomon</option>
-              <option>給与管理システム</option>
-              <option>e-Gov</option>
-              <option>イージアゼロ</option>
-              <option>SmartHR</option>
-            </select>
+            <label class="form-label">メールアドレス<span class="req">*</span></label>
+            <input type="email" class="form-input" id="f-email" placeholder="例：yamada@example.com">
           </div>
         </div>
+
         <div class="form-group">
-          <label class="form-label">問合せ内容<span class="req">*</span></label>
-          <textarea class="form-textarea" id="f-desc" placeholder="発生している現象、再現手順、エラーメッセージなどをご記入ください"></textarea>
+          <label class="form-label">お問い合わせ内容<span class="req">*</span></label>
+          <div class="form-help" style="margin-bottom:8px">該当するものをお選びください</div>
+          <div class="inquiry-type-grid">
+            <label class="inquiry-card" data-type="error">
+              <input type="radio" name="f-inquiry-type" value="error" onchange="switchInquiryType('error')">
+              <div class="inquiry-card-inner">
+                <i class="ti ti-alert-triangle"></i>
+                <div class="inquiry-card-title">エラー対応</div>
+                <div class="inquiry-card-desc">エラーや不具合のご報告・対応依頼</div>
+              </div>
+            </label>
+            <label class="inquiry-card" data-type="spec">
+              <input type="radio" name="f-inquiry-type" value="spec" onchange="switchInquiryType('spec')">
+              <div class="inquiry-card-inner">
+                <i class="ti ti-settings"></i>
+                <div class="inquiry-card-title">仕様について</div>
+                <div class="inquiry-card-desc">現在お使いのロボットの動作変更・確認</div>
+              </div>
+            </label>
+            <label class="inquiry-card" data-type="option">
+              <input type="radio" name="f-inquiry-type" value="option" onchange="switchInquiryType('option')">
+              <div class="inquiry-card-inner">
+                <i class="ti ti-shopping-cart-plus"></i>
+                <div class="inquiry-card-title">オプション・契約</div>
+                <div class="inquiry-card-desc">新しい機能の追加、契約内容の変更等</div>
+              </div>
+            </label>
+            <label class="inquiry-card" data-type="signin">
+              <input type="radio" name="f-inquiry-type" value="signin" onchange="switchInquiryType('signin')">
+              <div class="inquiry-card-inner">
+                <i class="ti ti-login"></i>
+                <div class="inquiry-card-title">サインアウト</div>
+                <div class="inquiry-card-desc">Power Automate のサインイン対応</div>
+              </div>
+            </label>
+          </div>
         </div>
-        <div class="form-row-3">
+
+        <!-- ===== Section: エラー対応 ===== -->
+        <div class="inquiry-section" id="sec-error" style="display:none">
+          <div class="form-step-title" style="background:#FCEBEB;color:#A32D2D"><i class="ti ti-alert-triangle"></i> エラー対応のご相談</div>
+          <div class="form-section-hint">複数のエラーがある場合は、1件ずつ別々にご送信ください。</div>
+
           <div class="form-group">
-            <label class="form-label">種別</label>
-            <select class="form-select" id="f-type">
-              <option>不具合</option>
-              <option>機能追加要望</option>
-              <option>操作に関する質問</option>
-              <option>仕様確認</option>
-              <option>その他</option>
+            <label class="form-label">対象のRPA・業務<span class="req">*</span></label>
+            <select class="form-select" id="fe-rpa">
+              <option value="">選択してください</option>
+              <option>1. 公文書ダウンロード</option>
+              <option>2. メール作成・送信</option>
+              <option>3. マイナンバー登録</option>
+              <option>4. 給与明細ダウンロード+納品データ作成</option>
+              <option>5. 台帳バックアップ</option>
+              <option>6. 手続情報バックアップ</option>
+              <option>7. 送付データと公文書チェック</option>
+              <option>8. 請求書一括作成</option>
+              <option>9. NSS請求データ更新</option>
+              <option>10. 納品用ファイル一括送信</option>
+              <option>11. わからない・その他</option>
             </select>
           </div>
+          <div class="form-group" id="fe-rpa-other-wrap" style="display:none">
+            <label class="form-label">実行ロボット名</label>
+            <input type="text" class="form-input" id="fe-rpa-other" placeholder="PowerAutomateに表示されている実行ロボット名をご入力ください">
+            <div class="form-help">対象のRPA・業務で「その他」をご選択された場合</div>
+          </div>
+
           <div class="form-group">
-            <label class="form-label">一次判定</label>
-            <select class="form-select" id="f-level">
-              <option value="">未判定</option>
-              <option value="L">L（軽微）</option>
-              <option value="M">M（中）</option>
-              <option value="H">H（重大）</option>
+            <label class="form-label">関連システム（当てはまるもの全て）<span class="req">*</span></label>
+            <div class="checkbox-grid" id="fe-systems">
+              <label class="cb-item"><input type="checkbox" value="オフィスステーション"><span>オフィスステーション</span></label>
+              <label class="cb-item"><input type="checkbox" value="社労夢"><span>社労夢</span></label>
+              <label class="cb-item"><input type="checkbox" value="セルズ台帳"><span>セルズ台帳</span></label>
+              <label class="cb-item"><input type="checkbox" value="e-Gov"><span>e-Gov</span></label>
+              <label class="cb-item"><input type="checkbox" value="SmartHR"><span>SmartHR</span></label>
+              <label class="cb-item"><input type="checkbox" value="イージアゼロ"><span>イージアゼロ</span></label>
+              <label class="cb-item"><input type="checkbox" value="MyKomon"><span>MyKomon</span></label>
+              <label class="cb-item"><input type="checkbox" value="その他"><span>その他</span></label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">どのような症状ですか？（当てはまるもの全て）<span class="req">*</span></label>
+            <div class="checkbox-grid" id="fe-symptoms">
+              <label class="cb-item"><input type="checkbox" value="途中で止まっている"><span>途中で止まっている</span></label>
+              <label class="cb-item"><input type="checkbox" value="エラーメッセージが出た"><span>エラーメッセージが出た</span></label>
+              <label class="cb-item"><input type="checkbox" value="ファイルが保存されていない"><span>ファイルが保存されていない</span></label>
+              <label class="cb-item"><input type="checkbox" value="ファイルの内容が正しくない"><span>ファイルの内容が正しくない</span></label>
+              <label class="cb-item"><input type="checkbox" value="通知が届かない"><span>通知が届かない</span></label>
+              <label class="cb-item"><input type="checkbox" value="通知が重複/誤った内容"><span>通知が重複/誤った内容</span></label>
+              <label class="cb-item"><input type="checkbox" value="ダウンロードされていない"><span>ダウンロードされていない</span></label>
+              <label class="cb-item"><input type="checkbox" value="画面が固まる・フリーズ"><span>画面が固まる・フリーズ</span></label>
+              <label class="cb-item"><input type="checkbox" value="起動しない"><span>起動しない</span></label>
+              <label class="cb-item"><input type="checkbox" value="その他"><span>その他</span></label>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">到達番号</label>
+              <input type="text" class="form-input" id="fe-arrival-no" placeholder="例: 202604221518106331">
+              <div class="form-help">不明の場合は空欄で結構です</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">発生頻度<span class="req">*</span></label>
+              <select class="form-select" id="fe-frequency">
+                <option value="">選択してください</option>
+                <option>今回初めて気づいた</option>
+                <option>何度か発生している(再現性あり)</option>
+                <option>今週に入ってから断続的に</option>
+                <option>毎回発生する</option>
+                <option>わからない</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">対象のデータ・案件<span class="req">*</span></label>
+            <textarea class="form-textarea" id="fe-target-data" placeholder="例: 株式会社○○商事/淺井明子/厚生年金資格取得" style="min-height:60px"></textarea>
+            <div class="form-help">会社名・個人名・手続き種類をわかる範囲でご入力ください</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">エラーメッセージの文言</label>
+            <input type="text" class="form-input" id="fe-error-msg" placeholder="例: 保存対象の公文書が存在しません">
+            <div class="form-help">画面に出た文言があればそのままご入力ください</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">具体的な状況・補足<span class="req">*</span></label>
+            <textarea class="form-textarea" id="fe-detail" placeholder="上の選択肢で伝えきれない内容があればご自由にご入力ください"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">最初に気づいた日時<span class="req">*</span></label>
+            <input type="text" class="form-input" id="fe-noticed-at" placeholder="例: 2026/04/22 09:00頃 / 本日朝 / 先週金曜の午後">
+          </div>
+        </div>
+
+        <!-- ===== Section: 仕様について ===== -->
+        <div class="inquiry-section" id="sec-spec" style="display:none">
+          <div class="form-step-title" style="background:#FAEEDA;color:#854F0B"><i class="ti ti-settings"></i> 仕様についてのご依頼</div>
+          <div class="form-section-hint">現在お使いのRPAの仕様を変更・確認したい場合のフォームです。</div>
+
+          <div class="form-group">
+            <label class="form-label">対象のRPA・業務<span class="req">*</span></label>
+            <select class="form-select" id="fs-rpa">
+              <option value="">選択してください</option>
+              <option>1. 公文書ダウンロード</option>
+              <option>2. メール作成・送信</option>
+              <option>3. マイナンバー登録</option>
+              <option>4. 給与明細ダウンロード+納品データ作成</option>
+              <option>5. 台帳バックアップ</option>
+              <option>6. 手続情報バックアップ</option>
+              <option>7. 送付データと公文書チェック</option>
+              <option>8. 請求書一括作成</option>
+              <option>9. NSS請求データ更新</option>
+              <option>10. 納品用ファイル一括送信</option>
+              <option>11. その他/わからない</option>
             </select>
           </div>
+          <div class="form-group" id="fs-rpa-other-wrap" style="display:none">
+            <label class="form-label">実行ロボット名</label>
+            <input type="text" class="form-input" id="fs-rpa-other" placeholder="PowerAutomateに表示されている実行ロボット名">
+          </div>
+
           <div class="form-group">
-            <label class="form-label">担当</label>
-            <select class="form-select" id="f-assignee">
-              <option value="">未割当</option>
-              <option>中川</option>
-              <option>田中</option>
-              <option>鈴木</option>
-              <option>佐藤</option>
+            <label class="form-label">カテゴリ<span class="req">*</span></label>
+            <select class="form-select" id="fs-category">
+              <option value="">選択してください</option>
+              <option>1. ファイルのリネームルール</option>
+              <option>2. 保存先フォルダの設定</option>
+              <option>3. 印刷設定(用紙サイズ・対象帳票等)</option>
+              <option>4. 手続一覧の追加・削除</option>
+              <option>5. 通知文言・通知先</option>
+              <option>6. 対象データの絞り込み条件</option>
+              <option>7. その他</option>
             </select>
+            <div class="form-help">内容に最も近いものをお選びください</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">対象のデータ・案件・手続き種類</label>
+            <textarea class="form-textarea" id="fs-target-data" placeholder="例: 雇用保険被保険者資格取得届、社会保険の取得手続き等" style="min-height:60px"></textarea>
+            <div class="form-help">対象がある場合はご入力ください（任意）</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">お問合せ内容<span class="req">*</span></label>
+            <textarea class="form-textarea" id="fs-content" placeholder="例：「○○の処理が完了したら××もチェックを入れてほしい」「△△の場合は印刷をスキップしてほしい」「現在、○○ の処理はどのような仕様になっていますか」"></textarea>
+            <div class="form-help">内容をできるだけ具体的にご記入ください</div>
           </div>
         </div>
-        <div class="form-row">
+
+        <!-- ===== Section: オプション・契約 ===== -->
+        <div class="inquiry-section" id="sec-option" style="display:none">
+          <div class="form-step-title" style="background:#E1F5EE;color:#0F6E56"><i class="ti ti-shopping-cart-plus"></i> オプション・契約のご相談</div>
+          <div class="form-section-hint">新機能の追加や契約内容の変更についてのご相談を承ります。</div>
+
           <div class="form-group">
-            <label class="form-label">日付</label>
-            <input type="date" class="form-input" id="f-date">
+            <label class="form-label">現在の契約プラン<span class="req">*</span></label>
+            <select class="form-select" id="fo-plan">
+              <option value="">選択してください</option>
+              <option>1. ライト</option>
+              <option>2. ミドル</option>
+              <option>3. スタンダード</option>
+              <option>4. エンタープライズ</option>
+              <option>5. わからない</option>
+            </select>
+            <div class="form-help">お分かりになる範囲でお選びください</div>
           </div>
+
           <div class="form-group">
-            <label class="form-label">納期</label>
-            <input type="date" class="form-input" id="f-deadline">
+            <label class="form-label">ご希望のオプション・機能<span class="req">*</span></label>
+            <select class="form-select" id="fo-option">
+              <option value="">選択してください</option>
+              <option>1. 公文書読み取り</option>
+              <option>2. 社内通知(完了/返戻/エラー通知)</option>
+              <option>3. メール/チャット作成・送信</option>
+              <option>4. 印刷</option>
+              <option>5. (社保)取得喪失証明書・保険料一覧表作成</option>
+              <option>6. 進捗管理簿への転記(Kintone/Excel等)</option>
+              <option>7. マイナポータル</option>
+              <option>8. 健保組合ごと公文書読み取り</option>
+              <option>9. 勤怠データを給与ソフト等に取り込み/変換</option>
+              <option>10. タイムカード等手書き帳票の転記</option>
+              <option>11. 納品ファイル準備(一覧表/明細等)</option>
+              <option>12. タイマー実行</option>
+              <option>13. 月額変更チェック</option>
+              <option>14. 請求書作成/リネーム/フォルダ格納</option>
+              <option>15. 複数のオプションを検討中(打合せ希望)</option>
+              <option>16. その他</option>
+              <option>17. ご解約・一部サービス廃止</option>
+            </select>
+            <div class="form-help">新しいオプション・機能を追加したい場合はお選びください</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">ご希望内容の詳細<span class="req">*</span></label>
+            <textarea class="form-textarea" id="fo-detail" placeholder="ご希望の内容を具体的にご入力ください"></textarea>
+            <div class="form-help">ご相談内容に応じて、保守担当または営業担当よりご連絡いたします</div>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">作業着手日</label>
-            <input type="date" class="form-input" id="f-startdate">
+
+        <!-- ===== Section: Power Automate サインイン ===== -->
+        <div class="inquiry-section" id="sec-signin" style="display:none">
+          <div class="form-step-title" style="background:#E6F1FB;color:#185FA5"><i class="ti ti-login"></i> Power Automate のサインイン作業</div>
+          <div class="form-section-hint">保守担当がPCに接続してサインインを行います。下記の「作業可能日時」をご指定ください。</div>
+        </div>
+
+        <!-- ===== Section: 共通：作業可能日時 ===== -->
+        <div class="inquiry-section" id="sec-schedule" style="display:none">
+          <div class="form-step-title">PC接続可能日時</div>
+          <div class="form-section-hint">保守担当がPCに接続して作業を行います。第1希望と第2希望をそれぞれご指定ください。</div>
+
+          <div class="schedule-block">
+            <div class="schedule-label">第1希望</div>
+            <div class="form-row">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">日付<span class="req">*</span></label>
+                <input type="date" class="form-input" id="f-sched1-date">
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">時間帯<span class="req">*</span></label>
+                <select class="form-select" id="f-sched1-time">
+                  <option value="">選択してください</option>
+                  <option>終日OK</option>
+                  <option>10:00～13:00</option>
+                  <option>13:00～17:00</option>
+                  <option>その他（自由記入）</option>
+                </select>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">先方希望納期（作業可能日時）</label>
-            <input type="text" class="form-input" id="f-clientdeadline" placeholder="例：2024/07/10 17:00まで">
+
+          <div class="schedule-block" style="margin-top:12px">
+            <div class="schedule-label">第2希望</div>
+            <div class="form-row">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">日付<span class="req">*</span></label>
+                <input type="date" class="form-input" id="f-sched2-date">
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">時間帯<span class="req">*</span></label>
+                <select class="form-select" id="f-sched2-time">
+                  <option value="">選択してください</option>
+                  <option>終日OK</option>
+                  <option>10:00～13:00</option>
+                  <option>13:00～17:00</option>
+                  <option>その他（自由記入）</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+
+        <!-- 担当者用：内部メモ -->
+        <div class="inquiry-section staff-only" id="sec-staff-meta" style="display:none">
+          <div class="form-step-title" style="background:var(--bg-secondary);color:var(--text-secondary)"><i class="ti ti-user-cog"></i> 担当者用設定（任意）</div>
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">一次判定</label>
+              <select class="form-select" id="f-level">
+                <option value="">未判定</option>
+                <option value="L">L（軽微）</option>
+                <option value="MH">MH（重大）</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">担当者割当</label>
+              <select class="form-select" id="f-assignee">
+                <option value="">未割当</option>
+                <option>早坂</option>
+                <option>大和</option>
+                <option>千々岩</option>
+                <option>金栗</option>
+                <option>宮崎</option>
+                <option>小佐井</option>
+                <option>桑原</option>
+                <option>田野</option>
+                <option>髙竹</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">納期</label>
+              <input type="date" class="form-input" id="f-deadline">
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:24px;padding-top:20px;border-top:1px solid var(--border-light)">
           <button class="btn" onclick="setView('list')">キャンセル</button>
-          <button class="btn btn-primary" onclick="submitNewIssue()"><i class="ti ti-send"></i> 課題を登録する</button>
+          <button class="btn btn-primary" onclick="submitNewIssue()"><i class="ti ti-send"></i> 起票する</button>
         </div>
       </div>
     </div>
@@ -890,147 +1204,101 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu
 
 <script>
 // ============ State ============
-const STORAGE_KEY = 'enrobo-board-v3';
+const STORAGE_KEY = 'enrobo-board-v4';
 const DEFAULT_DATA = {
   clients: [
-    { no: '001', name: 'A社', fullname: '株式会社エー', mainAssignee: '中川', subAssignee: '田中', email: 'contact@a-corp.example', tel: '03-1111-1111', note: '' },
-    { no: '002', name: 'B社', fullname: '株式会社ビー', mainAssignee: '田中', subAssignee: '鈴木', email: 'contact@b-corp.example', tel: '03-2222-2222', note: '' },
-    { no: '003', name: 'C社', fullname: '株式会社シー', mainAssignee: '佐藤', subAssignee: '', email: 'contact@c-corp.example', tel: '03-3333-3333', note: '' },
+    { no: '002', name: 'A社', fullname: '株式会社A', mainAssignee: '早坂', subAssignee: '宮崎', email: 'contact@a.example', tel: '03-2428-7672', note: '' },
+    { no: '003', name: 'B社', fullname: '株式会社B', mainAssignee: '宮崎', subAssignee: '大和', email: 'contact@b.example', tel: '03-1625-7211', note: '' },
+    { no: '005', name: 'C社', fullname: '株式会社C', mainAssignee: '髙竹', subAssignee: '髙竹', email: 'contact@c.example', tel: '03-6442-6583', note: '' },
+    { no: '010', name: 'D社', fullname: '株式会社D', mainAssignee: '早坂', subAssignee: '千々岩', email: 'contact@d.example', tel: '03-3212-6524', note: '' },
+    { no: '014', name: 'E社', fullname: '株式会社E', mainAssignee: '髙竹', subAssignee: '小佐井', email: 'contact@e.example', tel: '03-5016-3683', note: '' },
+    { no: '019', name: 'F社', fullname: '株式会社F', mainAssignee: '早坂', subAssignee: '桑原', email: 'contact@f.example', tel: '03-2435-7186', note: '' },
+    { no: '031', name: 'G社', fullname: '株式会社G', mainAssignee: '大和', subAssignee: '早坂', email: 'contact@g.example', tel: '03-6168-8345', note: '' },
+    { no: '053', name: 'H社', fullname: '株式会社H', mainAssignee: '大和', subAssignee: '早坂', email: 'contact@h.example', tel: '03-2519-3329', note: '' },
+    { no: '054', name: 'I社', fullname: '株式会社I', mainAssignee: '千々岩', subAssignee: '早坂', email: 'contact@i.example', tel: '03-5780-8055', note: '' },
+    { no: '079', name: 'つくば', fullname: '株式会社つくば', mainAssignee: '田野', subAssignee: '宮崎', email: 'contact@つくば.example', tel: '03-8688-1602', note: '' },
+    { no: '081', name: 'J社', fullname: '株式会社J', mainAssignee: '宮崎', subAssignee: '小佐井', email: 'contact@j.example', tel: '03-9547-8912', note: '' },
+    { no: '087', name: 'K社', fullname: '株式会社K', mainAssignee: '金栗', subAssignee: '髙竹', email: 'contact@k.example', tel: '03-6165-1205', note: '' },
+    { no: '096', name: 'L社', fullname: '株式会社L', mainAssignee: '桑原', subAssignee: '髙竹', email: 'contact@l.example', tel: '03-8116-9823', note: '' },
+    { no: '121', name: 'M社', fullname: '株式会社M', mainAssignee: '田野', subAssignee: '髙竹', email: 'contact@m.example', tel: '03-7873-7136', note: '' },
+    { no: '123', name: 'N社', fullname: '株式会社N', mainAssignee: '髙竹', subAssignee: '早坂', email: 'contact@n.example', tel: '03-3973-2353', note: '' },
+    { no: '126', name: 'O社', fullname: '株式会社O', mainAssignee: '田野', subAssignee: '宮崎', email: 'contact@o.example', tel: '03-3787-6487', note: '' },
+    { no: '137', name: 'P社', fullname: '株式会社P', mainAssignee: '小佐井', subAssignee: '髙竹', email: 'contact@p.example', tel: '03-7409-2200', note: '' },
+    { no: '143', name: 'Q社', fullname: '株式会社Q', mainAssignee: '田野', subAssignee: '桑原', email: 'contact@q.example', tel: '03-6506-1267', note: '' },
+    { no: '148', name: 'R社', fullname: '株式会社R', mainAssignee: '金栗', subAssignee: '大和', email: 'contact@r.example', tel: '03-6955-1210', note: '' },
+    { no: '156', name: '山田事務所', fullname: '株式会社山田事務所', mainAssignee: '小佐井', subAssignee: '金栗', email: 'contact@山田事務所.example', tel: '03-7647-9716', note: '' },
+    { no: '158', name: 'プロフェス', fullname: '株式会社プロフェス', mainAssignee: '髙竹', subAssignee: '早坂', email: 'contact@プロフェス.example', tel: '03-5713-9106', note: '' },
+    { no: '166', name: '飯田労務', fullname: '株式会社飯田労務', mainAssignee: '金栗', subAssignee: '髙竹', email: 'contact@飯田労務.example', tel: '03-8926-3909', note: '' },
+    { no: '181', name: 'S社', fullname: '株式会社S', mainAssignee: '千々岩', subAssignee: '髙竹', email: 'contact@s.example', tel: '03-8282-7202', note: '' },
+    { no: '206', name: 'T社', fullname: '株式会社T', mainAssignee: '田野', subAssignee: '早坂', email: 'contact@t.example', tel: '03-1166-3207', note: '' },
+    { no: '212', name: 'NAKA', fullname: '株式会社NAKA', mainAssignee: '田野', subAssignee: '金栗', email: 'contact@naka.example', tel: '03-1344-5200', note: '' },
+    { no: '214', name: 'U社', fullname: '株式会社U', mainAssignee: '小佐井', subAssignee: '宮崎', email: 'contact@u.example', tel: '03-8115-7887', note: '' },
+    { no: '219', name: 'ダーウィン', fullname: '株式会社ダーウィン', mainAssignee: '早坂', subAssignee: '大和', email: 'contact@ダーウィン.example', tel: '03-2025-9361', note: '' },
+    { no: '225', name: 'BDO', fullname: '株式会社BDO', mainAssignee: '小佐井', subAssignee: '大和', email: 'contact@bdo.example', tel: '03-2358-8097', note: '' },
+    { no: '232', name: 'いわき', fullname: '株式会社いわき', mainAssignee: '早坂', subAssignee: '髙竹', email: 'contact@いわき.example', tel: '03-7184-2203', note: '' },
+    { no: '237', name: 'V社', fullname: '株式会社V', mainAssignee: '髙竹', subAssignee: '桑原', email: 'contact@v.example', tel: '03-1477-6283', note: '' },
+    { no: '240', name: 'W社', fullname: '株式会社W', mainAssignee: '宮崎', subAssignee: '田野', email: 'contact@w.example', tel: '03-1541-6485', note: '' }
   ],
   issues: [
-    {
-      id: 1,
-      date: '2024/07/05', weekday: '金',
-      clientNo: '001', client: 'A社', project: '公文書ダウンロード', system: 'OS',
-      assignee: '中川', status: 'done', type: '不具合',
-      deadline: '', startDate: '', clientDeadline: '',
-      desc: '保存した公文書ファイルのファイル名と内容が不一致',
-      level: 'L',
-      tenMinDate: '',
-      causeAction: '最初に一覧画面のデータをDatatableで読み取るが、1つのデータについて一通り処理をして一覧画面に戻った際に画面がリフレッシュされて最初に読み取ったDatatableと実際の画面が食い違ってしまっていた\nOSのダウンロード画面を別タブで開くようにして画面のリフレッシュが起きないように修正した',
-      tagsManual: '一覧画面,Datatable,画面リフレッシュ,別タブで開く,新規タブ,データと画面の不一致',
-      tagsAI: '現象: ファイル名の不一致,公文書,データ不整合,ダウンロード,画面遷移,UI',
-      tagsAIMaster: 'ファイル名不一致,FilenameMismatch,公文書,OfficialDocument,データ不整合,DataInconsistency',
-      tagsDerived: '',
-      specChange: 'なし', specReflect: '',
-      completeDate: '2024/07/06',
-      workHours: 2, remainHours: 0,
-      causeCat: 'システム理解不足', unavoidable: 'いいえ',
-      screenRelated: '〇', procRelated: '',
-      countermeasure: '別タブ対応を標準化する',
-      updated: '2024/07/06 10:00',
-      comments: [{user:'中川',role:'staff',time:'07-06 10:00',text:'原因調査完了。別タブ対応で修正しました。'}]
-    },
-    {
-      id: 2,
-      date: '2024/07/08', weekday: '月',
-      clientNo: '002', client: 'B社', project: '勤怠データ取込', system: '社労夢',
-      assignee: '田中', status: 'inprogress', type: '不具合',
-      deadline: '2024/07/12', startDate: '2024/07/09', clientDeadline: '2024/07/12 17:00まで',
-      desc: '勤怠CSVの取込時にエラーが発生して止まります。先月までは問題なく動いていました。',
-      level: 'H',
-      tenMinDate: '2024/07/08 14:00',
-      causeAction: '調査中',
-      tagsManual: 'CSV取込,エラー,勤怠',
-      tagsAI: '', tagsAIMaster: '', tagsDerived: '',
-      specChange: '', specReflect: '',
-      completeDate: '', workHours: 1.5, remainHours: 2,
-      causeCat: '', unavoidable: '',
-      screenRelated: '', procRelated: '',
-      countermeasure: '',
-      updated: '2024/07/09 10:00',
-      comments: [{user:'田中',role:'staff',time:'07-09 10:00',text:'原因を調査中です。明日中に状況報告します。'}]
-    },
-    {
-      id: 3,
-      date: '2024/07/10', weekday: '水',
-      clientNo: '001', client: 'A社', project: '社保手続き自動送信', system: 'e-Gov',
-      assignee: '鈴木', status: 'pending10', type: '不具合',
-      deadline: '2024/07/15', startDate: '', clientDeadline: '',
-      desc: '社会保険手続きの自動送信処理で、特定の従業員データだけ失敗します。',
-      level: 'M',
-      tenMinDate: '', causeAction: '',
-      tagsManual: '自動送信,社保,特定データ',
-      tagsAI: '', tagsAIMaster: '', tagsDerived: '',
-      specChange: '', specReflect: '',
-      completeDate: '', workHours: 0, remainHours: 3,
-      causeCat: '', unavoidable: '',
-      screenRelated: '', procRelated: '〇',
-      countermeasure: '',
-      updated: '2024/07/10 16:00',
-      comments: []
-    },
-    {
-      id: 4,
-      date: '2024/07/11', weekday: '木',
-      clientNo: '003', client: 'C社', project: 'ログイン・パスワードリセット', system: 'MyKomon',
-      assignee: '佐藤', status: 'confirmed', type: '不具合',
-      deadline: '2024/07/14', startDate: '2024/07/12', clientDeadline: '2024/07/14 12:00まで',
-      desc: 'パスワードリセットメールが届かない事象が発生しています。',
-      level: 'M',
-      tenMinDate: '2024/07/11 15:00',
-      causeAction: 'メールサーバーの設定確認中',
-      tagsManual: 'パスワードリセット,メール未着,ログイン',
-      tagsAI: '', tagsAIMaster: '', tagsDerived: '',
-      specChange: '', specReflect: '',
-      completeDate: '', workHours: 2, remainHours: 1,
-      causeCat: '', unavoidable: '',
-      screenRelated: '〇', procRelated: '',
-      countermeasure: '',
-      updated: '2024/07/12 09:00',
-      comments: [{user:'佐藤',role:'staff',time:'07-12 09:00',text:'修正版をテスト環境にデプロイしました。確認をお願いします。'},{user:'C社 木村',role:'client',time:'07-12 15:30',text:'確認しました。本番反映を依頼します。'}]
-    },
-    {
-      id: 5,
-      date: '2024/07/03', weekday: '水',
-      clientNo: '002', client: 'B社', project: '帳票PDF文字化け', system: 'セルズ台帳',
-      assignee: '鈴木', status: 'done', type: '不具合',
-      deadline: '2024/07/07', startDate: '2024/07/04', clientDeadline: '',
-      desc: '出力したPDFで一部の漢字が文字化けします。',
-      level: 'L',
-      tenMinDate: '2024/07/03 16:00',
-      causeAction: 'フォント設定を変更することで文字化けを解消しました。',
-      tagsManual: 'PDF,文字化け,帳票',
-      tagsAI: '帳票,PDF出力,文字化け', tagsAIMaster: '', tagsDerived: '',
-      specChange: 'なし', specReflect: '',
-      completeDate: '2024/07/05',
-      workHours: 1, remainHours: 0,
-      causeCat: 'フォント設定誤り', unavoidable: 'いいえ',
-      screenRelated: '', procRelated: '',
-      countermeasure: 'フォント管理ガイドラインを整備する',
-      updated: '2024/07/05 11:00',
-      comments: [{user:'鈴木',role:'staff',time:'07-05 11:00',text:'修正完了しました。フォント設定を変更しています。'}]
-    },
-    {
-      id: 6,
-      date: '2024/07/12', weekday: '金',
-      clientNo: '001', client: 'A社', project: '給与計算エラー', system: '給与管理システム',
-      assignee: '中川', status: 'todo', type: '不具合',
-      deadline: '2024/07/20', startDate: '', clientDeadline: '',
-      desc: '一部従業員の給与計算で残業時間が反映されていません。',
-      level: 'H',
-      tenMinDate: '', causeAction: '',
-      tagsManual: '給与計算,残業,反映漏れ',
-      tagsAI: '', tagsAIMaster: '', tagsDerived: '',
-      specChange: '', specReflect: '',
-      completeDate: '', workHours: 0, remainHours: 4,
-      causeCat: '', unavoidable: '',
-      screenRelated: '', procRelated: '',
-      countermeasure: '',
-      updated: '2024/07/12 10:00',
-      comments: []
-    },
+    { id: 2, date: '2026/03/17', weekday: '月', clientNo: '137', client: 'P社', project: '公文書ダウンロード', system: '社労夢', assignee: '早坂', status: 'inprogress', type: '仕様変更', deadline: '2026/05/29', startDate: '2026/04/27', clientDeadline: '作業時間確認中', desc: '【振り返り時のご依頼】 500件上限への対処（繁忙期） 期間指定版ロボを追加（実行時に「データ作成日：自〜至」を入力→その範囲のみ処理）。 既存の"通常版"も併存し、時期で使い分け。\n公文書ダウンロードをコピーしてロボを作成。実行直後にデータ作成日の期間を指定する画面を出す。指定の期間のみ処理対象とする。', level: '', tenMinDate: '', causeAction: '3/17 16:00 先方より再検討のご連絡あり→社内確認中\n3/31 2つの案をご提案中、実施するか返答待ち。着手は4月初旬とお伝え。\n4/3 2回目のご提案済み。返答待ち\n4/14 詳細を先方とMTG予定→先方提案を採用\n申請時に備考欄に入力されている申請者名（20名分のいずれか）をもとに1データずつ検索を実施する仕様とする\n納期：6/10、作業期間：4/27,28の10-15時で連絡済み（早坂）\n4/27変更点（202604-05繁忙期対応でリージョン作成）：3h\nMain_繁忙期対応中を作成、初期処理サブフロー→Excel読込部追加、検索サブフロー→備考欄入力部分追加\n残りの対応は5月に実施予定→5/25・26にて作業予定', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: 'あり', specReflect: '済', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/03/17 10:00', comments: [] },
+    { id: 3, date: '2026/04/08', weekday: '火', clientNo: '053', client: 'H社', project: '', system: '社労夢', assignee: '大和', status: 'thismonth', type: '仕様相談', deadline: '2026/05/15', startDate: '', clientDeadline: '下記時間以外で対応 ①9：00～ 1H ②13：00～ 1H ③15：00～ 1H', desc: '★フォルダ移動の日程が分かり次第、先方よりご連絡いただける予定（連絡待ち）\nRPAに関係するファイルとフォルダの格納場所の移動を予定しているのですが、どのくらいの保守時間が必要になりますか。\n「\\\\192.168.1.200\\共有データ\\★自動バックアップフォルダー\\労務関連\\エンロボ\\」内にあるファイルをそのまま違う場所に移動する予定です。', level: '', tenMinDate: '2026/04/30', causeAction: 'システム設定ファイルで指定しているファイルパスは保存ルートフォルダと宛先不明フォルダのみ。\nその他はフロー内で直接指定されている＆フローは3つあるため、注意。\n保守時間は30分程度使用とお伝え済。→暫定5月中旬伺い予定', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/04/08 10:00', comments: [] },
+    { id: 4, date: '2026/04/10', weekday: '木', clientNo: '148', client: 'R社', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '早坂', status: 'confirmed', type: 'エラー対応', deadline: '2026/04/30', startDate: '2026/04/10', clientDeadline: 'いつでもOK ※週明けも特に日時指定なし', desc: 'エラーになっている処理が完了にならないのと、4/8に完了審査終了になっているのに、公文書印刷されない現象がすべてではないですがいくつか見受けられますので、一緒にご確認のほどをよろしくお願いいたします。', level: 'MH', tenMinDate: '2026/04/10', causeAction: '4/13週～10分検証/千々岩\n■ エラーとなっている処理が完了しない\n到達番号：202603271757321031 / 202511281827117231\n【エラーメッセージ】フォルダー内のファイルの一覧を取得できません。\n【サブフロー】不要なファイルを削除\n【ロケーション】サブフロー: 不要なファイルを削除、アクション: 19、フォルダー内のファイルを取得\n■ 4/8に完了審査終了になっているのに、公文書印刷されない現象→どの手続きを指しているのかわからなかった（時間切れ）→お客様へ該当の到達番号をご提示いただけないか確認中\n4/20 その後いかがかお伺いを送った → 4/28 エラー調査中とのこと（早坂）', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/04/10 10:00', comments: [] },
+    { id: 5, date: '2026/04/10', weekday: '木', clientNo: '010', client: 'D社', project: '4. 給与明細ダウンロード＋納品データ作成', system: '', assignee: '千々岩', status: 'thismonth', type: 'エラー対応', deadline: '2026/05/20', startDate: '', clientDeadline: '4/13～早めに対応 具体的な作業時間は要調整', desc: '支給控除一覧の画面操作中に止まってしまい、処理が進まない', level: 'MH', tenMinDate: '2026/04/10', causeAction: '現在、問題となっている画面は「支給控除一覧」の操作だが、フロー全体を通して不安定さが目立つ。\nEdgeのアップデート後、主にボタンクリック・プルダウン選択のアクションで個別に挙動が異なるため安定性が保てない。\nフォーカスを入れる、物理クリックの有無などボタンごとに確認が必要な状況。ボタン操作が多数存在するため相当な工数を必要とする見込み（3h以上）\n→早川さんへ再開発も視野に対応相談中', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/04/10 10:00', comments: [] },
+    { id: 6, date: '2026/04/13', weekday: '日', clientNo: '010', client: 'D社', project: '4. 給与明細ダウンロード＋納品データ作成', system: '', assignee: '千々岩', status: 'thismonth', type: 'エラー対応', deadline: '2026/05/20', startDate: '', clientDeadline: '', desc: 'No4のロボについて、4/10に「分割でも全く動かなくなっている」とコメントしましたが、一部の会社だけだったようです。\nデータ納品期限がきている会社については分割で一部ロボ実行できているので、完全修復となるまではなんとか手動でまにあわせるつもりです。\nなるべく早急にご対応いただけると助かります。\n4/10に全く動かなかった会社：司法書士法人相続・家族信託の窓口\n一部エラーで支給控除一覧PDFがおちない会社：山本建設\n今後納品データを作成する予定の会社：エクセルコーポレーション、エクセルコーポレーション飲食部門、日の出商会、ディバルコンサルタント、えふ、AZプロジェクト、ORCAService、ライフサポートnico、ファニムビ', level: '', tenMinDate: '2026/04/13', causeAction: '行き詰まり案件/水野 →協議必要', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/04/13 10:00', comments: [] },
+    { id: 7, date: '2026/04/15', weekday: '火', clientNo: '010', client: 'D社', project: '4. 給与明細ダウンロード＋納品データ作成', system: '', assignee: '千々岩', status: 'thismonth', type: 'エラー対応', deadline: '2026/05/20', startDate: '', clientDeadline: '', desc: '昨日よりマネーフォワード給与の仕様がまた少し変わりましたので共有させていただきます。\nそれにより、No4のロボは一人ずつの給与明細ダウンロード部分も動かなくなってしまいました。', level: 'MH', tenMinDate: '2026/04/15', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/04/15 10:00', comments: [] },
+    { id: 8, date: '2026/04/15', weekday: '火', clientNo: '031', client: 'G社', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '', status: 'todo', type: '仕様変更', deadline: '2026/05/21', startDate: '', clientDeadline: '5/18～5/21 確認中', desc: '審査中のコメント印刷（セルズ版） ※No4192でOS版を対応中', level: 'MH', tenMinDate: '2026/04/30', causeAction: '4192が安定したら、同一仕様を設置する', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/04/15 10:00', comments: [] },
+    { id: 9, date: '2026/04/28', weekday: '月', clientNo: '019', client: 'F社', project: '2. 【江戸川病院様】シフト登録', system: '', assignee: '桑原', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/30', startDate: '', clientDeadline: '5/1・5/7・5/8で確認中 →返答次第でアサイン →5/12 月末対応してほしいと連絡あり5月下旬ごろ作業日調整', desc: '江戸川病院のシフト登録でエラーが発生しました。内容はログインができない、手助けしてうまくログインできてもネットDE就業の画面が変わっているため操作が実行されないという状態です。', level: 'MH', tenMinDate: '2026/04/28', causeAction: 'ネットde顧問アップデートの影響。作業時間30～60分お伝え。保守時間0のため先方へ確認し、来月対応となりました。\n【5/11 PC使用時間の連絡待ち】→5/12 月末対応してほしいと連絡あり、下旬ごろ作業時間調整すると返事\n■ネットde顧問のアップデートの影響ある可能性のRPA：【江戸川病院様】シフト登録、残業申請登録、休日出勤登録', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/04/28 10:00', comments: [] },
+    { id: 10, date: '2026/05/01', weekday: '木', clientNo: '003', client: 'B社', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '金栗', status: 'inprogress', type: 'エラー対応', deadline: '2026/05/12', startDate: '2026/05/01', clientDeadline: '5/1・5/7・5/8 5/11・5/12 11:00-12:30以外OK', desc: '処理日の部分に要件定義書との相違があります。11：00～12：30以外はPC起動しておきますので、任意の時間で修正をお願いいたします。\n基 は印刷のみ / 社 扶養異動はDLのみ / 社 70歳到達はDLのみ / 社 喪失はDLのみ / 社 賞与CSVはスタイルシート変更して印刷のみ / 社 月変CSVはスタイルシート変更して印刷のみ / 社 取得はDLのみ', level: 'L', tenMinDate: '2026/05/01', causeAction: '社保の印刷フロー内で%IsPrint%が初期化されていなかったため、印刷チェックがされ、チャットワーク通知にも印刷の文言が含まれていた。実際の印刷はしていなかった。%isPrint%の初期化を追加した。\nその他フローと先方のご希望に相違がある可能性があるため、先方のご希望を確認中。連絡まち。', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/01 10:00', comments: [] },
+    { id: 11, date: '2026/05/01', weekday: '木', clientNo: '054', client: 'I社', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '金栗', status: 'inprogress', type: 'エラー対応', deadline: '2026/05/12', startDate: '2026/05/01', clientDeadline: '5/1 16:00までOK ※5/7-5/12の期間で確認中', desc: 'また、先週の金曜日から、ダウンロードされた公文書が自動でアップロードされておりません。\n確認をお願いいたします。PCはこれから16時まで使用できます。', level: 'MH', tenMinDate: '2026/05/01', causeAction: '前回の修正で解消するはず。（保存ボタンクリック後にポップアップが消えていなかったので、公開アップロードボタンが押せていなかった。）\n修正後の実行でも同様の事象がある場合は詳細を教えてほしい旨伝えた。連絡まち。', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/01 10:00', comments: [] },
+    { id: 12, date: '2026/05/07', weekday: '水', clientNo: '219', client: 'ダーウィン', project: '公文書ダウンロード', system: '社労夢', assignee: '千々岩', status: 'thismonth', type: '仕様変更', deadline: '2026/05/29', startDate: '', clientDeadline: '5/22（金）の残り保守時間に応じて採否確認', desc: '【設定ファイル要取得】返戻になったときに、返戻フォルダにPDFで保存される設定でお願いしていた気がするのですが、申請データ一式すべて保存されています。\nほかのエラー時と同様で、状況が一目でわかるような保存を依頼したつもりです。\n発生日時: 本日 / 再実行しても解消されませんか？: いいえ / 作業可能日時: いつでも大丈夫です', level: 'L', tenMinDate: '2026/05/07', causeAction: '【設定ファイル取得】未・済\n返戻時の処理については特段仕様変更のお申し出がなかった。共通モジュールのデフォルト通りで問題ない様子。\n※PDF化・リネームなし、保存ファイル選別なし\n<確認したデータ>要件定義書、要件定義MTGの動画、振り返りMTGの動画、CWの過去のやりとり（返戻・henreiで検索ヒットなし）\nお客様には「保守時間を使用して仕様変更を行うことは可能です」とご案内済み。\n→仕様変更のご依頼あり。5月後半の残り保守時間によって今月中の採否を決定。5/22または5/25を目処に採否を伺う。', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/07 10:00', comments: [] },
+    { id: 13, date: '2026/05/12', weekday: '月', clientNo: '232', client: 'いわき', project: '公文書ダウンロード', system: 'OS', assignee: '髙竹', status: 'inprogress', type: '仕様相談', deadline: '2026/05/22', startDate: '2026/05/14', clientDeadline: '5/13～5/18の期間中 10:00以降OK', desc: 'コメントを印刷してほしいです。審査終了となっている案件でも「処理不要としました」と判断されるケースがあるからです。可能でしょうか？\n発生日時: 本日 / 再実行しても解消されませんか？: いいえ / 作業可能日時: 本日この後OK\n厚生労働省のお知らせ(001)で下記のようにコメントがあり、終了となっています。「75歳到達による健康保険の資格喪失処理は完了しておりますので処理不要とさせていただきます。」', level: 'MH', tenMinDate: '2026/05/12', causeAction: '※印刷オプション採用済み ※不具合のコメントも印刷する？\n5/14 ・先方確認待ち「返戻コメントも印刷対象に含めるか」 ・技術検討・実装準備完了（回答後すぐ着手できる状態）', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/12 10:00', comments: [] },
+    { id: 14, date: '2026/05/12', weekday: '月', clientNo: '206', client: 'T社', project: '公文書ダウンロード', system: 'OS', assignee: '小佐井', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/15', startDate: '', clientDeadline: '確認中', desc: '【設定ファイル要取得】エンロボの公文書取得、1件データ名の付与にエラー？が出ていました。手動で修正済です。', level: 'MH', tenMinDate: '2026/05/12', causeAction: '【設定ファイル取得】未・済', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/12 10:00', comments: [] },
+    { id: 15, date: '2026/05/12', weekday: '月', clientNo: '005', client: 'C社', project: '公文書バックアップ', system: 'セルズ台帳', assignee: '大和', status: 'inprogress', type: 'エラー対応', deadline: '2026/05/12', startDate: '2026/05/15', clientDeadline: '事前連絡後、対応OK', desc: '台帳バックアップロボを起動させても、台帳メニュー画面が開いたあとすぐシャットダウンしてしまいます。その後、PC再起動後に試してみましたが同じ現象です。急いでおりませんので、対応可能になりましたらご連絡いただけますでしょうか。', level: 'L', tenMinDate: '2026/05/12', causeAction: 'セルズの公文書ダウンロード以外のフローでUIエラーが発生している状況。', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/12 10:00', comments: [] },
+    { id: 16, date: '2026/05/12', weekday: '月', clientNo: '123', client: 'N社', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '大和', status: 'confirmed', type: '仕様相談', deadline: '2026/05/18', startDate: '', clientDeadline: '14日終日可 18日14：00以降可 19日終日可', desc: '現在、セルズ台帳で届出た公文書をonedriveに保管いただいております。これに加え、cellsドライブでのアプロードを行える様、設定をお願いできますでしょうか。\ncellsドライブでの公文書の送付事業所は、現在2社ですが、これから増える予定がございます。', level: 'MH', tenMinDate: '2026/05/12', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/12 10:00', comments: [] },
+    { id: 17, date: '2026/05/12', weekday: '月', clientNo: '014', client: 'メッツア', project: '公文書ダウンロード', system: '', assignee: '宮崎', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/15', startDate: '2026/05/18', clientDeadline: '5/13 10:00以降OK / 5/14～5/19の期間 10:00-17:00 OK ★田野さんが開発期間中なので、事前に田野さんへ作業OKか要確認', desc: '健保組合手続完了後の公文書保管でエラーが発生しましたと表示されます\n発生日時: 本日 / 該当申請データ: 社会保険 - 月額変更届 - ライフワンダーズ合同会社 - ACEVES TOPETE CARLOS FRANCISCO(他2名) / 再実行しても解消されませんか？: はい / 作業可能日時: 明日10時以降', level: 'MH', tenMinDate: '2026/05/13', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/12 10:00', comments: [] },
+    { id: 18, date: '2026/05/12', weekday: '月', clientNo: '002', client: 'A社', project: '給与計算 機能追加', system: '', assignee: '宮崎', status: 'inprogress', type: 'エラー対応', deadline: '2026/05/13', startDate: '', clientDeadline: '★急ぎ希望 5/13中に対応 これよりOKとのこと', desc: '給与計算のフローで、Cells給与を開いた画面で動かなくなります。エラーコードも表示されず、フローは「実行中」となったままですが動きません。念のため再起動もしましたが改善されませんでした。今週給与計算が何件かあるため、早めにご対応いただけますと助かります。', level: 'MH', tenMinDate: '2026/05/13', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/12 10:00', comments: [] },
+    { id: 19, date: '2026/05/12', weekday: '月', clientNo: '096', client: 'L社', project: '共通', system: '', assignee: '田野', status: 'inprogress', type: '仕様変更', deadline: '2026/05/19', startDate: '2026/05/18', clientDeadline: '5/18 12：00～ / 5/19 9：30～12：00 16：00～ / 5/20 9：30～12：00 17：00～ / 5/22 終日います', desc: 'おかげさまで公文書遠隔使用させて頂きましたが、バグっておりません。急ぎませんので、公文書待機時間1分を設定して頂いた件、他のRPAについても全て設定して頂きたいです。', level: 'L', tenMinDate: '2026/05/13', causeAction: '以下のRPAに対して、冒頭に60秒待機のアクションを追加\n・02.労働保険→台帳転記 / ・03.賞与・算定データ→台帳転記 / ・04.入社情報→台帳転記 / ・05.賃金データ→台帳転記', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: 'あり', specReflect: '済', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/12 10:00', comments: [] },
+    { id: 20, date: '2026/05/13', weekday: '火', clientNo: '214', client: 'U社', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '金栗', status: 'confirmed', type: '仕様相談', deadline: '2026/05/19', startDate: '', clientDeadline: '★お客様からの連絡待ちです 5/14～5/19の期間で確認中', desc: 'RPAが処理をする前に、手動で印刷をする場合があるのですが、手続終了となるため恐らく一覧に表示されず処理が残っている申請があります。手動で印刷した場合は、その他に未保存と入力するようにしますので状況「手続終了」+その他「未保存」の場合に処理をするようにしていただけないでしょうか。', level: 'MH', tenMinDate: '2026/05/13', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/13 10:00', comments: [] },
+    { id: 21, date: '2026/05/13', weekday: '火', clientNo: '225', client: 'BDO', project: '公文書ダウンロード', system: 'e-Gov', assignee: '桑原', status: 'inprogress', type: 'エラー対応', deadline: '2026/05/14', startDate: '2026/05/14', clientDeadline: '5/14 午後OK / 5/15以降となる場合には再調整', desc: 'ダウンロードしたフォルダの展開ができない。\n事業所名：株式会社タマス / 手続名：雇用保険 育児給付・月額証明書 / 被保険者名：引沼 千春 / 到達番号：202605071507193933 / RPAにアップされているフォルダ名：20251207-20260206_育児休業・出生後休業（初回）_ヒキヌマチハル\n発生日時: 本日 / 再実行しても解消されませんか？: はい / 作業可能日時: 本日この後OK、明日の午後ならOK', level: 'L', tenMinDate: '2026/05/13', causeAction: '5/14 RPA用PCからは対象フォルダのファイルが参照可能だったため以下確認中\n・RPA用PC以外のPCから、フォルダ内のファイルが参照できない状況ということか\n・現在の状況\n5/15 フォルダをダウンロードした上で展開しようとすると下記エラーが出てしまうとのこと\n＜先方確認依頼中＞・再度同じフォルダをRPAで作成し、展開できるかどうか・PC開いた際OpenVPNのメッセージが表示されていたため設定確認依頼（不具合関連は不明）\n＜考えられる原因＞PADのサインイン画面が良く出ることもあり、通信状況やOneDriveが不安定な可能性もあり？\n→ここまでで40分使用中', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/13 10:00', comments: [] },
+    { id: 22, date: '2026/05/14', weekday: '水', clientNo: '206', client: 'T社', project: '公文書ダウンロード', system: 'OS', assignee: '千々岩', status: 'pending10', type: '仕様相談', deadline: '2026/05/29', startDate: '', clientDeadline: '仕様変更採用の場合、調整します', desc: 'グーグルドライブに返戻ファイルですが、xml形式で保管されておりますが、こちらPDFになったりしますでしょうか？', level: 'L', tenMinDate: '2026/05/14', causeAction: 'テスト期間終了間際にご希望があったが、やるかやらなか返答来ないままリリース。やる場合は保守時間を使用する旨お伝え済み。意向確認から。', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/14 10:00', comments: [] },
+    { id: 23, date: '2026/05/14', weekday: '水', clientNo: '206', client: 'T社', project: '公文書ダウンロード', system: 'OS', assignee: '千々岩', status: 'pending10', type: '仕様相談', deadline: '2026/05/29', startDate: '', clientDeadline: '仕様変更採用の場合、調整します', desc: '3か月前以上の公文書がある場合、それのダウンロードは無理ですよね？', level: 'L', tenMinDate: '2026/05/14', causeAction: 'テスト期間終了間際にご希望があったが、やるかやらなか返答来ないままリリース。やる場合は保守時間を使用する旨お伝え済み。意向確認から。', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/14 10:00', comments: [] },
+    { id: 24, date: '2026/05/14', weekday: '水', clientNo: '237', client: 'V社', project: '公文書ダウンロード', system: 'e-Gov', assignee: '宮崎', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/19', startDate: '', clientDeadline: '5/14 いつでもOK / 5/14～5/19の期間中、作業不可の時間帯があれば返信ください', desc: '※ミドルプラン\n【手続一覧に存在しないためスキップ】手続一覧に追加してください アウトルックコンサルティング株式会社 - 国民年金第3号被保険者関係届\n手続き一覧のエラーがありましたのでご対応お願いいたします。操作はいつでも大丈夫です。', level: 'L', tenMinDate: '2026/05/14', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/14 10:00', comments: [] },
+    { id: 25, date: '2026/05/14', weekday: '水', clientNo: '237', client: 'V社', project: '公文書ダウンロード', system: 'e-Gov', assignee: '宮崎', status: 'confirmed', type: '仕様相談', deadline: '2026/05/19', startDate: '', clientDeadline: 'いつでもOK', desc: '※ミドルプラン 仕様相談\n保存フォルダ名・リネーム後のファイル名を以下のように変更希望\n■保存フォルダ名 ①手続別名に"CSV"が付く場合、CSVの部分を除いてほしい ②被保険者名の後ろに"様"を付けてほしい\n■リネーム後のファイル名 ①手続別名に"CSV"が付く場合、CSVの部分を除いてほしい\n理想の表示形式：【20260507_月変_白鳥 昭子様】', level: 'L', tenMinDate: '2026/05/14', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/14 10:00', comments: [] },
+    { id: 26, date: '2026/05/14', weekday: '水', clientNo: '079', client: 'つくば', project: '公文書ダウンロード', system: '社労夢', assignee: '大和', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/20', startDate: '', clientDeadline: '5/19・5/20 いつでもOK', desc: '※OneDrive接続エラー\n手続きが完了しておりますが、公文書がPDFファイルに保存できていない状況です。\n発生日時: 5月8日 / 該当申請データ: 片岡ゴム商会 川村真悠 社会保険 育児休業等取得者終了届 202604281552461024 / 再実行しても解消されませんか？: はい / 作業可能日時: 本日この後は作業可能です\nENROBOを起動したところ、添付のエラーが何度か出ていました。時間をおいて起動したところENROBOは動きましたが、システムエラーとなり手続き完了したファイルは全て保存されていない状況です。', level: 'L', tenMinDate: '2026/05/14', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/14 10:00', comments: [] },
+    { id: 27, date: '2026/05/14', weekday: '水', clientNo: '156', client: '山田事務所', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '小佐井', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/19', startDate: '', clientDeadline: '5/18～5/21 午後OK', desc: '雇 育児休業（出生時）につきまして、出生後データがドキュワークスに格納されません。また、出生時と同様にドキュワークス格納、PDFデータの氏名の名付けをお願いいたします。（賃金証明、支給決定通知書ともに）\n発生日時: 4月25日 / 該当申請データ: 流羽布/羽部耕平/雇 育児休業（出生時）/202604091712553813 / 再実行しても解消されませんか？: はい / 作業可能日時: 午後ならいつでもOK', level: 'MH', tenMinDate: '2026/05/14', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/14 10:00', comments: [] },
+    { id: 28, date: '2026/05/15', weekday: '木', clientNo: '212', client: 'NAKA', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '早坂', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/19', startDate: '', clientDeadline: '5/18～5/21 13:00以降OK', desc: '4月14日より【はあとネイル】から【アプリア】へ事業所変更をしておりました。アプリア以降に取得したデータにつきまして、個人情報へ被保険者番号が反映されておりませんでした。現在は弊社にて手入力で対応しておりますが、原因や対策等ございましたら、ご確認いただけますと幸いです。\n発生日時: 4/14～4/22 / 該当申請データ: 【アプリア】【複数】【社会保険取得・雇用保険取得】 / 再実行しても解消されませんか？: はい / 作業可能日時: 平日13時以降', level: 'L', tenMinDate: '2026/05/15', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 29, date: '2026/05/15', weekday: '木', clientNo: '010', client: 'D社', project: '公文書ダウンロード', system: 'OS', assignee: '千々岩', status: 'temp', type: '仕様変更', deadline: '2026/05/29', startDate: '', clientDeadline: '5/25の週に実施 後日作業時間の調整', desc: 'ダウンロードフォルダに「公文書（00N）」のファイルが元からあったために、その後の保存フォルダが「公文書（00N）（1）」となってしまっていた。その後に実行するNo2のメール一括送信で、上記の連番が付与されているとエラーとなってしまう。\n対応案：取得したフォルダ名に（N）などの連番が付与されている場合、それを取り除く処理の実装。（※保守時間より約30分で対応可能です。）\n今月の残りの保守時間を考慮し、来週（5/18の週）は様子見とし、5/25の週にて対応を進めるよう調整。', level: '', tenMinDate: '2026/05/15', causeAction: '一応誰でも大丈夫です。（宮﨑）', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 30, date: '2026/05/15', weekday: '木', clientNo: '081', client: 'J社', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '千々岩', status: 'done', type: 'エラー対応', deadline: '2026/05/18', startDate: '2026/05/18', clientDeadline: '5/18いつでもOK', desc: '※Slackで共有中のセルズエラーの可能性大\n昨日早朝に開始して、台帳メニューが立ち上がったところでDL開始せず、そのあと終日外出の為放置ししました。夕方戻って確認したところ、DLまでに数時間（5時間以上）かかっていた模様です。\n本日も、台帳メニューが立ち上がっところで、DL開始せず、1時間以上経過しています。これまで見られなかった症状なのですが、やはり起動開始に時間がかかっているというのが理由なのでしょうか？表面上メニュー表示がされている状態ですので、何か他に原因があるのではと思いご連絡いたします。', level: 'MH', tenMinDate: '2026/05/18', causeAction: 'Windowsアップデートの影響である可能性が高い。「コンテンツの有効化」「編集を許可する」などDaMenu画面の上部に表示されるリボンを認識できていない様子が見受けられた。\n保守対応時にはどちらも表示されなかったため、表示された場合の検証ができていない。\nソース上はセレクターで"EXCEL2"を指定するチェックをオンにして対処している。\nまた、台帳終了時の"終了ボタン"については要素も認識され、動作も問題なかった。', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '2026/05/18', workHours: 0.5, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 31, date: '2026/05/15', weekday: '木', clientNo: '214', client: 'U社', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '金栗', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/19', startDate: '', clientDeadline: '5/14（木）～5/19（火）午後からであれば大丈夫です。', desc: '①エラー通知が来ていない ②処理がされていない', level: '', tenMinDate: '', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 32, date: '2026/05/15', weekday: '木', clientNo: '214', client: 'U社', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '金栗', status: 'confirmed', type: '仕様変更', deadline: '2026/05/19', startDate: '', clientDeadline: '5/14（木）～5/19（火）午後からであれば大丈夫です。', desc: '労働者名簿を作成した際に、メールの文面に労働者名簿を入れていただくことは可能でしょうか？また、メールに公文書を添付する際に労働者名簿も添付することは可能でしょうか', level: '', tenMinDate: '', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 33, date: '2026/05/15', weekday: '木', clientNo: '126', client: 'O社', project: '公文書ダウンロード', system: 'OS', assignee: '小佐井', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/19', startDate: '', clientDeadline: '5/18～5/21の期間 15:00以降OK', desc: 'Teams通知についてお伺いさせてください。返戻対応になった際のTeams通知がされない事象が発生しております。どういった場合に通知発行されないのでしょうか？\n対象手続き：到達番号 202605081213208744', level: 'L', tenMinDate: '2026/05/15', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 34, date: '2026/05/15', weekday: '木', clientNo: '053', client: 'H社', project: '公文書ダウンロード （従業員登録）', system: '', assignee: '大和', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/19', startDate: '', clientDeadline: '確認中 （お客様の返信待ち）', desc: '昨日ご確認いただいた件、本日稼働した際にもエラーで出てくるため、再度確認お願いいたします。下記のような通知の社会保険取得の申請に関して、番号入力ができていない状況です。\n【従業員登録エラーが発生しました】株式会社リエイフーズ 滝島 未子 社会保険 資格取得届\n【完了】株式会社リエイフーズ 滝島 未子 社会保険 資格取得届\n本日13：00～15：00、16：00～はPCが空いております。', level: 'MH', tenMinDate: '2026/05/15', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 35, date: '2026/05/15', weekday: '木', clientNo: '156', client: '山田事務所', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '小佐井', status: 'confirmed', type: '仕様相談', deadline: '2026/05/20', startDate: '', clientDeadline: '5/18～5/21 13:00以降OK', desc: '同月に育休給付等、同じ被保険者で同じ手続き名の申請をした場合に、Lドライブの格納が1つのフォルダーにまとめられていまい、データは「名付け 2」という形になってしまいます。こちらをフォルダーを別にすることは可能でしょうか？\n発生日時: 本日 / 該当申請データ: 医療法人社団和宏会大手町病院/高木百華/雇 育児休業/202605011014269153 / 再実行しても解消されませんか？: はい / 作業可能日時: 午後ならOK', level: 'L', tenMinDate: '2026/05/15', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 36, date: '2026/05/15', weekday: '木', clientNo: '166', client: '飯田労務', project: '公文書ダウンロード', system: 'e-Gov', assignee: '千々岩', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/19', startDate: '', clientDeadline: '5/18 16:00以降OK / 5/19 午前中OK / 5/20 午前中OK ※要事前連絡', desc: '・到達番号 202604201442233853 → 5/12に処理が終わっているようです。スキップされているのであれば通知が来るのではないでしょうか。→5/15 開発担当 長谷川さんが対応済み\n【保守で要対応】・到達番号 202604131032557924 ・到達番号 202605081332390184\n通知【手続一覧に存在しないためスキップ】国民年金第3号被保険者関係届 保存する公文書はありませんが、終了のコメントは必要です。', level: 'MH', tenMinDate: '2026/05/15', causeAction: '・コメントのみ取得が必要？・手続一覧にダミーの公文書名を追加して、コメントのみ取得するようにすればOK？→実際の手続き画面を要確認', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 37, date: '2026/05/15', weekday: '木', clientNo: '181', client: 'S社', project: '公文書ダウンロード', system: 'SmartHR', assignee: '宮崎', status: 'inprogress', type: 'エラー対応', deadline: '', startDate: '2026/05/15', clientDeadline: '', desc: '★No.4467、No.4422再依頼\n先ほど再度SmartHRの公文書RPAを実行いたしました。同じように、スキップされている会社が多く、少なくとも前回ご連絡した2社は審査終了が残ったままです。\n株式会社ラクスルファクトリー / 株式会社Re-grit Partners\n再度ご確認お願いします。クライアントからも催促の連絡が来てしまっているので、お早めにご対応お願いします。', level: '', tenMinDate: '', causeAction: '保守時間が残り0時間のため、少しだけみた。\n一度、再ログインの際に、想定していたダウンロードのブラウザが開いていないことによりエラーとなっている。（ブラウザーが空でないが、開いていない）\nその前に、ダウンロード画面表示後、ログイン画面が表示されている。（たぶん別ブラウザで）その後の会社できちんとホーム画面となっているが、ずっと古いログイン画面のURLを取得してしまっており、スキップとなっていた。\n・ブラウザーの閉じる処理の見直し', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 38, date: '2026/05/15', weekday: '木', clientNo: '087', client: 'K社', project: '公文書ダウンロード', system: 'OS', assignee: '大和', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/20', startDate: '', clientDeadline: '5/18～5/21の期間 9:30頃よりOK ※RPA実行完了していればOK', desc: '・5/13（水）公文書ダウンロード後、ChatworkやSlackで送信されていない\n・5/14（木）公文書ダウンロードが自動実行されていない\n現在は、「メール・チャット作成・送信」のところで、Excelを開いたり閉じたりする動きを繰り返しているようです。\n本日、PC再起動の上、公文書ダウンロードを手動で実行したところ、以下のような状況：・5/15（金）公文書ダウンロード後、ChatworkやSlackで送信されていない', level: 'MH', tenMinDate: '2026/05/15', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/15 10:00', comments: [] },
+    { id: 39, date: '2026/05/18', weekday: '日', clientNo: '158', client: 'プロフェス', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '宮崎', status: 'confirmed', type: 'エラー対応', deadline: '2026/05/21', startDate: '', clientDeadline: '調整予定', desc: '【ご質問です】審査終了になったデータで公文書データ（保存ファイル）が無い場合、RPAの処理は不要（処理できるものがない）なのですが、その場合、手続一覧の設定はどのようししたらよろしかったでしょうか？\n具体的な事例としましては、「社 取得CSV」で公文書がデータではなく郵送される場合、保存データ「7100001」等は格納されないので、RPAの処理は出来るものがないのですが、印刷とその他にチェックが入っております。※印刷物はありません。\n発生日時: 本日 / 再実行しても解消されませんか？: はい', level: 'MH', tenMinDate: '2026/05/18', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/18 10:00', comments: [] },
+    { id: 40, date: '2026/05/18', weekday: '日', clientNo: '014', client: 'E社', project: '公文書ダウンロード', system: '社労夢', assignee: '宮崎', status: 'inprogress', type: 'エラー対応', deadline: '2026/05/18', startDate: '2026/05/18', clientDeadline: '', desc: 'No.4437と一緒に\n社会保険の資格喪失で添付のようにフォルダ名がついてしまっております。同時期くらいに手続きをした人でも、このようになる人とそうでない人がいます。こちらについても合わせてご確認いただけますと幸いです', level: '', tenMinDate: '2026/05/18', causeAction: '公文書読み取りにて、社会保険・資格喪失で、PDFファイルのみの場合に、PDFから読み取る部分を修正。（TEXTで取得していたのをDatatableで取得する様にした。）', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '2026/05/18', workHours: 1, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/18 10:00', comments: [] },
+    { id: 41, date: '2026/05/18', weekday: '日', clientNo: '240', client: 'W社', project: '公文書ダウンロード', system: '社労夢', assignee: '千々岩', status: 'done', type: 'エラー対応', deadline: '2026/05/18', startDate: '2026/05/18', clientDeadline: 'いつでもOK', desc: '5/13に問合せさせていただいた現象と同様に本日もログイン処理を繰り返しており処理が進みません。ご確認をお願いできますでしょうか。\n※5/13対応分：・社労夢のログイン処理から送信画面一覧画面の表示を何度も繰り返しています。・事務所パスワード認証でしばらく止まっていて進めていないときもあるように見えます。・送信画面一覧画面まで進むこともありますが、初期表示で「未送信」のみ検索して「データがありません」というメッセージが表示されるところで止まっているように見えます。\nフローが停止する前（社労夢ログイン処理を繰り返している途中）に一度だけエラーメールが届きましたので、添付いたします。', level: 'L', tenMinDate: '2026/05/18', causeAction: 'ログインエラーは保守対応時には再現できなかった。スクショを見る限り、2要素認証で拡張機能の認証コードを入力後、「認証ボタン」が押せていない様子が見受けられる。前回は拡張機能のアイコン位置が変わっていて座標の修正を行っている模様。今回は別件であり、一時的な不調の可能性もあるためお客様に再実行を依頼した。\nまた、状況の更新にかなり時間がかかっている。対象件数が多い。保守対応時で6分かかったため、待機時間を最大8分に調整した。', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '2026/05/18', workHours: 0.5, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/18 10:00', comments: [] },
+    { id: 42, date: '2026/05/18', weekday: '日', clientNo: '121', client: 'M社', project: '公文書ダウンロード', system: 'セルズ台帳', assignee: '', status: 'todo', type: '仕様相談', deadline: '2026/05/22', startDate: '', clientDeadline: '調整中', desc: '仕様のご相談なのですが、宛先違いましたらお手数おかけいたしますがご担当者様へお取次ぎお願いいたします。急ぎの案件ではございません。\nこのたび、「林総事株式会社」という法人と「株式会社林総事」という株式会社を取ると全く同じ表記の法人様を受託いたしました。\n現在取得した公文書を保管するフォルダを検索する際「株式会社」を除いて検索し、合致したフォルダへ保管していただく仕様という認識ですが、その場合、フォルダの順序で上位の方のフォルダに、前(株)後(株)両方の公文書が保管される認識でよろしいでしょうか？また、公文書のメール送付も同様の判定となりますでしょうか？現時点では同一のご担当者様へ送付の為問題はないのですが…。。。', level: 'L', tenMinDate: '', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/18 10:00', comments: [] },
+    { id: 43, date: '2026/05/18', weekday: '日', clientNo: '143', client: 'Q社', project: '公文書ダウンロード （マイナポータル）', system: 'OS', assignee: '大和', status: 'temp', type: '仕様相談', deadline: '2026/05/19', startDate: '', clientDeadline: '5/19以降に再度連絡（大和さんへ確認）', desc: 'マイナポータルのチェック項目の設定なのですが、こちらでは初期値を「選択」にすることができないようです。マイナポータルのフロー開始時に「選択」を指定してから処理を開始するように仕様変更した場合、保守工数はどの程度かかるでしょうか？画面リロードの仕様変更と比較し、不具合の発生確率が低いほうで依頼させていただく予定です。', level: 'MH', tenMinDate: '', causeAction: '', tagsManual: '', tagsAI: '', tagsAIMaster: '', tagsDerived: '', specChange: '', specReflect: '', completeDate: '', workHours: 0, remainHours: 0, causeCat: '', unavoidable: '', screenRelated: '', procRelated: '', countermeasure: '', updated: '2026/05/18 10:00', comments: [] }
   ],
   notifications: [
-    {id:1, title:'No.6 に新しい課題が起票されました', issueId:6, time:'16:00', read:false},
-    {id:2, title:'No.4 のステータスが確定になりました', issueId:4, time:'昨日', read:false},
-    {id:3, title:'No.2 担当者から対応状況報告があります', issueId:2, time:'2日前', read:false},
+    {id:1, title:'No.43 (Q社) に仕様相談が起票されました', issueId:43, time:'たった今', read:false},
+    {id:2, title:'No.42 (M社) に仕様相談が起票されました', issueId:42, time:'5分前', read:false},
+    {id:3, title:'No.41 (W社) が対応完了になりました', issueId:41, time:'1時間前', read:false},
+    {id:4, title:'No.40 (E社) が対応完了になりました', issueId:40, time:'本日', read:true},
+    {id:5, title:'No.30 (J社) が対応完了になりました', issueId:30, time:'本日', read:true},
   ],
   activity: [
-    {time:'16:00', text:'中川 さんが No.6 を起票しました', icon:'plus'},
-    {time:'10:00', text:'田中 さんが No.2 のステータスを「対応中」に変更しました', icon:'arrow-right'},
-    {time:'昨日', text:'佐藤 さんが No.4 にコメントしました', icon:'message'},
-    {time:'2日前', text:'中川 さんが No.1 を完了にしました', icon:'circle-check'},
+    {time:'たった今', text:'大和 さんが No.43 を起票しました', icon:'plus'},
+    {time:'5分前', text:'宮崎 さんが No.42 を起票しました', icon:'plus'},
+    {time:'1時間前', text:'千々岩 さんが No.41 を「対応完了」に変更しました', icon:'circle-check'},
+    {time:'本日', text:'宮崎 さんが No.40 を「対応完了」に変更しました', icon:'circle-check'},
+    {time:'本日', text:'千々岩 さんが No.30 を「対応完了」に変更しました', icon:'circle-check'},
+    {time:'昨日', text:'髙竹 さんが No.13 のステータスを「対応中」に変更しました', icon:'arrow-right'},
+    {time:'昨日', text:'桑原 さんが No.21 のステータスを「対応中」に変更しました', icon:'arrow-right'},
+    {time:'2日前', text:'宮崎 さんが No.37 にコメントしました', icon:'message'},
   ]
 };
 
@@ -1063,7 +1331,7 @@ const levelLabel = {L:'L（軽微）', M:'M（中）', H:'H（重大）'};
 const levelClass = {L:'level-L', M:'level-M', H:'level-H'};
 
 // ロール別の表示クライアント名（クライアントロールの「自社」をどれにするかをここで指定）
-const CLIENT_ROLE_SELF = 'A社';
+const CLIENT_ROLE_SELF = 'D社';
 
 // ============ Role / View ============
 function setRole(r){
@@ -1072,6 +1340,8 @@ function setRole(r){
   document.querySelectorAll('.staff-only').forEach(el=>el.style.display = r==='staff'?'':'none');
   // クライアントロール時は staff-only ビュー（顧客マスタ）を開いていれば一覧へ
   if(r==='client' && currentView==='clients') setView('list');
+  // 起票画面を開いていればロール変更を反映するため再初期化
+  if(currentView==='new') initNewIssueForm();
   if(currentIssue) openDetail(currentIssue.id);
   renderAll();
 }
@@ -1082,11 +1352,62 @@ function setView(v){
   document.getElementById('view-'+v).classList.add('active');
   document.querySelectorAll('.nav-item[data-view]').forEach(el=>el.classList.toggle('active', el.dataset.view===v));
   if(v==='dashboard') renderDashboard();
-  if(v==='new') {
-    document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
-    populateClientDropdown();
-  }
+  if(v==='new') initNewIssueForm();
   if(v==='clients') renderClientMaster();
+}
+
+function initNewIssueForm(){
+  // 顧客プルダウン生成
+  populateClientDropdown();
+  // クライアントロール時は自社を自動選択して固定
+  const clientSel = document.getElementById('f-client');
+  if(currentRole==='client'){
+    clientSel.value = CLIENT_ROLE_SELF;
+    clientSel.disabled = true;
+    autoFillClientNo();
+  } else {
+    clientSel.disabled = false;
+  }
+  // 種別選択をリセット
+  document.querySelectorAll('input[name="f-inquiry-type"]').forEach(r=>r.checked=false);
+  document.querySelectorAll('.inquiry-section').forEach(s=>s.style.display='none');
+  // 担当者用セクションは種別選択前は非表示（switchInquiryType で表示制御）
+  // フィールドリセット
+  ['f-contact-name','f-email','fe-rpa-other','fe-arrival-no','fe-target-data','fe-error-msg','fe-detail','fe-noticed-at',
+   'fs-rpa-other','fs-target-data','fs-content','fo-detail',
+   'f-sched1-date','f-sched1-time','f-sched2-date','f-sched2-time','f-deadline'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  ['fe-rpa','fe-frequency','fs-rpa','fs-category','fo-plan','fo-option','f-level','f-assignee'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  document.querySelectorAll('#fe-systems input, #fe-symptoms input').forEach(cb=>cb.checked=false);
+  document.getElementById('fe-rpa-other-wrap').style.display='none';
+  document.getElementById('fs-rpa-other-wrap').style.display='none';
+}
+
+// 問い合わせ種別を切り替えてセクションを表示
+function switchInquiryType(type){
+  // すべて非表示
+  document.querySelectorAll('.inquiry-section').forEach(s=>s.style.display='none');
+  // 対応するセクションを表示
+  if(type==='error'){
+    document.getElementById('sec-error').style.display='block';
+    document.getElementById('sec-schedule').style.display='block';
+  } else if(type==='spec'){
+    document.getElementById('sec-spec').style.display='block';
+    document.getElementById('sec-schedule').style.display='block';
+  } else if(type==='option'){
+    document.getElementById('sec-option').style.display='block';
+    // オプション系はPC接続不要なケースもあるが、念のため表示
+    document.getElementById('sec-schedule').style.display='block';
+  } else if(type==='signin'){
+    document.getElementById('sec-signin').style.display='block';
+    document.getElementById('sec-schedule').style.display='block';
+  }
+  // 担当者用セクションは常に表示（staff時のみ）
+  const staffSec = document.getElementById('sec-staff-meta');
+  if(staffSec && currentRole==='staff' && type) staffSec.style.display='block';
 }
 
 function switchTab(tabId, el){
@@ -1427,35 +1748,127 @@ function deleteIssue(){
 
 // ============ New Issue Form ============
 function submitNewIssue(){
+  // 共通項目
   const client = document.getElementById('f-client').value;
-  const project = document.getElementById('f-project').value.trim();
-  const desc = document.getElementById('f-desc').value.trim();
-  const system = document.getElementById('f-system').value;
-  const type = document.getElementById('f-type').value;
-  const level = document.getElementById('f-level').value;
-  const assignee = document.getElementById('f-assignee').value;
-  const date = document.getElementById('f-date').value||new Date().toISOString().slice(0,10);
-  const deadline = document.getElementById('f-deadline').value;
-  const startDate = document.getElementById('f-startdate').value;
-  const clientDeadline = document.getElementById('f-clientdeadline').value;
   const clientNo = document.getElementById('f-clientno').value;
+  const contactName = document.getElementById('f-contact-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const inquiryTypeEl = document.querySelector('input[name="f-inquiry-type"]:checked');
+  const inquiryType = inquiryTypeEl ? inquiryTypeEl.value : '';
 
-  if(!client || !project || !desc || !system){
-    showToast('必須項目（顧客・案件・問合せ内容・システム）を入力してください', 'error');
-    return;
+  // 共通バリデーション
+  if(!client){ showToast('顧客を選択してください', 'error'); return; }
+  if(!contactName){ showToast('ご担当者名を入力してください', 'error'); return; }
+  if(!email){ showToast('メールアドレスを入力してください', 'error'); return; }
+  if(!inquiryType){ showToast('お問い合わせ内容を選択してください', 'error'); return; }
+
+  // 種別ごとに必須項目を確認 & 課題データを組み立て
+  let project = '';
+  let system = '';
+  let type = '';
+  let level = document.getElementById('f-level') ? document.getElementById('f-level').value : '';
+  let assignee = document.getElementById('f-assignee') ? document.getElementById('f-assignee').value : '';
+  let desc = '';
+
+  if(inquiryType === 'error'){
+    const rpa = document.getElementById('fe-rpa').value;
+    const rpaOther = document.getElementById('fe-rpa-other').value.trim();
+    const systems = [...document.querySelectorAll('#fe-systems input:checked')].map(c=>c.value);
+    const symptoms = [...document.querySelectorAll('#fe-symptoms input:checked')].map(c=>c.value);
+    const arrivalNo = document.getElementById('fe-arrival-no').value.trim();
+    const targetData = document.getElementById('fe-target-data').value.trim();
+    const errorMsg = document.getElementById('fe-error-msg').value.trim();
+    const detail = document.getElementById('fe-detail').value.trim();
+    const noticedAt = document.getElementById('fe-noticed-at').value.trim();
+    const frequency = document.getElementById('fe-frequency').value;
+
+    if(!rpa){ showToast('対象のRPA・業務を選択してください', 'error'); return; }
+    if(systems.length===0){ showToast('関連システムを1つ以上選択してください', 'error'); return; }
+    if(symptoms.length===0){ showToast('症状を1つ以上選択してください', 'error'); return; }
+    if(!targetData){ showToast('対象のデータ・案件を入力してください', 'error'); return; }
+    if(!detail){ showToast('具体的な状況・補足を入力してください', 'error'); return; }
+    if(!noticedAt){ showToast('最初に気づいた日時を入力してください', 'error'); return; }
+    if(!frequency){ showToast('発生頻度を選択してください', 'error'); return; }
+
+    project = rpa.replace(/^\d+\.\s*/, '') + (rpaOther ? `（${rpaOther}）` : '');
+    system = systems[0]; // 最初の1つを代表値に
+    type = 'エラー対応';
+    desc = `【症状】${symptoms.join(' / ')}\n` +
+           (arrivalNo ? `【到達番号】${arrivalNo}\n` : '') +
+           `【対象データ】${targetData}\n` +
+           (errorMsg ? `【エラーメッセージ】${errorMsg}\n` : '') +
+           `【具体的な状況】${detail}\n` +
+           `【最初に気づいた日時】${noticedAt}\n` +
+           `【発生頻度】${frequency}` +
+           (systems.length>1 ? `\n【関連システム】${systems.join(' / ')}` : '');
+  }
+  else if(inquiryType === 'spec'){
+    const rpa = document.getElementById('fs-rpa').value;
+    const rpaOther = document.getElementById('fs-rpa-other').value.trim();
+    const category = document.getElementById('fs-category').value;
+    const targetData = document.getElementById('fs-target-data').value.trim();
+    const content = document.getElementById('fs-content').value.trim();
+
+    if(!rpa){ showToast('対象のRPA・業務を選択してください', 'error'); return; }
+    if(!category){ showToast('カテゴリを選択してください', 'error'); return; }
+    if(!content){ showToast('お問合せ内容を入力してください', 'error'); return; }
+
+    project = rpa.replace(/^\d+\.\s*/, '') + (rpaOther ? `（${rpaOther}）` : '');
+    system = '';
+    type = '仕様相談';
+    desc = `【カテゴリ】${category.replace(/^\d+\.\s*/, '')}\n` +
+           (targetData ? `【対象データ・手続き種類】${targetData}\n` : '') +
+           `【お問合せ内容】${content}`;
+  }
+  else if(inquiryType === 'option'){
+    const plan = document.getElementById('fo-plan').value;
+    const option = document.getElementById('fo-option').value;
+    const detail = document.getElementById('fo-detail').value.trim();
+
+    if(!plan){ showToast('現在の契約プランを選択してください', 'error'); return; }
+    if(!option){ showToast('ご希望のオプション・機能を選択してください', 'error'); return; }
+    if(!detail){ showToast('ご希望内容の詳細を入力してください', 'error'); return; }
+
+    project = option.replace(/^\d+\.\s*/, '');
+    system = '';
+    type = 'オプション・契約';
+    desc = `【契約プラン】${plan.replace(/^\d+\.\s*/, '')}\n` +
+           `【ご希望のオプション】${option.replace(/^\d+\.\s*/, '')}\n` +
+           `【詳細】${detail}`;
+  }
+  else if(inquiryType === 'signin'){
+    project = 'Power Automate サインイン作業';
+    system = '';
+    type = 'サインイン';
+    desc = `Power Automate がサインアウトされているため、サインイン作業をお願いします。`;
   }
 
-  const maxId = state.issues.reduce((m,i)=>Math.max(m, Number(i.id)||0), 0);
-  const d = new Date(date);
+  // スケジュール情報を desc に追加
+  const sched1Date = document.getElementById('f-sched1-date').value;
+  const sched1Time = document.getElementById('f-sched1-time').value;
+  const sched2Date = document.getElementById('f-sched2-date').value;
+  const sched2Time = document.getElementById('f-sched2-time').value;
+  if(!sched1Date || !sched1Time){ showToast('PC接続可能日時の第1希望を入力してください', 'error'); return; }
+  if(!sched2Date || !sched2Time){ showToast('PC接続可能日時の第2希望を入力してください', 'error'); return; }
+  const clientDeadline = `第1希望：${sched1Date.replace(/-/g,'/')} ${sched1Time} / 第2希望：${sched2Date.replace(/-/g,'/')} ${sched2Time}`;
+
+  // 起票者情報を desc 冒頭に追加
+  desc = `【ご担当者】${contactName}（${email}）\n` + desc;
+
+  // 課題データ組み立て
+  const deadline = document.getElementById('f-deadline') ? document.getElementById('f-deadline').value : '';
+  const today = new Date().toISOString().slice(0,10);
+  const d = new Date(today);
   const weekdays = ['日','月','火','水','木','金','土'];
+  const maxId = state.issues.reduce((m,i)=>Math.max(m, Number(i.id)||0), 0);
 
   const newIssue = {
     id: maxId+1,
-    date: date.replace(/-/g,'/'),
+    date: today.replace(/-/g,'/'),
     weekday: weekdays[d.getDay()],
     clientNo, client, project, system, type, level, assignee,
     deadline: deadline.replace(/-/g,'/'),
-    startDate: startDate.replace(/-/g,'/'),
+    startDate: '',
     clientDeadline,
     desc,
     status: 'todo',
@@ -1470,17 +1883,10 @@ function submitNewIssue(){
   state.issues.unshift(newIssue);
   saveState();
 
-  addActivity(`No.${newIssue.id} 「${newIssue.project}」が起票されました`, 'plus');
-  addNotification(`新規課題 No.${newIssue.id} が起票されました`, newIssue.id);
+  addActivity(`No.${newIssue.id} 「${newIssue.project}」が起票されました（${client}）`, 'plus');
+  addNotification(`新規課題 No.${newIssue.id} が起票されました（${client}）`, newIssue.id);
 
-  // Reset form
-  ['f-client','f-clientno','f-project','f-system','f-desc','f-deadline','f-startdate','f-clientdeadline'].forEach(id=>{
-    document.getElementById(id).value='';
-  });
-  document.getElementById('f-level').value='';
-  document.getElementById('f-assignee').value='';
-
-  showToast('課題を登録しました', 'success');
+  showToast('課題を起票しました', 'success');
   setView('list');
   renderAll();
 }
@@ -1929,6 +2335,18 @@ function renderAll(){
 document.addEventListener('keydown', e=>{
   if(e.key==='Escape' && currentIssue) closeDetail();
   if((e.metaKey||e.ctrlKey) && e.key==='Enter' && currentIssue) addComment();
+});
+
+// 起票フォームの「その他」選択時に追加入力欄を表示
+document.addEventListener('change', e=>{
+  if(e.target.id === 'fe-rpa'){
+    const show = e.target.value.includes('わからない') || e.target.value.includes('その他');
+    document.getElementById('fe-rpa-other-wrap').style.display = show ? '' : 'none';
+  }
+  if(e.target.id === 'fs-rpa'){
+    const show = e.target.value.includes('わからない') || e.target.value.includes('その他');
+    document.getElementById('fs-rpa-other-wrap').style.display = show ? '' : 'none';
+  }
 });
 
 // Init
